@@ -1,0 +1,141 @@
+apply plugin: 'cpp'
+apply plugin: 'visual-studio'
+
+clean {
+ delete "vs"
+}
+
+// Define the build model
+model {
+
+    // Dependencies
+    repositories {
+        libs(PrebuiltLibraries) {
+
+            sdl2 {
+				headers.srcDirs "libs/SDL2-2.0.5/include"
+				binaries.withType(SharedLibraryBinary) {
+					if (targetPlatform == platforms.x64) {
+						sharedLibraryLinkFile = file("libs/SDL2-2.0.5/lib/x64/sdl2.lib")  
+						sharedLibraryFile = file("libs/SDL2-2.0.5/lib/x64/sdl2.dll")    
+					}
+                }
+            }
+			
+			// TODO: Fix this so that header only libs can be defined up here
+			//rang {
+			//	headers.srcDirs "libs/rang/include"
+			//}
+			
+			// TODO:
+			// Same for stb libs
+			
+			// TODO: Why do you throw access violations when I link you?
+			vulkan {
+				headers.srcDirs "C:/VulkanSDK/1.0.46.0/Include"
+                binaries.withType(StaticLibraryBinary) {
+                    staticLibraryFile = file("C:/VulkanSDK/1.0.46.0/Lib/vulkan-1.lib")                       
+                }
+            }
+        }
+    }
+	
+	// Targets
+	buildTypes {
+        Debug
+        Release
+    }
+	
+	// Configurations
+	platforms {
+		x86 {
+			architecture "x86_64"
+		}
+        x64 {
+            architecture "x64"
+        }
+    }
+    
+    // Artifacts
+    components {
+	
+        // Disable all DLL compilation
+        all {
+            binaries.withType(SharedLibraryBinarySpec) {
+                buildable = false
+            }              
+        }
+
+        wishbone(NativeExecutableSpec) {
+			
+			targetPlatform "x64"
+			
+            sources {
+                cpp {
+                    source {
+                        srcDirs "src/cpp"
+                        include "**/*.cpp"						
+                    }
+                    exportedHeaders {
+                        srcDirs "src/headers", "libs/rang/includes", "libs/stb" // TODO: Dirty, fix me
+                        include "**/*.hpp", "**/*.h"
+                    }	
+                }
+            }
+
+            binaries.all {
+                // Define toolchain-specific compiler and linker options
+                if (toolChain in VisualCpp) {		
+
+					// General
+                    cppCompiler.args "/MT"
+					cppCompiler.args "/EHsc"
+					cppCompiler.args "/std:c++latest"
+					
+					// External Lib Flags
+					cppCompiler.define "SDL_MAIN_HANDLED"
+					cppCompiler.define "STB_IMAGE_IMPLEMENTATION"
+					
+					// Link libs
+					lib library: "sdl2", linkage: "shared"
+
+					// TODO: Broken, something is up
+					//lib library: "vulkan", linkage: "static"	
+
+					// TODO: Fix me
+					//lib library: "rang", linkage: "api"	
+                }
+            }
+			
+			InstallExecutable
+        }
+	}
+	
+	// Generate VS Files
+	visualStudio {
+        solutions.all {
+            solutionFile.location = "vs/${name}.sln"
+            solutionFile.withContent { TextProvider content ->
+                content.asBuilder().insert(0, "# GENERATED FILE: DO NOT EDIT\n")
+                //content.text = content.text.replaceAll("HideSolutionNode = FALSE", "HideSolutionNode = TRUE")
+				
+				content.text = content.text.replaceAll( "Microsoft Visual Studio Solution File, Format Version [0-9]+\\.[0-9]+",
+															"Microsoft Visual Studio Solution File, Format Version 12.00")
+            }
+        }
+		
+		projects.all {
+            projectFile.location = "vs/${name}.vcxproj"
+			filtersFile.location = "vs/${name}.vcxproj.filters"
+            projectFile.withXml {
+                asNode().appendNode('PropertyGroup', [Label: 'Custom'])
+                        .appendNode('ProjectDetails', "THIS PROJECT IS AUTO-GENERATED: ${project.name}")
+				
+				asNode().@ToolsVersion = "12.0"
+
+				// Set platform toolset so you don't end up using VS2010 directories
+				asNode().PropertyGroup.findAll({ it.@Label == 'Configuration' }).each { configNode -> configNode.appendNode("PlatformToolset", "v140")}
+            }
+        }
+    }
+}

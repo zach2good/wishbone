@@ -1,0 +1,2 @@
+gradle clean build wishboneVisualStudio installWishboneReleaseExecutable
+pause
