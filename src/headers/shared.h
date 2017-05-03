@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <utility>
+
 #include <string>
 #include <string.h>
 #include <iostream>
@@ -30,3 +32,16 @@ static std::time_t time_now = std::time(nullptr);
 #define LOG_WARN(m) std::cout << rang::bg::yellow << std::put_time(std::localtime(&time_now), "%y-%m-%d %OH:%OM:%OS") << " [WARN] " << "(" << __FUNCTION__ << ":" << __LINE__ << ") || " << m << rang::style::reset << std::endl;
 #define LOG_INFO(m) std::cout << rang::bg::cyan << std::put_time(std::localtime(&time_now), "%y-%m-%d %OH:%OM:%OS") << " [INFO] " << "(" << __FUNCTION__ << ":" << __LINE__ << ") || " << m << rang::style::reset << std::endl;
 #define LOG(m) std::cout << std::put_time(std::localtime(&time_now), "%y-%m-%d %OH:%OM:%OS") << " [LOG] " << "(" << __FUNCTION__ << ":" << __LINE__ << ") || " << m << rang::style::reset << std::endl;
+
+void error() {}
+template<typename First, typename ...Rest>
+void error( First && first, Rest && ...rest)
+{
+	std::cout << rang::bg::red;
+	std::cout << std::put_time(std::localtime(&time_now), "%OH:%OM:%OS");
+	std::cout << " [ERROR] " << "(" << __FUNCTION__ << ":" << __LINE__ << ") || ";
+	std::cout << std::forward<First>(first);
+	error(std::forward<Rest>(rest)...);
+	std::cout << rang::style::reset;
+	std::cout << std::endl;
+}
