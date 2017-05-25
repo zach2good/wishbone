@@ -25,6 +25,8 @@ int main(int argc, char* argv[])
 	};
 	std::cout << j.dump(4) << std::endl;
 
+	std::cout << j["name"] << std::endl;
+
 	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
 
 	//Start SDL
@@ -56,11 +58,16 @@ int main(int argc, char* argv[])
 		std::cout << "Something went wrong with glad!" << std::endl;
 	}
 
+	ImGuiIO& io = ImGui::GetIO();
+	io.IniFilename = NULL; // Disable ini file
+
 	ImGui_ImplSdlGL3_Init(m_Window);
-	
+	ImVec4 clear_color = ImColor(114, 144, 154);
+
 	bool quit = false;
 	SDL_Event event;
 	while (!quit){
+		// Input
 		while (SDL_PollEvent(&event)) {
 			ImGui_ImplSdlGL3_ProcessEvent(&event);
 			switch (event.type) {
@@ -71,9 +78,14 @@ int main(int argc, char* argv[])
 					break;
 			}
 		}
-		ImVec4 clear_color = ImColor(114, 144, 154);
-		ImGui_ImplSdlGL3_NewFrame(m_Window);
+		// Update
 
+		// Draw content frame
+		glClearColor(clear_color.x, clear_color.y, clear_color.z, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Draw ImGui frame
+		ImGui_ImplSdlGL3_NewFrame(m_Window);
 		{
 			static float f = 0.0f;
 			ImGui::Text("Hello, world!");
@@ -81,10 +93,9 @@ int main(int argc, char* argv[])
 			ImGui::ColorEdit3("clear color", (float*)&clear_color);
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		}
-			
-		glClearColor(0.2, 0.2, 0.2, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		ImGui::Render();
+		
+		// Swap buffers
 		SDL_GL_SwapWindow(m_Window);
 	}
 		
@@ -93,7 +104,5 @@ int main(int argc, char* argv[])
 	SDL_DestroyWindow(m_Window);
 	SDL_Quit();
 
-	std::cout << "Press any key to exit..." << std::endl;
-	getchar();
 	return 0;
 }

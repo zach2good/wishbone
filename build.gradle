@@ -170,17 +170,20 @@ model {
                     cppCompiler.args "/MT"
 					cppCompiler.args "/EHsc"
 					cppCompiler.args "/FS"
+					cppCompiler.args "/MP"
 					
 					if (buildType == buildTypes.Debug){
 						linker.args "/DEBUG"
 						cppCompiler.args "/DEBUG"
 						cppCompiler.args "/Zi"
 						cppCompiler.args "/MTd"
+						cppCompiler.args "/Od"
 						
 					}
 					else
 					{
 						cppCompiler.args "/MT" 
+						cppCompiler.args "/O2"
 					}
 					
 					linker.args "/SUBSYSTEM:CONSOLE"
@@ -227,4 +230,14 @@ model {
             }
         }
     }
+}
+
+task copyDll(type:Copy, dependsOn: assemble){
+	include "*.dll"
+	from "libs/SDL2-2.0.5/lib/x64"
+	into "build/exe/wishbone/x64/release"
+}
+
+task run(type:Exec, dependsOn: copyDll){
+	commandLine 'cmd', '/c', "start build\\exe\\wishbone\\x64\\release\\wishbone.exe"
 }
