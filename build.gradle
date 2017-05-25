@@ -134,6 +134,9 @@ model {
 					{
 						cppCompiler.args "/MT"
 					}
+					
+					lib library: "glad", linkage: "static"
+					lib library: "sdl2", linkage: "shared"
                 }
             }
         }
@@ -146,11 +149,11 @@ model {
             sources {
                 cpp {
                     source {
-                        srcDirs "src/cpp", "src/imgui"
+                        srcDirs "src/cpp"
                         include "**/*.cpp"						
                     }
                     exportedHeaders {
-                        srcDirs "src/headers", "src/imgui"
+                        srcDirs "src/headers"
                         include "**/*.hpp", "**/*.h"
                     }	
                 }
