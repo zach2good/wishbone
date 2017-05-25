@@ -1,11 +1,26 @@
 #include <stdio.h>
 #include <iostream>
 
+//https://github.com/nothings/stb/blob/master/stb_image.h
 // Defined in the build script
 //#define STB_IMAGE_IMPLEMENTATION 
 #include "stb_image.h"
 
+//https://github.com/agauniyal/rang
 #include "rang.hpp"
+
+//https://github.com/nlohmann/json/tree/master
+#include "json.hpp"
+using json = nlohmann::json;
+
+//https://github.com/Dav1dde/glad
+#include "glad/glad.h"
+
+//https://github.com/ocornut/imgui
+#include "imgui.h"
+#include "imgui_impl_sdl_gl3.h"
+
+#include "SDL.h"
 
 int main(int argc, char* argv[]) 
 { 
@@ -14,7 +29,91 @@ int main(int argc, char* argv[])
 	stbi_image_free(rgb);
 
 	rang::init();
+	std::cout << rang::bg::gray << rang::fg::black << "Wishbone" << std::endl << rang::style::reset;
 
+	json j = {
+		{ "pi", 3.141 },
+		{ "happy", true },
+		{ "name", "Niels" },
+		{ "nothing", nullptr },
+		{ "answer",{
+			{ "everything", 42 }
+		} },
+		{ "list",{ 1, 0, 2 } },
+		{ "object",{
+			{ "currency", "USD" },
+			{ "value", 42.99 }
+		} }
+	};
+	std::cout << j.dump(4) << std::endl;
+
+	//Start SDL
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		std::cout << "SDL Error" << std::endl;
+	}
+
+	SDL_DisplayMode current;
+	SDL_GetCurrentDisplayMode(0, &current);
+
+	// Start a Window
+	auto m_Window = SDL_CreateWindow("",
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		800, 600,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+
+	if (!m_Window) {
+		std::cout << "Window Error" << std::endl;
+	}
+
+	// Start OpenGL Context
+	auto m_Context = SDL_GL_CreateContext(m_Window);
+	if (!m_Context) {
+		std::cout << "Context Error" << std::endl;
+	}
+
+	if (!gladLoadGL()) {
+		std::cout << "Something went wrong with glad!" << std::endl;
+	}
+
+	ImGui_ImplSdlGL3_Init(m_Window);
+	
+	bool quit = false;
+	SDL_Event event;
+	while (!quit){
+		while (SDL_PollEvent(&event)) {
+			ImGui_ImplSdlGL3_ProcessEvent(&event);
+			switch (event.type) {
+				case SDL_QUIT:
+					quit = true;
+					break;
+				default:
+					break;
+			}
+		}
+		ImVec4 clear_color = ImColor(114, 144, 154);
+		ImGui_ImplSdlGL3_NewFrame(m_Window);
+
+		{
+			static float f = 0.0f;
+			ImGui::Text("Hello, world!");
+			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+			ImGui::ColorEdit3("clear color", (float*)&clear_color);
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		}
+			
+		glClearColor(0.2, 0.2, 0.2, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		ImGui::Render();
+		SDL_GL_SwapWindow(m_Window);
+	}
+		
+	ImGui_ImplSdlGL3_Shutdown();
+	SDL_GL_DeleteContext(m_Context);
+	SDL_DestroyWindow(m_Window);
+	SDL_Quit();
+
+	std::cout << "Press any key to exit..." << std::endl;
 	getchar();
 	return 0;
 }

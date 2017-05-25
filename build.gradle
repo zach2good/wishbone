@@ -25,7 +25,9 @@ model {
 			rang {
 				headers.srcDirs "libs/rang/includes"
             }
-			
+			json {
+				headers.srcDirs "libs/json"
+            }
         }
     }
 	
@@ -53,8 +55,8 @@ model {
                 buildable = false
             }              
         }
-
-        wishbone(NativeExecutableSpec) {
+		
+		glad(NativeLibrarySpec) {
 			
 			targetPlatform "x86"
 			targetPlatform "x64"
@@ -62,11 +64,11 @@ model {
             sources {
                 cpp {
                     source {
-                        srcDirs "src/cpp"
-                        include "**/*.cpp"						
+                        srcDirs "libs/glad/src"
+                        include "**/*.cpp", "**/*.c"					
                     }
                     exportedHeaders {
-                        srcDirs "src/headers"
+                        srcDirs "libs/glad/include"
                         include "**/*.hpp", "**/*.h"
                     }	
                 }
@@ -91,13 +93,101 @@ model {
 					{
 						cppCompiler.args "/MT"
 					}
+                }
+            }
+        }
+		
+		imgui(NativeLibrarySpec) {
+			
+			targetPlatform "x86"
+			targetPlatform "x64"
+			
+            sources {
+                cpp {
+                    source {
+                        srcDirs "libs/imgui"
+                        include "**/*.cpp"					
+                    }
+                    exportedHeaders {
+                        srcDirs "libs/imgui"
+                        include "**/*.hpp", "**/*.h"
+                    }	
+                }
+            }
+
+            binaries.all {
+                // Define toolchain-specific compiler and linker options
+                if (toolChain in VisualCpp) {		
+
+					// General
+                    cppCompiler.args "/MT"
+					cppCompiler.args "/EHsc"
+					cppCompiler.args "/FS"
 					
+					if (buildType == buildTypes.Debug){
+						linker.args "/DEBUG"
+						cppCompiler.args "/DEBUG"
+						cppCompiler.args "/Zi"
+						cppCompiler.args "/MTd"
+					}
+					else
+					{
+						cppCompiler.args "/MT"
+					}
+                }
+            }
+        }
+
+        wishbone(NativeExecutableSpec) {
+			
+			targetPlatform "x86"
+			targetPlatform "x64"
+			
+            sources {
+                cpp {
+                    source {
+                        srcDirs "src/cpp", "src/imgui"
+                        include "**/*.cpp"						
+                    }
+                    exportedHeaders {
+                        srcDirs "src/headers", "src/imgui"
+                        include "**/*.hpp", "**/*.h"
+                    }	
+                }
+            }
+
+            binaries.all {
+                // Define toolchain-specific compiler and linker options
+                if (toolChain in VisualCpp) {		
+
+					// General
+                    cppCompiler.args "/MT"
+					cppCompiler.args "/EHsc"
+					cppCompiler.args "/FS"
+					
+					if (buildType == buildTypes.Debug){
+						linker.args "/DEBUG"
+						cppCompiler.args "/DEBUG"
+						cppCompiler.args "/Zi"
+						cppCompiler.args "/MTd"
+						
+					}
+					else
+					{
+						cppCompiler.args "/MT" 
+					}
+					
+					linker.args "/SUBSYSTEM:CONSOLE"
+					
+					cppCompiler.define "SDL_MAIN_HANDLED"
 					cppCompiler.define "STB_IMAGE_IMPLEMENTATION"
 					
-					// Link libs
 					lib library: "sdl2", linkage: "shared"
+					lib library: "glad", linkage: "static"
+					lib library: "imgui", linkage: "static"
 					lib library: "stb", linkage: "api"	
 					lib library: "rang", linkage: "api"	
+					lib library: "json", linkage: "api"	
                 }
             }
         }
