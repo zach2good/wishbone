@@ -1,36 +1,20 @@
 #include <stdio.h>
 #include <iostream>
 
-#include "shared.h"
-#include "renderer.h"
+// Defined in the build script
+//#define STB_IMAGE_IMPLEMENTATION 
+#include "stb_image.h"
 
-#include "ServiceLocator.h"
+#include "rang.hpp"
 
 int main(int argc, char* argv[]) 
 { 
-	LOG("Wishbone");
+	int width, height, bpp;
+	unsigned char* rgb = stbi_load("myimage.png", &width, &height, &bpp, 3);
+	stbi_image_free(rgb);
 
-	// Stub in null systems
-	//ServiceLocator::initialize();
+	rang::init();
 
-	// Set up systems in order
-	//ServiceLocator::provide(new NullAudioSystem());
-
-	// Access systems
-	//auto audio = ServiceLocator::getAudio();
-	
-	LOG_ERROR("LOG_ERROR");
-	LOG_WARN("LOG_WARN");
-	LOG_INFO("LOG_INFO");	
-
-	Renderer ren;
-	ren.init();
-
-	ren.cleanup();
-
-	error("ERR", "1", 1);
-	
-	LOG("Goodbye");
 	getchar();
 	return 0;
 }
