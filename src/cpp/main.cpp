@@ -2,8 +2,11 @@
 
 int main(int argc, char* argv[]) 
 { 
-	int width, height, bpp;
-	unsigned char* rgb = stbi_load("myimage.png", &width, &height, &bpp, 3);
+	int width = 0, height = 0, bpp = 0;
+	unsigned char* rgb = stbi_load("res/jetroid-sprites/player/idle/s01.png", &width, &height, &bpp, 3);
+	if (!rgb) {
+		std::cout << "Could not load image" << std::endl;
+	}
 	stbi_image_free(rgb);
 
 	rang::init();
@@ -72,8 +75,16 @@ int main(int argc, char* argv[])
 			ImGui_ImplSdlGL3_ProcessEvent(&event);
 			switch (event.type) {
 				case SDL_QUIT:
+				{
 					quit = true;
 					break;
+				}
+				case SDL_KEYDOWN:
+					if (event.key.keysym.sym == SDLK_ESCAPE)
+					{
+						quit = true;
+						break;
+					}	
 				default:
 					break;
 			}

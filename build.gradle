@@ -161,6 +161,24 @@ model {
                     }	
                 }
             }
+			
+			binaries.withType(NativeExecutableBinarySpec) { bin ->
+				bin.tasks.withType(InstallExecutable) { installTask ->
+					def runtimeFiles = fileTree(dir: 'res')
+					installTask.inputs.files runtimeFiles
+					installTask.doLast ({
+						// Copy files for install tasks
+						copy {
+						   from runtimeFiles
+						   into installTask.destinationDir.path + "\\res"
+						}  	
+						copy {
+							from runtimeFiles
+							into "vs\\res"
+						} 	
+					})
+				}   
+			}
 
             binaries.all {
                 // Define toolchain-specific compiler and linker options
@@ -238,6 +256,11 @@ task copyDll(type:Copy, dependsOn: assemble){
 	into "build/exe/wishbone/x64/release"
 }
 
-task run(type:Exec, dependsOn: copyDll){
+task copyRes(type:Copy, dependsOn: assemble){
+	from "res"
+	into "build/exe/wishbone/x64/release/res"
+}
+
+task run(type:Exec, dependsOn: [copyDll, copyRes]){
 	commandLine 'cmd', '/c', "start build\\exe\\wishbone\\x64\\release\\wishbone.exe"
 }
