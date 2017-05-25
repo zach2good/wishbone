@@ -25,6 +25,8 @@ int main(int argc, char* argv[])
 	};
 	std::cout << j.dump(4) << std::endl;
 
+	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
+
 	//Start SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		std::cout << "SDL Error" << std::endl;

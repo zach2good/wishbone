@@ -28,6 +28,9 @@ model {
 			json {
 				headers.srcDirs "libs/json"
             }
+			glm {
+				headers.srcDirs "libs/glm"
+            }
         }
     }
 	
@@ -191,6 +194,7 @@ model {
 					lib library: "stb", linkage: "api"	
 					lib library: "rang", linkage: "api"	
 					lib library: "json", linkage: "api"	
+					lib library: "glm", linkage: "api"	
                 }
             }
         }
