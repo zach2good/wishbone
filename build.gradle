@@ -78,8 +78,13 @@ model {
             }
 
             binaries.all {
-                // Define toolchain-specific compiler and linker options
-                if (toolChain in VisualCpp) {		
+                // Define toolchain-specific compiler and linker options	
+if (toolChain in Gcc){
+cppCompiler.args "-w"
+linker.args "-lSDL"
+
+}                
+if (toolChain in VisualCpp) {		
 
 					// General
                     cppCompiler.args "/MT"
@@ -120,7 +125,13 @@ model {
 
             binaries.all {
                 // Define toolchain-specific compiler and linker options
-                if (toolChain in VisualCpp) {		
+if (toolChain in Gcc){
+   cppCompiler.args "-w"
+   linker.args "-lSDL"
+   lib library: "glad", linkage: "static"
+   lib library: "sdl2", linkage: "shared"
+}  
+              if (toolChain in VisualCpp) {		
 
 					// General
                     cppCompiler.args "/MT"
