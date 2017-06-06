@@ -6,8 +6,10 @@
 // SDL
 #ifdef _WIN32
 #include <SDL.h>
+#include <glad/glad.h>
 #else
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 #endif
 
 // Removed for now to aid Linux compilation

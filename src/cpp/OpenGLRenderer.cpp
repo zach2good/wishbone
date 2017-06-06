@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#include "glad/glad.h"
-
 OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _height)
 {
 	//Start SDL
@@ -30,10 +28,11 @@ OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _
 	if (!m_pGLContext) {
 		std::cout << "Context Error" << std::endl;
 	}
-
+#ifdef _WIN32
 	if (!gladLoadGL()) {
 		std::cout << "Something went wrong with glad!" << std::endl;
 	}
+#endif
 }
 
 OpenGLRenderer::~OpenGLRenderer()

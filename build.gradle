@@ -81,7 +81,7 @@ model {
                 // Define toolchain-specific compiler and linker options	
 				if (toolChain in Gcc){
 					cppCompiler.args "-w"
-					linker.args "-lSDL"
+					linker.args "-lSDL2"
 				}   
 				
 				if (toolChain in VisualCpp) {		
@@ -126,7 +126,7 @@ model {
             // Define toolchain-specific compiler and linker options
 			if (toolChain in Gcc){
 				cppCompiler.args "-w", "-I /usr/include/SDL2/"
-				linker.args "-lSDL"
+				linker.args "-lSDL2"
 				lib library: "glad", linkage: "static"
 			}  
             if (toolChain in VisualCpp) {		
@@ -155,7 +155,7 @@ model {
 
         wishbone(NativeExecutableSpec) {
 			
-			targetPlatform "x86"
+			//targetPlatform "x86"
 			targetPlatform "x64"
 			
             sources {
@@ -194,12 +194,12 @@ model {
 
 				if (toolChain in Gcc){
 				    cppCompiler.args "-w", "-I /usr/include/SDL2/"
-				    linker.args "-lSDL"
+				    linker.args "-lSDL2", "-lGL"
 
 					cppCompiler.define "SDL_MAIN_HANDLED"
 					cppCompiler.define "STB_IMAGE_IMPLEMENTATION"
 							
-					lib library: "glad", linkage: "static"
+					//lib library: "glad", linkage: "static"
 					lib library: "imgui", linkage: "static"
 					lib library: "stb", linkage: "api"	
 					lib library: "rang", linkage: "api"	
