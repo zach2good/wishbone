@@ -1,7 +1,6 @@
 #pragma once
 
 #include "IRenderer.h"
-#include "common.h"
 
 class OpenGLRenderer : public IRenderer
 {
@@ -10,6 +9,7 @@ public:
 	~OpenGLRenderer() override;
 
 	void clear() override;
+	void drawDebug();
 	void draw() override;
 	void swap() override;
 
@@ -17,5 +17,5 @@ public:
 	
 private:
 	SDL_Window* m_pWindow;
-	SDL_GLContext m_pGLContext;
+	SDL_GLContext m_GLContext;
 };

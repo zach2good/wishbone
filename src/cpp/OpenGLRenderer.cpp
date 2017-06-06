@@ -1,5 +1,10 @@
 #include "OpenGLRenderer.h"
 
+#include <iostream>
+
+#include "imgui.h"
+#include "imgui_impl_sdl_gl3.h"
+
 OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _height)
 {
 	//Start SDL
@@ -22,8 +27,8 @@ OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _
 	}
 
 	// Start OpenGL Context
-	m_pGLContext = SDL_GL_CreateContext(m_pWindow);
-	if (!m_pGLContext) {
+	m_GLContext = SDL_GL_CreateContext(m_pWindow);
+	if (!m_GLContext) {
 		std::cout << "Context Error" << std::endl;
 	}
 #ifdef _WIN32
@@ -31,11 +36,14 @@ OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _
 		std::cout << "Something went wrong with glad!" << std::endl;
 	}
 #endif
+
+	ImGui_ImplSdlGL3_Init(m_pWindow);
 }
 
 OpenGLRenderer::~OpenGLRenderer()
 {
-	SDL_GL_DeleteContext(m_pGLContext);
+	ImGui_ImplSdlGL3_Shutdown();
+	SDL_GL_DeleteContext(m_GLContext);
 	SDL_DestroyWindow(m_pWindow);
 	SDL_Quit();
 }
@@ -46,13 +54,27 @@ void OpenGLRenderer::clear()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void OpenGLRenderer::drawDebug()
+{
+	ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
+	if (ImGui::CollapsingHeader("OpenGL Information"))
+	{
+		ImGui::Text("GL_VERSION: %s \n", glGetString(GL_VERSION));
+		ImGui::Text("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
+		ImGui::Text("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	}
+}
+
 void OpenGLRenderer::draw()
 {
-	//
+	
 }
 
 void OpenGLRenderer::swap()
 {
+	ImGui_ImplSdlGL3_NewFrame(m_pWindow);
+	drawDebug();
+	ImGui::Render();
 	SDL_GL_SwapWindow(m_pWindow);
 }
 

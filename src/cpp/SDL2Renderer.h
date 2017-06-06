@@ -1,7 +1,6 @@
 #pragma once
 
 #include "IRenderer.h"
-#include "common.h"
 
 class SDL2Renderer : public IRenderer
 {
@@ -17,5 +16,5 @@ public:
 
 private:
 	SDL_Window* m_pWindow;
-	SDL_Renderer * m_pRenderer;
+	SDL_Renderer* m_pRenderer;
 };

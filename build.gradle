@@ -60,7 +60,7 @@ model {
 
         glad(NativeLibrarySpec) {
 
-            targetPlatform "x86"
+            //targetPlatform "x86"
             targetPlatform "x64"
 
             sources {
@@ -103,7 +103,7 @@ model {
 
         imgui(NativeLibrarySpec) {
 
-            targetPlatform "x86"
+            //targetPlatform "x86"
             targetPlatform "x64"
 
             sources {
@@ -192,10 +192,8 @@ model {
                 if (toolChain in VisualCpp) {
 
                     // General
-                    cppCompiler.args "/MT"
                     cppCompiler.args "/EHsc"
                     cppCompiler.args "/FS"
-                    cppCompiler.args "/MP"
 
                     if (buildType == buildTypes.Debug) {
                         linker.args "/DEBUG"
@@ -205,13 +203,10 @@ model {
                         cppCompiler.args "/Od"
 
                     } else {
-                        cppCompiler.args "/MT"
                         cppCompiler.args "/O2"
                     }
 
                     linker.args "/SUBSYSTEM:CONSOLE"
-
-
 
                     lib library: "sdl2", linkage: "shared"
                     lib library: "glad", linkage: "static"

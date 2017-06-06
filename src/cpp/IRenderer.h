@@ -1,6 +1,15 @@
 #pragma once
 
-class SDL_Window;
+
+// SDL
+#ifdef _WIN32
+#include <SDL.h>
+#include <glad/glad.h>
+#else
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+#endif
+
 
 class IRenderer 
 { 
