@@ -126,10 +126,9 @@ if (toolChain in VisualCpp) {
             binaries.all {
                 // Define toolchain-specific compiler and linker options
 if (toolChain in Gcc){
-   cppCompiler.args "-w"
-   linker.args "-lSDL"
+   cppCompiler.args "-w", "-I /usr/include/SDL2/"
+   linker.args "-lSDL", "-lGL"
    lib library: "glad", linkage: "static"
-   lib library: "sdl2", linkage: "shared"
 }  
               if (toolChain in VisualCpp) {		
 
@@ -193,7 +192,24 @@ if (toolChain in Gcc){
 
             binaries.all {
                 // Define toolchain-specific compiler and linker options
-                if (toolChain in VisualCpp) {		
+
+if (toolChain in Gcc){
+   cppCompiler.args "-w", "-I /usr/include/SDL2/"
+   linker.args "-lSDL", "-lGL"
+
+					cppCompiler.define "SDL_MAIN_HANDLED"
+					cppCompiler.define "STB_IMAGE_IMPLEMENTATION"
+					
+					lib library: "sdl2", linkage: "shared"				
+					lib library: "glad", linkage: "static"
+					lib library: "imgui", linkage: "static"
+					lib library: "stb", linkage: "api"	
+					lib library: "rang", linkage: "api"	
+					lib library: "json", linkage: "api"	
+					lib library: "glm", linkage: "api"	
+   
+}     
+             if (toolChain in VisualCpp) {		
 
 					// General
                     cppCompiler.args "/MT"

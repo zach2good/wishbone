@@ -9,10 +9,15 @@
 #include "imgui.h"
 #include "imgui_impl_sdl_gl3.h"
 
-// SDL,GL3W
+// SDL
+#ifdef _WIN32
 #include <SDL.h>
 #include <SDL_syswm.h>
 #include <glad/glad.h>
+#else
+#include <SDL2/SDL.h>
+#include <glad/glad.h>
+#endif
 
 // Data
 static double       g_Time = 0.0f;

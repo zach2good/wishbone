@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IRenderer.h"
-#include "SDL.h"
+#include "common.h"
 
 class OpenGLRenderer : public IRenderer
 {
