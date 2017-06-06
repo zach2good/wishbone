@@ -19,7 +19,7 @@
 //#include "stb_image.h"
 
 //https://github.com/agauniyal/rang
-#include "rang.hpp"
+//#include "rang.hpp"
 
 //https://github.com/nlohmann/json/tree/master
 #include "json.hpp"

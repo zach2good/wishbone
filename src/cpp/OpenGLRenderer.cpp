@@ -1,7 +1,5 @@
 #include "OpenGLRenderer.h"
 
-#include <iostream>
-
 OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _height)
 {
 	//Start SDL

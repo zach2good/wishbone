@@ -1,6 +1,4 @@
 #include "common.h"
-
-#include "SDL2Renderer.h"
 #include "OpenGLRenderer.h"
 
 int main(int argc, char* argv[]) 

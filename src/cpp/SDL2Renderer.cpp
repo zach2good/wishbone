@@ -1,7 +1,5 @@
 #include "SDL2Renderer.h"
 
-#include <iostream>
-
 SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _height)
 {
 	//Start SDL
