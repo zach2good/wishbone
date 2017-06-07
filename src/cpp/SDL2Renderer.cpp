@@ -33,9 +33,9 @@ SDL2Renderer::~SDL2Renderer()
   SDL_DestroyWindow(m_pWindow);
 }
 
-void SDL2Renderer::clear(int _r, int _g, int _b)
+void SDL2Renderer::clear(float _r, float _g, float _b)
 {
-  SDL_SetRenderDrawColor(m_pRenderer, _r, _g, _b, 255);
+  SDL_SetRenderDrawColor(m_pRenderer, (Uint8) 255.0f * _r, (Uint8) 255.0f * _g, (Uint8) 255.0f * _b, 255);
   SDL_RenderClear(m_pRenderer);
 }
 

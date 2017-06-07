@@ -14,7 +14,7 @@ class IRenderer
 public:
 	virtual ~IRenderer() {};
 
-	virtual void clear(int _r, int _g, int _b) = 0;
+	virtual void clear(float _r, float _g, float _b) = 0;
 	virtual void submit() = 0;
 	virtual void draw() = 0;
 	virtual void swap() = 0;

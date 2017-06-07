@@ -43,6 +43,8 @@ OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _
 	std::cout << "GL_VENDOR: " << glGetString(GL_VENDOR) << std::endl;
 	std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
+	ImGuiIO& io = ImGui::GetIO();
+	io.IniFilename = NULL; // Disables ini file output
 	ImGui_ImplSdlGL3_Init(m_pWindow);
 }
 
@@ -54,10 +56,9 @@ OpenGLRenderer::~OpenGLRenderer()
 	SDL_Quit();
 }
 
-void OpenGLRenderer::clear(int _r, int _g, int _b)
+void OpenGLRenderer::clear(float _r, float _g, float _b)
 {
-  // TODO: This is gross, change parameter type to doubles
-  glClearColor((double) 255/_r, (double) 255/_g, (double) 255/_b, 1.0);
+  glClearColor( _r, _g, _b, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

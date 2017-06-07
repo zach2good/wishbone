@@ -8,7 +8,7 @@ public:
 	OpenGLRenderer(const char* _title, const int _width, const int _height);
 	~OpenGLRenderer() override;
 
-	void clear(int _r, int _g, int _b) override;
+	void clear(float _r, float _g, float _b) override;
 	void drawDebug();
 	void submit() override {};
 	void draw() override;

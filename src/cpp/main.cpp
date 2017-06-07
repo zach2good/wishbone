@@ -1,13 +1,17 @@
 #include "common.h"
 
-// TODO: This is really hacky, the OGL Renderer can support Mesa3, this will not scale past 2D
-#ifdef _WIN32
+#ifdef __linux
+#  define SDL2_RENDERER
+#endif 
+
+#ifdef SDL2_RENDERER 
+#  include "SDL2Renderer.h"
+#  define REN SDL2Renderer 
+#else
 #  include "OpenGLRenderer.h"
 #  define REN OpenGLRenderer
-#else
-#  include "SDL2Renderer.h"
-#  define REN SDL2Renderer
 #endif
+
 int main(int argc, char* argv[]) 
 { 
 	Uint64 NOW = SDL_GetPerformanceCounter();
@@ -50,7 +54,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		m_Renderer->clear(50, 50, 50);
+		m_Renderer->clear(0.3f, 0.3f, 0.3f);
 
 		m_Renderer->draw();
 

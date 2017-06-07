@@ -211,8 +211,10 @@ model {
                 }
                 cppCompiler.define "SDL_MAIN_HANDLED"
                 cppCompiler.define "STB_IMAGE_IMPLEMENTATION"
+				
+				//cppCompiler.define "SDL2_RENDERER"
 
-		lib library: "glad", linkage: "static"
+				lib library: "glad", linkage: "static"
                 lib library: "imgui", linkage: "static"
                 lib library: "stb", linkage: "api"
                 lib library: "rang", linkage: "api"
@@ -253,8 +255,14 @@ model {
     }
 }
 
-
-// TODO: Add run task that supports windows and linux
-// if (operatingSystem.name.contains("win") etc...
-// WIN: "cmd", "/c", "build/exe/wishbone/release/wishbone"
-// LINUX: "bash", "build/exe/wishbone/release/wishbone"
+task run(type:Exec, dependsOn: build){
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		copy {
+			from "libs/SDL2-2.0.5/lib/x64/SDL2.dll"
+			into "build/exe/wishbone/release/"
+                        }
+		commandLine "cmd", "/c", "build\\exe\\wishbone\\release\\wishbone.exe"
+	} else {
+		commandLine "./build/exe/wishbone/release/wishbone"
+	}
+}
