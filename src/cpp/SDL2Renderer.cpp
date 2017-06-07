@@ -25,6 +25,9 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 
 	m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, SDL_RENDERER_ACCELERATED);
 
+	SDL_SetWindowTitle(m_pWindow, "Wishbone");
+	
+	/*
 	int imgFlags = IMG_INIT_PNG;
 	if (!(IMG_Init(imgFlags) & imgFlags))
 	{
@@ -42,6 +45,7 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 	{
 		std::cout << " Failed to load font : " << SDL_GetError() << std::endl;
 	}
+	*/
 }
 
 SDL2Renderer::~SDL2Renderer()
@@ -58,15 +62,22 @@ void SDL2Renderer::clear(float _r, float _g, float _b)
 
 void SDL2Renderer::draw()
 {
+  /*
 	SDL_Surface* solid = TTF_RenderText_Solid(font, "Wishbone", textColor);
 	textTexture = SDL_CreateTextureFromSurface(m_pRenderer, solid);
 	SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h);
 	textRect.x = 0;
 	textRect.y = 0;
 	SDL_RenderCopy(m_pRenderer, textTexture, nullptr, &textRect);
+  */
 }
 
 void SDL2Renderer::swap()
 {
   SDL_RenderPresent(m_pRenderer);
+}
+
+SDL_Surface* SDL2Renderer::loadImage(const std::string &filepath)
+{
+  return nullptr;
 }
