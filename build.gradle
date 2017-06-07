@@ -252,3 +252,9 @@ model {
         }
     }
 }
+
+
+// TODO: Add run task that supports windows and linux
+// if (operatingSystem.name.contains("win") etc...
+// WIN: "cmd", "/c", "build/exe/wishbone/release/wishbone"
+// LINUX: "bash", "build/exe/wishbone/release/wishbone"
