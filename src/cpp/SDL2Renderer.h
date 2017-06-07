@@ -2,6 +2,14 @@
 
 #include "IRenderer.h"
 
+#ifdef _WIN32
+#include <SDL_image.h>
+#include <SDL_TTF.h>
+#else
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_TTF.h>
+#endif
+
 class SDL2Renderer : public IRenderer
 {
 public:
@@ -17,4 +25,12 @@ public:
 private:
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
+
+	SDL_Surface* screenSurface;
+	SDL_Texture* textTexture;
+	SDL_Rect textRect;
+
+	TTF_Font* font;
+	SDL_Color textColor = { 255, 255, 255, 255 }; // white
+	SDL_Color backgroundColor = { 0, 0, 0, 255 }; // black
 };

@@ -18,6 +18,30 @@ model {
                     }
                 }
             }
+			sdl2_image {
+                headers.srcDirs "libs/SDL2_image-2.0.1/include"
+                binaries.withType(SharedLibraryBinary) {
+                    if (targetPlatform == platforms.x64) {
+                        sharedLibraryLinkFile = file("libs/SDL2_image-2.0.1/lib/x64/SDL2_image.lib")
+                        sharedLibraryFile = file("libs/SDL2_image-2.0.1/lib/x64/SDL2_image.dll")
+                    } else {
+                        sharedLibraryLinkFile = file("libs/SDL2_image-2.0.1/lib/x86/SDL2_image.lib")
+                        sharedLibraryFile = file("libs/SDL2_image-2.0.1/lib/x86/SDL2_image.dll")
+                    }
+                }
+            }
+			sdl2_ttf {
+                headers.srcDirs "libs/SDL2_ttf-2.0.14/include"
+                binaries.withType(SharedLibraryBinary) {
+                    if (targetPlatform == platforms.x64) {
+                        sharedLibraryLinkFile = file("libs/SDL2_ttf-2.0.14/lib/x64/SDL2_ttf.lib")
+                        sharedLibraryFile = file("libs/SDL2_ttf-2.0.14/lib/x64/SDL2_ttf.dll")
+                    } else {
+                        sharedLibraryLinkFile = file("libs/SDL2_ttf-2.0.14/lib/x86/SDL2_ttf.lib")
+                        sharedLibraryFile = file("libs/SDL2_ttf-2.0.14/lib/x86/SDL2_ttf.dll")
+                    }
+                }
+            }
             stb {
                 headers.srcDirs "libs/stb"
             }
@@ -186,7 +210,7 @@ model {
 
                 if (toolChain in Gcc) {
                     cppCompiler.args "-w", "-I /usr/include/SDL2/", "-fpermissive"
-                    linker.args "-lSDL2", "-ldl"
+                    linker.args "-lSDL2", "-lSDL2_ttf", "-ldl"
                 }
                 if (toolChain in VisualCpp) {
 
@@ -207,14 +231,13 @@ model {
 
                     linker.args "/SUBSYSTEM:CONSOLE"
 
-                    lib library: "sdl2", linkage: "shared"     
+                    lib library: "sdl2", linkage: "shared"  
+					lib library: "sdl2_image", linkage: "shared"    
+					lib library: "sdl2_ttf", linkage: "shared"     
                 }
                 cppCompiler.define "SDL_MAIN_HANDLED"
-                cppCompiler.define "STB_IMAGE_IMPLEMENTATION"
-		cppCompiler.define "STB_TRUETYPE_IMPLEMENTATION"
-
 				
-				//cppCompiler.define "SDL2_RENDERER"
+				cppCompiler.define "SDL2_RENDERER"
 
 				lib library: "glad", linkage: "static"
                 lib library: "imgui", linkage: "static"
@@ -261,6 +284,14 @@ task run(type:Exec, dependsOn: build){
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		copy {
 			from "libs/SDL2-2.0.5/lib/x64/SDL2.dll"
+
+			from "libs/SDL2_image-2.0.1/lib/x64/libpng16-16.dll"
+			from "libs/SDL2_image-2.0.1/lib/x64/SDL2_image.dll"
+
+			from "libs/SDL2_ttf-2.0.14/lib/x64/libfreetype-6.dll"
+			from "libs/SDL2_ttf-2.0.14/lib/x64/SDL2_ttf.dll"
+
+			from "libs/SDL2_ttf-2.0.14/lib/x64/zlib1.dll"
 			into "build/exe/wishbone/release/"
                         }
 		commandLine "cmd", "/c", "build\\exe\\wishbone\\release\\wishbone.exe"

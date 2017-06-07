@@ -1,9 +1,6 @@
 #include "SDL2Renderer.h"
 
 #include <iostream>
-#include "stb_image.h"
-#include "stb_easy_font.h"
-#include "stb_truetype.h"
 
 SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _height)
 {
@@ -28,41 +25,23 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 
 	m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, SDL_RENDERER_ACCELERATED);
 
-	SDL_Surface* loadedSurface = nullptr;
-
-	int w;
-	int h;
-	int comp;
-	unsigned char* image = stbi_load("res/jetroid-sprites/player/idle/s01.png",
-					 &w, &h, &comp,
-					 STBI_rgb);
-	if (image == nullptr)
+	int imgFlags = IMG_INIT_PNG;
+	if (!(IMG_Init(imgFlags) & imgFlags))
 	{
-	  std::cout << "Could not load image" << std::endl;
+		std::cout << " Failed to initialize IMG : " << SDL_GetError() << std::endl;
 	}
-	else
+
+	if (TTF_Init() < 0)
 	{
-	  std::cout << "Loaded image" << std::endl;
+		std::cout << " Failed to initialize TTF : " << SDL_GetError() << std::endl;
 	}
-	stbi_image_free(image);
 
-	SDL_FreeSurface(loadedSurface);
+	font = TTF_OpenFont("res/Roboto-Black.ttf", 20);
 
-/*
-	// Roboto-Black.ttf
-	char buffer[24<<20];
-	stbtt_fontinfo font;
-	int i,j,ascent,baseline,ch=0;
-	float scale, xpos=2; // leave a little padding in case the character extends left
-	const unsigned char *text = "Heljo World!"; // intentionally misspelled to show 'lj' brokenness
-
-	fread(buffer, 1, 1000000, fopen("c:/windows/fonts/arialbd.ttf", "rb"));
-	stbtt_InitFont(&font, buffer, 0);
-
-	scale = stbtt_ScaleForPixelHeight(&font, 15);
-	stbtt_GetFontVMetrics(&font, &ascent,0,0);
-	baseline = (int) (ascent*scale);
-*/
+	if (font == nullptr)
+	{
+		std::cout << " Failed to load font : " << SDL_GetError() << std::endl;
+	}
 }
 
 SDL2Renderer::~SDL2Renderer()
@@ -79,7 +58,12 @@ void SDL2Renderer::clear(float _r, float _g, float _b)
 
 void SDL2Renderer::draw()
 {
-  // Draw anything that was submitted, probably a pointer to the world state
+	SDL_Surface* solid = TTF_RenderText_Solid(font, "Wishbone", textColor);
+	textTexture = SDL_CreateTextureFromSurface(m_pRenderer, solid);
+	SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h);
+	textRect.x = 0;
+	textRect.y = 0;
+	SDL_RenderCopy(m_pRenderer, textTexture, nullptr, &textRect);
 }
 
 void SDL2Renderer::swap()
