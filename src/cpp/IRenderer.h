@@ -8,9 +8,8 @@
 #endif
 #include <glad/glad.h>
 
-
-class IRenderer 
-{ 
+class IRenderer
+{
 public:
 	virtual ~IRenderer() {};
 
@@ -18,6 +17,6 @@ public:
 	virtual void submit() = 0;
 	virtual void draw() = 0;
 	virtual void swap() = 0;
-	
+
 	virtual SDL_Window* getWindow() = 0;
 };

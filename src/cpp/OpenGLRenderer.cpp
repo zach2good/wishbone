@@ -35,7 +35,7 @@ OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _
 	if (!gladLoadGL()) {
 		std::cout << "Something went wrong with glad!" << std::endl;
 	}
-	
+
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
@@ -58,8 +58,8 @@ OpenGLRenderer::~OpenGLRenderer()
 
 void OpenGLRenderer::clear(float _r, float _g, float _b)
 {
-  glClearColor( _r, _g, _b, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(_r, _g, _b, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void OpenGLRenderer::drawDebug()
@@ -75,7 +75,7 @@ void OpenGLRenderer::drawDebug()
 
 void OpenGLRenderer::draw()
 {
-	
+
 }
 
 void OpenGLRenderer::swap()

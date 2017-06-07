@@ -15,7 +15,7 @@ public:
 	void swap() override;
 
 	SDL_Window* getWindow() override { return m_pWindow; }
-	
+
 private:
 	SDL_Window* m_pWindow;
 	SDL_GLContext m_GLContext;

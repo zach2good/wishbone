@@ -3,12 +3,6 @@
 #include <iostream>
 #include <memory>
 
-// Removed for now to aid Linux compilation
-// https://github.com/nothings/stb/blob/master/stb_image.h
-// Defined in the build script
-//#define STB_IMAGE_IMPLEMENTATION 
-//#include "stb_image.h"
-
 //https://github.com/agauniyal/rang
 #include "rang.hpp"
 
