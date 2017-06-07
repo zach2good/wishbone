@@ -185,7 +185,7 @@ model {
                 // Define toolchain-specific compiler and linker options
 
                 if (toolChain in Gcc) {
-                    cppCompiler.args "-w", "-I /usr/include/SDL2/"
+                    cppCompiler.args "-w", "-I /usr/include/SDL2/", "-fpermissive"
                     linker.args "-lSDL2", "-ldl"
                 }
                 if (toolChain in VisualCpp) {
@@ -211,6 +211,8 @@ model {
                 }
                 cppCompiler.define "SDL_MAIN_HANDLED"
                 cppCompiler.define "STB_IMAGE_IMPLEMENTATION"
+		cppCompiler.define "STB_TRUETYPE_IMPLEMENTATION"
+
 				
 				//cppCompiler.define "SDL2_RENDERER"
 

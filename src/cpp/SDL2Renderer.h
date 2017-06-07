@@ -12,7 +12,6 @@ public:
 	void submit() override {};
 	void draw() override;
 	void swap() override;
-
 	SDL_Window* getWindow() override { return m_pWindow; }
 
 private:

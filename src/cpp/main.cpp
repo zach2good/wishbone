@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 	
 	std::shared_ptr<IRenderer> p = std::make_shared<REN>("Wishbone", 800, 600);
 	auto m_Renderer = p.get();
-
+	
 	bool quit = false;
 	SDL_Event event;
 	while (!quit){
