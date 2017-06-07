@@ -29,17 +29,19 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 
 SDL2Renderer::~SDL2Renderer()
 {
-	SDL_DestroyRenderer(m_pRenderer);
-	SDL_DestroyWindow(m_pWindow);
+  SDL_DestroyRenderer(m_pRenderer);
+  SDL_DestroyWindow(m_pWindow);
 }
 
-void SDL2Renderer::clear()
+void SDL2Renderer::clear(int _r, int _g, int _b)
 {
-	SDL_RenderClear(m_pRenderer);
+  SDL_SetRenderDrawColor(m_pRenderer, _r, _g, _b, 255);
+  SDL_RenderClear(m_pRenderer);
 }
 
 void SDL2Renderer::draw()
 {
+  // Draw anything that was submitted, probably a pointer to the world state
 }
 
 void SDL2Renderer::swap()

@@ -80,7 +80,6 @@ model {
                 // Define toolchain-specific compiler and linker options	
                 if (toolChain in Gcc) {
                     cppCompiler.args "-w"
-                    linker.args "-lSDL2"
                 }
 
                 if (toolChain in VisualCpp) {
@@ -187,7 +186,7 @@ model {
 
                 if (toolChain in Gcc) {
                     cppCompiler.args "-w", "-I /usr/include/SDL2/"
-                    linker.args "-lSDL2", "-lGL"
+                    linker.args "-lSDL2", "-ldl"
                 }
                 if (toolChain in VisualCpp) {
 
@@ -208,12 +207,12 @@ model {
 
                     linker.args "/SUBSYSTEM:CONSOLE"
 
-                    lib library: "sdl2", linkage: "shared"
-                    lib library: "glad", linkage: "static"
+                    lib library: "sdl2", linkage: "shared"     
                 }
                 cppCompiler.define "SDL_MAIN_HANDLED"
                 cppCompiler.define "STB_IMAGE_IMPLEMENTATION"
 
+		lib library: "glad", linkage: "static"
                 lib library: "imgui", linkage: "static"
                 lib library: "stb", linkage: "api"
                 lib library: "rang", linkage: "api"

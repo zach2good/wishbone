@@ -12,12 +12,10 @@
 // SDL
 #ifdef _WIN32
 #include <SDL.h>
-#include <SDL_syswm.h>
-#include <glad/glad.h>
 #else
 #include <SDL2/SDL.h>
-#include <glad/glad.h>
 #endif
+#include <glad/glad.h>
 
 // Data
 static double       g_Time = 0.0f;

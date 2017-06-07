@@ -8,7 +8,8 @@ public:
 	SDL2Renderer(const char* _title, const int _width, const int _height);
 	~SDL2Renderer() override;
 
-	void clear() override;
+	void clear(int _r, int _g, int _b) override;
+	void submit() override {};
 	void draw() override;
 	void swap() override;
 

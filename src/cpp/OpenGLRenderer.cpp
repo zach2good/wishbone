@@ -31,11 +31,17 @@ OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _
 	if (!m_GLContext) {
 		std::cout << "Context Error" << std::endl;
 	}
-#ifdef _WIN32
+
 	if (!gladLoadGL()) {
 		std::cout << "Something went wrong with glad!" << std::endl;
 	}
-#endif
+	
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
+	std::cout << "GL_VERSION: " << glGetString(GL_VERSION) << std::endl;
+	std::cout << "GL_VENDOR: " << glGetString(GL_VENDOR) << std::endl;
+	std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
 	ImGui_ImplSdlGL3_Init(m_pWindow);
 }
@@ -48,10 +54,11 @@ OpenGLRenderer::~OpenGLRenderer()
 	SDL_Quit();
 }
 
-void OpenGLRenderer::clear()
+void OpenGLRenderer::clear(int _r, int _g, int _b)
 {
-	glClearColor(0.2, 0.2, 0.2, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  // TODO: This is gross, change parameter type to doubles
+  glClearColor((double) 255/_r, (double) 255/_g, (double) 255/_b, 1.0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void OpenGLRenderer::drawDebug()
