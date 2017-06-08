@@ -121,7 +121,7 @@ model {
             binaries.all {
                 // Define toolchain-specific compiler and linker options
                 if (toolChain in Gcc) {
-                    cppCompiler.args "-w", "-I /usr/include/SDL2/"
+                    cppCompiler.args "-std=c++0x", "-w", "-I /usr/include/SDL2/"
                     linker.args "-lSDL2"
                 }
                 if (toolChain in VisualCpp) {

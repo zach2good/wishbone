@@ -52,12 +52,12 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 SDL2Renderer::~SDL2Renderer()
 {
 	// Destroy Textures
-	for each (auto tex in m_mapTextures)
-	{
+  for (auto& tex : m_mapTextures)
+  {
 		SDL_DestroyTexture(tex.second);
-	}
+  }
 
-	for each (auto surf in m_mapSurfaces)
+  for (auto& surf : m_mapSurfaces)
 	{
 		SDL_FreeSurface(surf.second);
 	}
