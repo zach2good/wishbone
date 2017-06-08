@@ -26,3 +26,33 @@ private:
 	std::map<std::string, SDL_Surface*> m_mapSurfaces;
 	std::map<std::string, SDL_Texture*> m_mapTextures;
 };
+
+/*
+// GameObject
+std::string name 
+float x;
+float y;
+
+std::vector<IComponent>
+ */
+
+/* 
+// Physics : IComponent
+float dx;
+float dy;
+ */
+
+/*
+// Sprite : IComponent
+float w;
+float h;
+float name;
+
+// No Logic, just data
+ */
+
+/*
+// AnimatedSprite : IComponent
+int speed;
+std::vector<Sprite*>
+*/

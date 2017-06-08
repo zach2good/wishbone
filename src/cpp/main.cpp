@@ -12,6 +12,8 @@
 #  define REN OpenGLRenderer
 #endif
 
+#include "common.h"
+
 int main(int argc, char* argv[])
 {
 	Uint64 NOW = SDL_GetPerformanceCounter();
