@@ -5,7 +5,12 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#include "Component.h"
+#include "GameObject.h"
+#include "Sprite.h"
+
 SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _height)
+	: m_gameObjects(nullptr)
 {
 	//Start SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -31,20 +36,40 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 	SDL_SetWindowTitle(m_pWindow, "Wishbone");
 
 	loadTexture("res/font_source2.png", "font");
+
 	loadTexture("res/jetroid-sprites/player/idle/s01.png", "idle01");
+	loadTexture("res/jetroid-sprites/player/idle/s02.png", "idle02");
+	loadTexture("res/jetroid-sprites/player/idle/s03.png", "idle03");
+	loadTexture("res/jetroid-sprites/player/idle/s04.png", "idle04");
+	loadTexture("res/jetroid-sprites/player/idle/s05.png", "idle05");
+	loadTexture("res/jetroid-sprites/player/idle/s06.png", "idle06");
+	loadTexture("res/jetroid-sprites/player/idle/s07.png", "idle07");
+	loadTexture("res/jetroid-sprites/player/idle/s08.png", "idle08");
+	loadTexture("res/jetroid-sprites/player/idle/s09.png", "idle09");
+	loadTexture("res/jetroid-sprites/player/idle/s10.png", "idle10");
 }
 
 SDL2Renderer::~SDL2Renderer()
 {
 	// Destroy Textures
-	//SDL_DestroyTexture();
+	for each (auto tex in m_mapTextures)
+	{
+		SDL_DestroyTexture(tex.second);
+	}
 
-	// Destroy Surfaces
-	//SDL_FreeSurface();
+	for each (auto surf in m_mapSurfaces)
+	{
+		SDL_FreeSurface(surf.second);
+	}
 
 	// Destroy Objects
 	SDL_DestroyRenderer(m_pRenderer);
 	SDL_DestroyWindow(m_pWindow);
+}
+
+void SDL2Renderer::submit(std::vector<GameObject*>* gameObjects)
+{
+	m_gameObjects = gameObjects;
 }
 
 void SDL2Renderer::clear(float _r, float _g, float _b)
@@ -55,17 +80,42 @@ void SDL2Renderer::clear(float _r, float _g, float _b)
 
 void SDL2Renderer::draw()
 {
-	SDL_Rect dest;
-	dest.x = 10;
-	dest.y = 10;
-	dest.w = 32;
-	dest.h = 32;
-	SDL_RenderCopy(m_pRenderer, m_mapTextures["idle01"], NULL, &dest);
+	for (int i = 0; i < m_gameObjects->size(); ++i)
+	{
+		auto go = m_gameObjects->at(i);
+		for (int j = 0; j < go->m_Components.size(); j++)
+		{
+			auto comp = go->m_Components[j];
+			if (comp->type == "sprite")
+			{
+				auto sprite = static_cast<Sprite*>(comp);
+				drawSprite(go, sprite);
+			}
+			else if (comp->type == "anim_sprite")
+			{
+
+			}
+			else if (comp->type == "gui")
+			{
+
+			}
+		}
+	}
 }
 
 void SDL2Renderer::swap()
 {
 	SDL_RenderPresent(m_pRenderer);
+}
+
+void SDL2Renderer::drawSprite(GameObject* go, Sprite* sp)
+{
+	SDL_Rect dest;
+	dest.x = go->x;
+	dest.y = go->y;
+	dest.w = 32;
+	dest.h = 32;
+	SDL_RenderCopy(m_pRenderer, m_mapTextures[sp->name], NULL, &dest);
 }
 
 SDL_Surface* SDL2Renderer::loadSurface(const std::string& filepath, const std::string& name)

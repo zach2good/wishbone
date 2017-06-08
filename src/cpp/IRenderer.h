@@ -8,13 +8,16 @@
 #endif
 #include <glad/glad.h>
 
+#include <vector>
+class GameObject;
+
 class IRenderer
 {
 public:
 	virtual ~IRenderer() {};
 
 	virtual void clear(float _r, float _g, float _b) = 0;
-	virtual void submit() = 0;
+	virtual void submit(std::vector<GameObject*>* gameObjects) = 0;
 	virtual void draw() = 0;
 	virtual void swap() = 0;
 

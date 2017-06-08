@@ -4,6 +4,11 @@
 
 #include <map>
 #include <string>
+#include <vector>
+
+class GameObject;
+class Component;
+class Sprite;
 
 class SDL2Renderer : public IRenderer
 {
@@ -12,12 +17,14 @@ public:
 	~SDL2Renderer() override;
 
 	void clear(float _r, float _g, float _b) override;
-	void submit() override {};
+	void submit(std::vector<GameObject*>* gameObjects) override;
 	SDL_Surface* loadSurface(const std::string& filepath, const std::string& name);
 	SDL_Texture* loadTexture(const std::string& filepath, const std::string& name);
 	void draw() override;
 	void swap() override;
 	SDL_Window* getWindow() override { return m_pWindow; }
+
+	void drawSprite(GameObject* go, Sprite* sp);
 
 private:
 	SDL_Window* m_pWindow;
@@ -25,34 +32,6 @@ private:
 
 	std::map<std::string, SDL_Surface*> m_mapSurfaces;
 	std::map<std::string, SDL_Texture*> m_mapTextures;
+
+	std::vector<GameObject*>* m_gameObjects;
 };
-
-/*
-// GameObject
-std::string name 
-float x;
-float y;
-
-std::vector<IComponent>
- */
-
-/* 
-// Physics : IComponent
-float dx;
-float dy;
- */
-
-/*
-// Sprite : IComponent
-float w;
-float h;
-float name;
-
-// No Logic, just data
- */
-
-/*
-// AnimatedSprite : IComponent
-int speed;
-std::vector<Sprite*>
-*/

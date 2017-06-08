@@ -10,7 +10,7 @@ public:
 
 	void clear(float _r, float _g, float _b) override;
 	void drawDebug();
-	void submit() override {};
+	void submit(std::vector<GameObject*>* gameObjects) override {}
 	void draw() override;
 	void swap() override;
 

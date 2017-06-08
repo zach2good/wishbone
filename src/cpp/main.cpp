@@ -20,8 +20,21 @@ int main(int argc, char* argv[])
 	Uint64 LAST = 0;
 	double deltaTime = 0;
 
-	std::shared_ptr<IRenderer> p = std::make_shared<REN>("Wishbone", 800, 600);
+	std::shared_ptr<REN> p = std::make_shared<REN>("Wishbone", 800, 600);
 	auto m_Renderer = p.get();
+
+	std::vector<GameObject*> gameObjects;
+
+	GameObject go("player", 20, 20);
+	Sprite sp("res/jetroid-sprites/player/idle/s01.png", "idle01");
+	go.m_Components.push_back(&sp);
+
+	GameObject go1("player", 50, 20);
+	Sprite sp2("res/jetroid-sprites/player/idle/s03.png", "idle03");
+	go1.m_Components.push_back(&sp2);
+
+	gameObjects.push_back(&go);
+	gameObjects.push_back(&go1);
 
 	bool quit = false;
 	SDL_Event event;
@@ -54,6 +67,8 @@ int main(int argc, char* argv[])
 				break;
 			}
 		}
+
+		m_Renderer->submit(&gameObjects);
 
 		m_Renderer->clear(0.3f, 0.3f, 0.3f);
 

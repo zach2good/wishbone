@@ -5,9 +5,6 @@
 class Component
 {
  public:
-  Component();
-  ~Component();
-
   std::string type;
 
  protected:
