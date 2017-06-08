@@ -58,13 +58,14 @@ int main(int argc, char* argv[])
 				break;
 			}
 			case SDL_KEYDOWN:
-				if (event.key.keysym.sym == SDLK_ESCAPE)
-				{
-					quit = true;
-					break;
-				}
-			default:
-				break;
+			  if (event.key.keysym.sym == SDLK_ESCAPE)
+			    {
+			      quit = true;
+			    }
+			  if (event.key.keysym.sym == SDLK_d)
+			    {
+				  go.x += 10;
+			    }	  
 			}
 		}
 
