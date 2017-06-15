@@ -29,6 +29,7 @@ public:
 private:
 	SDL_Window* m_pWindow;
 	SDL_Renderer* m_pRenderer;
+	SDL_GLContext m_GLContext;
 
 	std::map<std::string, SDL_Surface*> m_mapSurfaces;
 	std::map<std::string, SDL_Texture*> m_mapTextures;

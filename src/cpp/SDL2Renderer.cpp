@@ -17,19 +17,28 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 		std::cout << "SDL Error" << std::endl;
 	}
 
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-
 	// Start a Window
 	m_pWindow = SDL_CreateWindow(_title,
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		_width, _height,
-		SDL_WINDOW_SHOWN);
+		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	if (!m_pWindow) {
 		std::cout << "Window Error" << std::endl;
+	}
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+
+	// Start OpenGL Context
+	m_GLContext = SDL_GL_CreateContext(m_pWindow);
+	if (!m_GLContext) {
+		std::cout << "Context Error" << std::endl;
+	}
+
+	if (!gladLoadGL()) {
+		std::cout << "Something went wrong with glad!" << std::endl;
 	}
 
 	//direct3d, openGL, opengles2, opengles, software
@@ -42,25 +51,17 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 
 	std::cout << "Renderer: " << rendererInfo.name << std::endl;
 	std::cout << "CurrentVideoDriver: " << SDL_GetCurrentVideoDriver() << std::endl;
-
-	// If OpenGL, print version info?
+	std::cout << "GL_VERSION: " << glGetString(GL_VERSION) << std::endl;
+	std::cout << "GL_VENDOR: " << glGetString(GL_VENDOR) << std::endl;
+	std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 	
 	SDL_SetWindowTitle(m_pWindow, "Wishbone");
 
-	loadTexture("res/font_source2.png", "font");
-
-	loadTexture("res/jetroid-sprites/player/idle/s01.png", "idle01");
-	loadTexture("res/jetroid-sprites/player/idle/s02.png", "idle02");
-	loadTexture("res/jetroid-sprites/player/idle/s03.png", "idle03");
-	loadTexture("res/jetroid-sprites/player/idle/s04.png", "idle04");
-	loadTexture("res/jetroid-sprites/player/idle/s05.png", "idle05");
-	loadTexture("res/jetroid-sprites/player/idle/s06.png", "idle06");
-	loadTexture("res/jetroid-sprites/player/idle/s07.png", "idle07");
-	loadTexture("res/jetroid-sprites/player/idle/s08.png", "idle08");
-
-
-	loadTexture("res/jetroid-sprites/player/idle/s09.png", "idle09");
-	loadTexture("res/jetroid-sprites/player/idle/s10.png", "idle10");
+	loadTexture("res/graphics/tiles.png", "tiles");
+	loadTexture("res/graphics/player.png", "player");
+	loadTexture("res/graphics/meter.png", "meter");
+	loadTexture("res/graphics/enemies.png", "enemies");
+	loadTexture("res/graphics/items.png", "items");
 }
 
 SDL2Renderer::~SDL2Renderer()

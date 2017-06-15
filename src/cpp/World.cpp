@@ -6,7 +6,7 @@ World::World()
   // BoundingBox
   // PlayerControlled
   // ParticleEmitter (particle, shape, decaytime, lifetime)
-  Sprite* sp = new Sprite("res/jetroid-sprites/player/idle/s01.png", "idle01");
+  Sprite* sp = new Sprite("res/jetroid-sprites/player/idle/s01.png", "player");
   go->m_Components.push_back(sp);
   
   m_gameObjects.push_back(go);

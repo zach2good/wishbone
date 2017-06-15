@@ -28,10 +28,11 @@ int main(int argc, char* argv[])
   
   // Loop Start
   bool quit = false;
-  SDL_Event event;
   while (!quit) {		 
 
     quit = m_InputManager->poll();
+
+	m_World->step(0.0);
     
     m_Renderer->submit(&m_World->m_gameObjects);
     
