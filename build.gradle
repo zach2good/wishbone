@@ -301,10 +301,10 @@ task run(type:Exec, dependsOn: build){
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		copy {
 			from "libs/SDL2-2.0.5/lib/x64/SDL2.dll"
-			into "build/exe/wishbone/release/"
+			into "build/exe/wishbone/debug/"
                         }
-		commandLine "cmd", "/c", "build\\exe\\wishbone\\release\\wishbone.exe"
+		commandLine "cmd", "/c", "build\\exe\\wishbone\\debug\\wishbone.exe"
 	} else {
-		commandLine "./build/exe/wishbone/release/wishbone"
+		commandLine "./build/exe/wishbone/debug/wishbone"
 	}
 }
