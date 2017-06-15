@@ -47,7 +47,6 @@ int main(int argc, char* argv[])
   }
 
   // Clean up
-  getchar();
   
   return 0;
 }

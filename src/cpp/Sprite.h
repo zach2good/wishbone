@@ -11,8 +11,7 @@
 class Sprite : public Component
 {
 public: 
-	Sprite(std::string _filename, std::string _name) : filename(_filename), name(_name) { type = "sprite"; }
-	Sprite(std::string _filename, std::string _name, int x, int y, int w, int h) : filename(_filename), name(_name) 
+	Sprite(std::string _name, int x, int y, int w, int h) : name(_name) 
 	{ 
 		type = "sprite"; 
 		rect.x = x;
@@ -21,7 +20,6 @@ public:
 		rect.h = h;
 	}
 
-	std::string filename;
 	std::string name;
 	SDL_Rect rect;
 };

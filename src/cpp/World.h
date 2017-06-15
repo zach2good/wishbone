@@ -6,6 +6,8 @@
 #include "Component.h"
 #include "GameObject.h"
 
+class AnimatedSprite;
+
 class World {
  public:
   
@@ -20,4 +22,6 @@ class World {
   // private:
     std::vector<GameObject*> m_gameObjects;
     std::vector<Component*> m_components;
+
+	void updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double delta);
 };

@@ -24,6 +24,7 @@ using json = nlohmann::json;
 #include "GameObject.h"
 #include "World.h"
 #include "Sprite.h"
+#include "AnimatedSprite.h"
 
 // Memory leak detection in debug
 #ifdef _DEBUG

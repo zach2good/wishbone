@@ -9,6 +9,7 @@
 class GameObject;
 class Component;
 class Sprite;
+class AnimatedSprite;
 
 class SDL2Renderer : public IRenderer
 {

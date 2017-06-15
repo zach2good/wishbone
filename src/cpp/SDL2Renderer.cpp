@@ -8,6 +8,7 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Sprite.h"
+#include "AnimatedSprite.h"
 
 SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _height)
 	: m_gameObjects(nullptr)
@@ -110,7 +111,9 @@ void SDL2Renderer::draw()
 			}
 			else if (comp->type == "anim_sprite")
 			{
-
+				auto anim_sprite = static_cast<AnimatedSprite*>(comp);
+				Sprite* sprite = anim_sprite->frames->at(anim_sprite->currentFrame);
+				drawSprite(go, sprite);
 			}
 			else if (comp->type == "gui")
 			{
