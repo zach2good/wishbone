@@ -26,18 +26,19 @@ int main(int argc, char* argv[])
   std::unique_ptr<World> ptr_wo = std::make_unique<World>();
   auto m_World = ptr_wo.get();
   
+  double delta = 16.0;
   // Loop Start
   bool quit = false;
   while (!quit) {		 
 
+	delta = m_Timer->getDelta();
+
     quit = m_InputManager->poll();
 
-	m_World->step(0.0);
+	m_World->step(delta);
     
     m_Renderer->submit(&m_World->m_gameObjects);
-    
     m_Renderer->clear(0.3f, 0.3f, 0.3f);
-    
     m_Renderer->draw();
     
     // Debug Draw
@@ -46,6 +47,7 @@ int main(int argc, char* argv[])
   }
 
   // Clean up
+  getchar();
   
   return 0;
 }

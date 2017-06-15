@@ -144,6 +144,48 @@ model {
                 lib library: "glad", linkage: "static"
             }
         }
+		
+		nvwa(NativeLibrarySpec) {
+
+            //targetPlatform "x86"
+            targetPlatform "x64"
+
+            sources {
+                cpp {
+                    source {
+                        srcDirs "libs/nvwa"
+                        include "**/*.cpp"
+                    }
+                    exportedHeaders {
+                        srcDirs "libs/nvwa"
+                        include "**/*.hpp", "**/*.h"
+                    }
+                }
+            }
+
+            binaries.all {
+                // Define toolchain-specific compiler and linker options
+                if (toolChain in Gcc) {
+                    cppCompiler.args "-std=c++0x", "-w"
+                }
+                if (toolChain in VisualCpp) {
+
+                    // General
+                    cppCompiler.args "/MT"
+                    cppCompiler.args "/EHsc"
+                    cppCompiler.args "/FS"
+
+                    if (buildType == buildTypes.Debug) {
+                        linker.args "/DEBUG"
+                        cppCompiler.args "/DEBUG"
+                        cppCompiler.args "/Zi"
+                        cppCompiler.args "/MTd"
+                    } else {
+                        cppCompiler.args "/MT"
+                    }
+                }
+            }
+        }
 
         wishbone(NativeExecutableSpec) {
 
@@ -215,6 +257,7 @@ model {
 
 				lib library: "glad", linkage: "static"
                 lib library: "imgui", linkage: "static"
+				lib library: "nvwa", linkage: "static"
                 lib library: "stb", linkage: "api"
                 lib library: "rang", linkage: "api"
                 lib library: "json", linkage: "api"

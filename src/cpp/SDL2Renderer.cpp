@@ -130,9 +130,9 @@ void SDL2Renderer::drawSprite(GameObject* go, Sprite* sp)
 	SDL_Rect dest;
 	dest.x = go->x;
 	dest.y = go->y;
-	dest.w = 32;
-	dest.h = 32;
-	SDL_RenderCopy(m_pRenderer, m_mapTextures[sp->name], NULL, &dest);
+	dest.w = sp->rect.w;
+	dest.h = sp->rect.h;
+	SDL_RenderCopy(m_pRenderer, m_mapTextures[sp->name], &sp->rect, &dest);
 }
 
 SDL_Surface* SDL2Renderer::loadSurface(const std::string& filepath, const std::string& name)
