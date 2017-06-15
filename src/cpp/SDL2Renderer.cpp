@@ -45,6 +45,8 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 	loadTexture("res/jetroid-sprites/player/idle/s06.png", "idle06");
 	loadTexture("res/jetroid-sprites/player/idle/s07.png", "idle07");
 	loadTexture("res/jetroid-sprites/player/idle/s08.png", "idle08");
+
+
 	loadTexture("res/jetroid-sprites/player/idle/s09.png", "idle09");
 	loadTexture("res/jetroid-sprites/player/idle/s10.png", "idle10");
 }

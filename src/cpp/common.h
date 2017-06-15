@@ -18,6 +18,9 @@ using json = nlohmann::json;
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 
+#include "Timer.h"
+#include "InputManager.h"
 #include "Component.h"
 #include "GameObject.h"
+#include "World.h"
 #include "Sprite.h"
