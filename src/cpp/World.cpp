@@ -14,9 +14,9 @@ World::World()
   // Create World
   GameObject* go = new GameObject("player", 50, 500);
 
-  Sprite* p1 = new Sprite("player", 0, 0, 16, 16);
-  Sprite* p2 = new Sprite("player", 16, 0, 16, 16);
-  Sprite* p3 = new Sprite("player", 32, 0, 16, 16);
+  Sprite* p1 = new Sprite("player", 0, 0, 16, 16, 0);
+  Sprite* p2 = new Sprite("player", 16, 0, 16, 16, 1);
+  Sprite* p3 = new Sprite("player", 32, 0, 16, 16, 2);
 
   std::vector<Sprite*>* frames = new std::vector<Sprite*>();
   frames->push_back(p1);

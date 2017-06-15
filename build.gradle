@@ -253,7 +253,7 @@ model {
                 }
                 cppCompiler.define "SDL_MAIN_HANDLED"
 				
-				cppCompiler.define "SDL2_RENDERER"
+				//cppCompiler.define "SDL2_RENDERER"
 
 				lib library: "glad", linkage: "static"
                 lib library: "imgui", linkage: "static"

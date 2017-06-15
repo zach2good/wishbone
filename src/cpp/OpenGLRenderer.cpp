@@ -9,6 +9,8 @@
 #include "GameObject.h"
 #include "Sprite.h"
 #include "AnimatedSprite.h"
+#include "Shader.h"
+#include "Texture.h"
 
 OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _height)
 {
@@ -50,15 +52,59 @@ OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _
 	}
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
 	std::cout << "GL_VERSION: " << glGetString(GL_VERSION) << std::endl;
 	std::cout << "GL_VENDOR: " << glGetString(GL_VENDOR) << std::endl;
 	std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = NULL; // Disables ini file output
 	ImGui_ImplSdlGL3_Init(m_pWindow);
+
+	spriteShader = new Shader("res/shaders/sprite.vs", "res/shaders/sprite.fs");
+	glm::mat4 projection = glm::ortho(0.0f, 
+								static_cast<GLfloat>(_width),
+								static_cast<GLfloat>(_height), 
+								0.0f, -1.0f, 1.0f);
+
+	// VS
+	spriteShader->Use().SetMatrix4("projection", projection);
+
+	// FS
+	spriteShader->Use().SetInteger("image", 0);
+
+	loadTexture("res/graphics/player.png", "player");
+	loadTexture("res/graphics/enemies.png", "enemies");
+	loadTexture("res/graphics/tiles.png", "tiles");
+
+	// Configure VAO/VBO
+	GLuint VBO;
+	GLfloat vertices[] = {
+		// Pos      // Tex
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f,
+
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f
+	};
+
+	glGenVertexArrays(1, &this->VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindVertexArray(this->VAO);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 OpenGLRenderer::~OpenGLRenderer()
@@ -78,6 +124,7 @@ void OpenGLRenderer::clear(float _r, float _g, float _b)
 {
 	glClearColor(_r, _g, _b, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	ImGui_ImplSdlGL3_NewFrame(m_pWindow);
 }
 
 void OpenGLRenderer::drawDebug()
@@ -88,6 +135,21 @@ void OpenGLRenderer::drawDebug()
 		ImGui::Text("GL_VERSION: %s \n", glGetString(GL_VERSION));
 		ImGui::Text("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
 		ImGui::Text("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	}
+
+	if (ImGui::CollapsingHeader("Textures"))
+	{
+		for (auto& tex : m_mapTextures)
+		{
+			auto t = tex.second;
+			std::string title = std::to_string(t->ID) + " : " + t->filename;
+			if (ImGui::CollapsingHeader(title.c_str()))
+			{
+				double multiplier = 250.0 / t->width;
+				ImVec2 v(t->width * multiplier, t->height * multiplier);
+				ImGui::Image((void*)(GLuint)t->ID, v);
+			}
+		}
 	}
 }
 
@@ -122,14 +184,55 @@ void OpenGLRenderer::draw()
 
 void OpenGLRenderer::drawSprite(GameObject* go, Sprite* sp)
 {
+	glm::vec2 position = glm::vec2(go->x, go->y);
+	glm::vec2 size = glm::vec2(sp->rect.w, sp->rect.h);
+	GLfloat rotate = 0.0f;
+	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
+	// ======================
+
+	spriteShader->Use();
+	glm::mat4 model;
+	model = glm::translate(model, glm::vec3(position, 0.0f)); 
+
+	model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); 
+	model = glm::rotate(model, rotate, glm::vec3(0.0f, 0.0f, 1.0f)); 
+	model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); 
+
+	model = glm::scale(model, glm::vec3(size, 1.0f)); 
+
+	// VS
+	spriteShader->SetMatrix4("model", model);
+
+	glm::vec2 offset(4, 2);
+	spriteShader->SetVector2f("offset", offset);
+
+	float x = (sp->position * 0.25f);
+	float y = 0; // (sp->position * 0.5f);
+	glm::vec2 add(x, y);
+	spriteShader->SetVector2f("add", add);
+
+	// FS
+	spriteShader->SetVector3f("spriteColor", color);
+
+	glActiveTexture(GL_TEXTURE0);
+	m_mapTextures[sp->name]->Bind();
+
+	glBindVertexArray(this->VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
 }
 
 void OpenGLRenderer::swap()
 {
-	ImGui_ImplSdlGL3_NewFrame(m_pWindow);
+	
 	drawDebug();
 	ImGui::Render();
 	SDL_GL_SwapWindow(m_pWindow);
 }
 
+void OpenGLRenderer::loadTexture(const std::string& filepath, const std::string& name)
+{
+	Texture* tex = new Texture(filepath.c_str());
+	m_mapTextures[name] = tex;
+}

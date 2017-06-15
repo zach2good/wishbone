@@ -6,11 +6,11 @@
 #include <vector>
 
 //https://github.com/agauniyal/rang
-#include "rang.hpp"
+//#include "rang.hpp"
 
 //https://github.com/nlohmann/json/tree/master
-#include "json.hpp"
-using json = nlohmann::json;
+//#include "json.hpp"
+//using json = nlohmann::json;
 
 //http://glm.g-truc.net/0.9.8/index.html
 #include <glm/vec3.hpp> // glm::vec3

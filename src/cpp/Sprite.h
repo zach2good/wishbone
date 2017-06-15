@@ -11,16 +11,19 @@
 class Sprite : public Component
 {
 public: 
-	Sprite(std::string _name, int x, int y, int w, int h) : name(_name) 
+	Sprite(std::string _name, int x, int y, int w, int h, int position = 0) 
+		: name(_name) 
 	{ 
 		type = "sprite"; 
 		rect.x = x;
 		rect.y = y;
 		rect.w = w;
 		rect.h = h;
+		this->position = position;
 	}
 
 	std::string name;
 	SDL_Rect rect;
+	int position; // for spritesheets
 };
 

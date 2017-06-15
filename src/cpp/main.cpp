@@ -12,6 +12,11 @@
 #  define REN OpenGLRenderer
 #endif
 
+#ifndef STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#endif
+
 int main(int argc, char* argv[])
 {
   std::unique_ptr<Timer> ptr_timer = std::make_unique<Timer>();

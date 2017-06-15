@@ -2,10 +2,15 @@
 
 #include "IRenderer.h"
 
+#include <string>
+#include <map>
+
 class GameObject;
 class Component;
 class Sprite;
 class AnimatedSprite;
+class Shader;
+class Texture;
 
 class OpenGLRenderer : public IRenderer
 {
@@ -29,5 +34,12 @@ private:
 	SDL_Window* m_pWindow;
 	SDL_GLContext m_GLContext;
 
+	Shader* spriteShader;
+
 	std::vector<GameObject*>* m_gameObjects;
+
+	std::map<std::string, Texture*> m_mapTextures;
+	void loadTexture(const std::string& filepath, const std::string& name);
+
+	GLuint VAO, VBO;
 };

@@ -11,17 +11,21 @@
 #include <sstream>
 #include <iostream>
 
+#include <glad/glad.h>
+
 #include "common.h"
 
 class Texture
 {
 public:
-	Texture()
-	{
-		// Take useful bits from here:
-		// https://learnopengl.com/#!Getting-started/Textures
-	}
+	GLuint ID;
+	int width, height, nrChannels;
+	const char* filename;
+
+	Texture(const char* filename);
 	~Texture();
+
+	void Bind() const;
 
 private:
 
