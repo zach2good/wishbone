@@ -96,6 +96,8 @@ void SDL2Renderer::clear(float _r, float _g, float _b)
 
 void SDL2Renderer::draw()
 {
+	// TODO: Rendering order: sort and draw
+
 	for (int i = 0; i < m_gameObjects->size(); ++i)
 	{
 		auto go = m_gameObjects->at(i);

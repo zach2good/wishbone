@@ -5,6 +5,11 @@
 #include "imgui.h"
 #include "imgui_impl_sdl_gl3.h"
 
+#include "Component.h"
+#include "GameObject.h"
+#include "Sprite.h"
+#include "AnimatedSprite.h"
+
 OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _height)
 {
 	//Start SDL
@@ -64,6 +69,11 @@ OpenGLRenderer::~OpenGLRenderer()
 	SDL_Quit();
 }
 
+void OpenGLRenderer::submit(std::vector<GameObject*>* gameObjects)
+{
+	m_gameObjects = gameObjects;
+}
+
 void OpenGLRenderer::clear(float _r, float _g, float _b)
 {
 	glClearColor(_r, _g, _b, 1.0f);
@@ -82,6 +92,35 @@ void OpenGLRenderer::drawDebug()
 }
 
 void OpenGLRenderer::draw()
+{
+	for (int i = 0; i < m_gameObjects->size(); ++i)
+	{
+		auto go = m_gameObjects->at(i);
+		if (!go) return;
+		for (int j = 0; j < go->m_Components.size(); j++)
+		{
+			auto comp = go->m_Components[j];
+			if (!comp) return;
+			if (comp->type == "sprite")
+			{
+				auto sprite = static_cast<Sprite*>(comp);
+				drawSprite(go, sprite);
+			}
+			else if (comp->type == "anim_sprite")
+			{
+				auto anim_sprite = static_cast<AnimatedSprite*>(comp);
+				Sprite* sprite = anim_sprite->frames->at(anim_sprite->currentFrame);
+				drawSprite(go, sprite);
+			}
+			else if (comp->type == "gui")
+			{
+
+			}
+		}
+	}
+}
+
+void OpenGLRenderer::drawSprite(GameObject* go, Sprite* sp)
 {
 
 }

@@ -12,7 +12,7 @@
 World::World()
 {
   // Create World
-  GameObject* go = new GameObject("player", 20, 20);
+  GameObject* go = new GameObject("player", 50, 500);
 
   Sprite* p1 = new Sprite("player", 0, 0, 16, 16);
   Sprite* p2 = new Sprite("player", 16, 0, 16, 16);
