@@ -17,15 +17,14 @@ int main(int argc, char* argv[])
   std::unique_ptr<Timer> ptr_timer = std::make_unique<Timer>();
   auto m_Timer = ptr_timer.get();
 
-  // TODO: Global Singleton? Or just pass like this into game world
   std::unique_ptr<InputManager> ptr_im = std::make_unique<InputManager>();
   auto m_InputManager = ptr_im.get();
 
   std::unique_ptr<REN> ptr_ren = std::make_unique<REN>("Wishbone", 800, 600);
   auto m_Renderer = ptr_ren.get();
   
-  std::unique_ptr<World> ptr_w = std::make_unique<World>();
-  auto m_World = ptr_w.get();
+  std::unique_ptr<World> ptr_wo = std::make_unique<World>();
+  auto m_World = ptr_wo.get();
   
   // Loop Start
   bool quit = false;

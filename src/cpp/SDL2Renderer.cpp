@@ -17,8 +17,9 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 		std::cout << "SDL Error" << std::endl;
 	}
 
-	SDL_DisplayMode current;
-	SDL_GetCurrentDisplayMode(0, &current);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
 	// Start a Window
 	m_pWindow = SDL_CreateWindow(_title,
@@ -31,7 +32,7 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 		std::cout << "Window Error" << std::endl;
 	}
 
-	m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, SDL_RENDERER_ACCELERATED);
+	m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	SDL_SetWindowTitle(m_pWindow, "Wishbone");
 

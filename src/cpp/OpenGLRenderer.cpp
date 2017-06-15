@@ -12,8 +12,9 @@ OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _
 		std::cout << "SDL Error" << std::endl;
 	}
 
-	SDL_DisplayMode current;
-	SDL_GetCurrentDisplayMode(0, &current);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
 	// Start a Window
 	m_pWindow = SDL_CreateWindow(_title,
@@ -26,6 +27,13 @@ OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _
 		std::cout << "Window Error" << std::endl;
 	}
 
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	SDL_DisplayMode current;
+	SDL_GetCurrentDisplayMode(0, &current);
+
 	// Start OpenGL Context
 	m_GLContext = SDL_GL_CreateContext(m_pWindow);
 	if (!m_GLContext) {
@@ -37,7 +45,7 @@ OpenGLRenderer::OpenGLRenderer(const char* _title, const int _width, const int _
 	}
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
 	std::cout << "GL_VERSION: " << glGetString(GL_VERSION) << std::endl;
 	std::cout << "GL_VENDOR: " << glGetString(GL_VENDOR) << std::endl;
