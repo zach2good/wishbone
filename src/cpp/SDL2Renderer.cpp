@@ -32,8 +32,19 @@ SDL2Renderer::SDL2Renderer(const char* _title, const int _width, const int _heig
 		std::cout << "Window Error" << std::endl;
 	}
 
+	//direct3d, openGL, opengles2, opengles, software
+	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "openGL");
+
 	m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
+	SDL_RendererInfo rendererInfo;
+	SDL_GetRendererInfo(m_pRenderer, &rendererInfo);
+
+	std::cout << "Renderer: " << rendererInfo.name << std::endl;
+	std::cout << "CurrentVideoDriver: " << SDL_GetCurrentVideoDriver() << std::endl;
+
+	// If OpenGL, print version info?
+	
 	SDL_SetWindowTitle(m_pWindow, "Wishbone");
 
 	loadTexture("res/font_source2.png", "font");
