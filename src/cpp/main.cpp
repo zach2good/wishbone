@@ -1,9 +1,5 @@
 #include "common.h"
 
-#ifdef __linux
-#  define SDL2_RENDERER
-#endif 
-
 #ifdef SDL2_RENDERER 
 #  include "SDL2Renderer.h"
 #  define REN SDL2Renderer
