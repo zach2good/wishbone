@@ -24,12 +24,12 @@ World:: ~World()
   
 bool World::load(std::string filename)
 {
-
+	return false;
 }
 
 bool World::save(std::string filename)
 {
-
+	return false;
 }
   
 void World::step(double delta)

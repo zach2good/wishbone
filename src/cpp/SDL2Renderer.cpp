@@ -85,9 +85,11 @@ void SDL2Renderer::draw()
 	for (int i = 0; i < m_gameObjects->size(); ++i)
 	{
 		auto go = m_gameObjects->at(i);
+		if (!go) return;
 		for (int j = 0; j < go->m_Components.size(); j++)
 		{
 			auto comp = go->m_Components[j];
+			if (!comp) return;
 			if (comp->type == "sprite")
 			{
 				auto sprite = static_cast<Sprite*>(comp);

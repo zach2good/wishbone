@@ -1,5 +1,10 @@
 #include "Timer.h"
-#include "SDL2/SDL.h"
+
+#ifdef _WIN32
+#include <SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
 
 Timer::Timer()
 {
@@ -17,12 +22,12 @@ void Timer::setup()
   LAST = 0;
   delta = 0;
 
-  timestamps.push_back(std::make_pair<const char*, double>("Timer Start", 0.0));
+  //timestamps.push_back(std::make_pair<const char*, double>("Timer Start", 0.0));
 }
 
 void Timer::profile(const char*  name)
 {
-  timestamps.push_back(std::make_pair<const char*, double>("", 0.0));
+ // timestamps.push_back(std::make_pair<const char*, double>("", 0.0));
 }
 
 double Timer::getDelta()
