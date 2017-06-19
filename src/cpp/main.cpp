@@ -1,13 +1,15 @@
 #include "common.h"
 
+// TODO: Can I be bothered to maintain two renderers? 
 #ifdef SDL2_RENDERER 
 #  include "SDL2Renderer.h"
 #  define REN SDL2Renderer
-#else // TODO: Implement side-by-side rendering to compare SDL Renderer with OGL Renderer (Windows only for now)
+#else
 #  include "OpenGLRenderer.h"
 #  define REN OpenGLRenderer
 #endif
 
+// TODO: Move into Resource Manager
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -15,8 +17,7 @@
 
 int main(int argc, char* argv[])
 {
-  std::unique_ptr<Timer> ptr_timer = std::make_unique<Timer>();
-  auto m_Timer = ptr_timer.get();
+  auto m_Timer = std::make_unique<Timer>().get();
 
   std::unique_ptr<InputManager> ptr_im = std::make_unique<InputManager>();
   auto m_InputManager = ptr_im.get();

@@ -7,6 +7,7 @@
 #include "GameObject.h"
 
 class AnimatedSprite;
+class Player;
 
 class World {
  public:
@@ -24,4 +25,7 @@ class World {
     std::vector<Component*> m_components;
 
 	void updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double delta);
+    void handlePlayer(GameObject* go, Player* player, double delta);
+
+    bool isPaused;
 };
