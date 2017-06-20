@@ -25,7 +25,9 @@ public:
 	Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
 	~Shader();
 
+    // TODO: Make everything chainable like this
 	Shader &Use();
+    
 	void SetFloat(const GLchar *name, GLfloat value, GLboolean useShader = false);
 	void SetInteger(const GLchar *name, GLint value, GLboolean useShader = false);
 	void SetVector2f(const GLchar *name, GLfloat x, GLfloat y, GLboolean useShader = false);

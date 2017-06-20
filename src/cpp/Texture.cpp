@@ -44,7 +44,7 @@ Texture::Texture(const char* filename)
 }
 Texture::~Texture()
 {
-
+    // gl DestroyTexture?
 }
 
 void Texture::Bind() const

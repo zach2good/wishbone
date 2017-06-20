@@ -8,6 +8,7 @@
 
 #include <iostream>
 
+#include "ResourceManager.h"
 #include "Sprite.h"
 #include "AnimatedSprite.h"
 #include "Player.h"
@@ -21,6 +22,11 @@ World::World()
     // TODO: Write a pool to hold all components and game objects
   // Create World
   GameObject* go = new GameObject("player", 50, 500);
+
+  for (int i = 0; i < 100; i++)
+  {
+      m_gameObjects.push_back(new GameObject("", 0, 0));
+  }
 
   Player* p = new Player();
   

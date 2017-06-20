@@ -13,18 +13,18 @@
 
 #include <glad/glad.h>
 
-#include "common.h"
+//#include "common.h"
 
 class Texture
 {
 public:
-	GLuint ID;
-	int width, height, nrChannels;
-	const char* filename;
-
 	Texture(const char* filename);
 	~Texture();
 
+    GLuint ID;
+	int width, height, nrChannels;
+    const char* filename;
+    
 	void Bind() const;
 
 private:

@@ -4,8 +4,9 @@
 #include <map>
 
 // SDL
-// Texture
-// Shader
+#include "Shader.h"
+#include "Texture.h"
+
 // TiledMap
 
 class ResourceManager
@@ -13,16 +14,23 @@ class ResourceManager
  public:
 
     // static
-    
-    // Shader* LoadShader(std::string name, std::string filename)
-    // Texture* LoadTexture(std::string name, std:;string filename)
+    ResourceManager();
+    ~ResourceManager();
+
+    // TODO: Upgrade to use std::string?
+    Shader* LoadShader(const char* name, const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
+
+    // TODO: const
+    Texture* LoadTexture(const char* name, const char* filename);
+
     // TiledMap* LoadTiledMap(std::string name, std:;string filename)
     // Music* LoadMusic(std::string name, std::string filename)
     // Sound* LoadSound(std::string name, std::string filename)
     // JSON* LoadJSON(std::string name, std::string filename)
     
-    // Shader* GetShader(std::string name)
-    // Texture* GetTexture(std::string name)
+    Shader* GetShader(const char* name);
+    Texture* GetTexture(const char* name);
+
     // TiledMap* GetTiledMap(std::string name)
     // Music* GetMusic(std::string name)
     // Sound* GetSound(std::string name)
@@ -38,8 +46,8 @@ class ResourceManager
     
  private:
 
-    // std::map<std::string, Shader*> m_Shaders;
-    // std::map<std::string, Texture*> m_Textures;
+    std::map<const char*, Shader*> m_mapShaders;
+    std::map<const char*, Texture*> m_mapTextures;
     // std::map<std::string, TiledMap*> m_TiledMaps;
     // std::map<std::string, Music*> m_Music;
     // std::map<std::string, Sound*> m_Sounds;
