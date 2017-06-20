@@ -67,11 +67,6 @@ World:: ~World()
         if (go)
             delete go;
 	}
-    for (const auto& comp : m_components)
-    {
-        if (comp)
-            delete comp;
-    }
 }
   
 bool World::load(std::string filename)
