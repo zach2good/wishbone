@@ -5,6 +5,7 @@
 #include "imgui.h"
 #include "imgui_impl_sdl_gl3.h"
 
+#include "ResourceManager.h"
 #include "AnimatedSprite.h"
 #include "Component.h"
 #include "GameObject.h"
@@ -65,6 +66,7 @@ OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
   io.IniFilename = NULL; // Disables ini file output
   ImGui_ImplSdlGL3_Init(m_pWindow);
 
+  // TODO: Get from ResourceManager
   spriteShader = new Shader("res/shaders/sprite.vs", "res/shaders/sprite.fs");
   glm::mat4 projection =
       glm::ortho(0.0f, static_cast<GLfloat>(_width),
@@ -76,6 +78,7 @@ OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
   // FS
   spriteShader->Use().SetInteger("image", 0);
 
+  // TODO: Get from ResourceManager
   loadTexture("res/graphics/player.png", "player");
   loadTexture("res/graphics/enemies.png", "enemies");
   loadTexture("res/graphics/tiles.png", "tiles");
