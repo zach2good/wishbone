@@ -46,6 +46,11 @@ class SpriteSheet
     {
         return texture->height / y_split;
     }
+
+    Texture* GetTexture()
+    {
+        return texture;
+    }
     
  private:
     Texture* texture;

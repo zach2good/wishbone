@@ -12,15 +12,39 @@
 
 class Sprite : public Component
 {
-public: 
+public:
+
+    // Use whole texture
+    Sprite(Texture* _tex)
+    {
+        tex = _tex;
+        x = 0.0f;
+        y = 0.0f;
+        w = 1.0f;
+        h = 1.0f;
+    }
+
+    // Use a subset of a texture, dictated by a spritesheet
 	Sprite(SpriteSheet* ss, int i)
-        : ss(ss), index(i)
 	{ 
-		
+		tex = ss->GetTexture();
+        x = ss->GetSpriteX(i);
+        y = ss->GetSpriteY(i);
+        w = ss->GetSpriteW(i);
+        h = ss->GetSpriteH(i);
 	}
 
  private:
-    SpriteSheet* ss;
-    int index;
+    Texture* tex;
+    float x;
+    float y;
+    float w;
+    float h;
+
+    // TODO:
+    // Rotation
+    // Color
+    // Scale
+    // etc.
 };
 

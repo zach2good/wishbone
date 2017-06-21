@@ -3,6 +3,10 @@
 ResourceManager::ResourceManager()
 {
     // TODO: Preload everything here? Or in world?
+
+    LoadShader("blank", "", "");
+
+    LoadTexture("player", "res/graphics/player.png");
 }
 
 ResourceManager::~ResourceManager()

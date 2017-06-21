@@ -6,6 +6,8 @@
 // SDL
 #include "Shader.h"
 #include "Texture.h"
+#include "SpriteSheet.h"
+#include "Sprite.h"
 
 // TiledMap
 
@@ -22,6 +24,8 @@ class ResourceManager
 
     // TODO: const
     Texture* LoadTexture(const char* name, const char* filename);
+
+    // Make SpriteSheets and Sprites public?
 
     // TiledMap* LoadTiledMap(std::string name, std:;string filename)
     // Music* LoadMusic(std::string name, std::string filename)
@@ -48,6 +52,9 @@ class ResourceManager
 
     std::map<const char*, Shader*> m_mapShaders;
     std::map<const char*, Texture*> m_mapTextures;
+    std::map<const char*, SpriteSheet*> m_mapSpriteSheets;
+    std::map<const char*, Sprite*> m_mapSprites;
+    
     // std::map<std::string, TiledMap*> m_TiledMaps;
     // std::map<std::string, Music*> m_Music;
     // std::map<std::string, Sound*> m_Sounds;
