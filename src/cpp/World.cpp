@@ -28,29 +28,9 @@ World::World()
       m_gameObjects.push_back(new GameObject("", 0, 0));
   }
 
-  Player* p = new Player();
-  
-  Sprite* p1 = new Sprite("player", 0, 0, 16, 16, 0);
-  Sprite* p2 = new Sprite("player", 16, 0, 16, 16, 1);
-  Sprite* p3 = new Sprite("player", 32, 0, 16, 16, 2);
-
-  std::vector<Sprite*>* frames = new std::vector<Sprite*>();
-  frames->push_back(p1);
-  frames->push_back(p2);
-  frames->push_back(p3);
-  frames->push_back(p2);
-
-  AnimatedSprite* a1 = new AnimatedSprite(150, frames);
-
-  // Push all created components into this vector so they can be deleted later
-  m_components.push_back(p);
-  m_components.push_back(p1);
-  m_components.push_back(p2);
-  m_components.push_back(p3);
-  m_components.push_back(a1);
-  
+  Player* p = new Player(); 
   go->m_Components.push_back(p);
-  go->m_Components.push_back(a1);
+  
   m_gameObjects.push_back(go);
 }
 

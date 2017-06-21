@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include "IRenderer.h"
@@ -37,3 +38,4 @@ private:
 
 	std::vector<GameObject*>* m_gameObjects;
 };
+*/

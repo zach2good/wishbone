@@ -79,9 +79,9 @@ OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
   spriteShader->Use().SetInteger("image", 0);
 
   // TODO: Get from ResourceManager
-  loadTexture("res/graphics/player.png", "player");
-  loadTexture("res/graphics/enemies.png", "enemies");
-  loadTexture("res/graphics/tiles.png", "tiles");
+  // loadTexture("res/graphics/player.png", "player");
+  //loadTexture("res/graphics/enemies.png", "enemies");
+  //loadTexture("res/graphics/tiles.png", "tiles");
 
   // Configure VAO/VBO
   GLuint VBO;
@@ -172,12 +172,12 @@ void OpenGLRenderer::draw() {
       if (!comp)
         return;
       if (comp->type == "sprite") {
-        auto sprite = static_cast<Sprite *>(comp);
-        drawSprite(go, sprite);
+          //auto sprite = static_cast<Sprite *>(comp);
+          //drawSprite(go, sprite);
       } else if (comp->type == "anim_sprite") {
-        auto anim_sprite = static_cast<AnimatedSprite *>(comp);
-        Sprite *sprite = anim_sprite->frames->at(anim_sprite->currentFrame);
-        drawSprite(go, sprite);
+          //auto anim_sprite = static_cast<AnimatedSprite *>(comp);
+          //Sprite *sprite = anim_sprite->frames->at(anim_sprite->currentFrame);
+          //drawSprite(go, sprite);
       } else if (comp->type == "gui") {
         //===
       }
@@ -186,7 +186,7 @@ void OpenGLRenderer::draw() {
 }
 
 void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
-
+    /*
   glm::vec2 position = glm::vec2(go->x, go->y);
   glm::vec2 size = glm::vec2(sp->rect.w, sp->rect.h);
   GLfloat rotate = 0.0f;
@@ -223,6 +223,7 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
   glBindVertexArray(this->VAO);
   glDrawArrays(GL_TRIANGLES, 0, 6);
   glBindVertexArray(0);
+    */
 }
 
 void OpenGLRenderer::swap() {

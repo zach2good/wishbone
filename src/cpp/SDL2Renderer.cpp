@@ -1,3 +1,4 @@
+/*
 #include "SDL2Renderer.h"
 
 #include <iostream>
@@ -195,3 +196,4 @@ SDL_Texture* SDL2Renderer::loadTexture(const std::string& filepath, const std::s
 
 	return m_mapTextures[name];
 }
+*/
