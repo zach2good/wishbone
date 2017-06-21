@@ -26,12 +26,14 @@ Shader* ResourceManager::LoadShader(const char* name, const char* vertexPath, co
 {
     Shader* shader = new Shader(vertexPath, fragmentPath, geometryPath);
     m_mapShaders[name] = shader;
+	return shader;
 }
 
 Texture* ResourceManager::LoadTexture(const char* name, const char* filename)
 {
     Texture* tex = new Texture(filename);
     m_mapTextures[name] = tex;
+	return tex;
 }
 
 Shader* ResourceManager::GetShader(const char* name)

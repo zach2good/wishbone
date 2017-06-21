@@ -1,15 +1,8 @@
 #include "common.h"
 
-// TODO: Can I be bothered to maintain two renderers? 
-#ifdef SDL2_RENDERER 
-#  include "SDL2Renderer.h"
-#  define REN SDL2Renderer
-#else
-#  include "OpenGLRenderer.h"
-#  define REN OpenGLRenderer
-#endif
+#include "OpenGLRenderer.h"
+#define REN OpenGLRenderer
 
-// TODO: Move into Resource Manager
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -17,38 +10,39 @@
 
 int main(int argc, char* argv[])
 {
-  auto m_Timer = std::make_unique<Timer>().get();
+	std::unique_ptr<Timer> ptr_time = std::make_unique<Timer>();
+	auto m_Timer = ptr_time.get();
 
-  std::unique_ptr<InputManager> ptr_im = std::make_unique<InputManager>();
-  auto m_InputManager = ptr_im.get();
+	std::unique_ptr<InputManager> ptr_im = std::make_unique<InputManager>();
+	auto m_InputManager = ptr_im.get();
 
-  std::unique_ptr<REN> ptr_ren = std::make_unique<REN>("Wishbone", 800, 600);
-  auto m_Renderer = ptr_ren.get();
-  
-  std::unique_ptr<World> ptr_wo = std::make_unique<World>();
-  auto m_World = ptr_wo.get();
-  
-  double delta = 16.0;
-  // Loop Start
-  bool quit = false;
-  while (!quit) {		 
+	std::unique_ptr<REN> ptr_ren = std::make_unique<REN>("Wishbone", 800, 600);
+	auto m_Renderer = ptr_ren.get();
 
-	delta = m_Timer->getDelta();
+	std::unique_ptr<World> ptr_wo = std::make_unique<World>();
+	auto m_World = ptr_wo.get();
 
-    quit = m_InputManager->poll();
+	double delta = 16.0;
+	// Loop Start
+	bool quit = false;
+	while (!quit) {
 
-	m_World->step(delta);
-    
-    m_Renderer->submit(&m_World->m_gameObjects);
-    m_Renderer->clear(0.3f, 0.3f, 0.3f);
-    m_Renderer->draw();
-    
-    // Debug Draw
-    
-    m_Renderer->swap();
-  }
+		delta = m_Timer->getDelta();
 
-  // Clean up
-  
-  return 0;
+		quit = m_InputManager->poll();
+
+		m_World->step(delta);
+
+		m_Renderer->submit(&m_World->m_gameObjects);
+		m_Renderer->clear(0.3f, 0.3f, 0.3f);
+		m_Renderer->draw();
+
+		// Debug Draw
+
+		m_Renderer->swap();
+	}
+
+	// Clean up
+
+	return 0;
 }
