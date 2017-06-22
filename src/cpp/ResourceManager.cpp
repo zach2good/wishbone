@@ -11,29 +11,29 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
-  for (auto& shader : m_mapShaders)
-  {
-	  // Destroy Shader
-  }
+    for (auto& shader : m_mapShaders)
+    {
+        // Destroy Shader
+    }
 
-  for (auto& tex : m_mapTextures)
-  {
-      // Destroy Texture
-  }
+    for (auto& tex : m_mapTextures)
+    {
+        // Destroy Texture
+    }
 }
 
 Shader* ResourceManager::LoadShader(const char* name, const char* vertexPath, const char* fragmentPath, const char* geometryPath)
 {
     Shader* shader = new Shader(vertexPath, fragmentPath, geometryPath);
     m_mapShaders[name] = shader;
-	return shader;
+    return shader;
 }
 
 Texture* ResourceManager::LoadTexture(const char* name, const char* filename)
 {
     Texture* tex = new Texture(filename);
     m_mapTextures[name] = tex;
-	return tex;
+    return tex;
 }
 
 Shader* ResourceManager::GetShader(const char* name)

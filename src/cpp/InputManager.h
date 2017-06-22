@@ -8,17 +8,17 @@
 
 class InputManager
 {
- public:
-  InputManager& instance();
-  
-  bool poll();
-  
- private:
-  // Static instance pointer
-  
-  // Key up state
-  // key down state
-  // Mouse state
+public:
+    InputManager& instance();
 
-  // Controller state
+    bool poll();
+
+private:
+    // Static instance pointer
+
+    // Key up state
+    // key down state
+    // Mouse state
+
+    // Controller state
 };

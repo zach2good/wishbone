@@ -18,14 +18,14 @@
 class Texture
 {
 public:
-	Texture(const char* filename);
-	~Texture();
+    Texture(const char* filename);
+    ~Texture();
 
     GLuint ID;
-	int width, height, nrChannels;
+    int width, height, nrChannels;
     const char* filename;
-    
-	void Bind() const;
+
+    void Bind() const;
 
 private:
 

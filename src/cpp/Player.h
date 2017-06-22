@@ -15,6 +15,6 @@ public:
         type = "player";
     }
     ~Player();
-    
+
 private:
 };

@@ -10,39 +10,39 @@
 
 int main(int argc, char* argv[])
 {
-	std::unique_ptr<Timer> ptr_time = std::make_unique<Timer>();
-	auto m_Timer = ptr_time.get();
+    std::unique_ptr<Timer> ptr_time = std::make_unique<Timer>();
+    auto m_Timer = ptr_time.get();
 
-	std::unique_ptr<InputManager> ptr_im = std::make_unique<InputManager>();
-	auto m_InputManager = ptr_im.get();
+    std::unique_ptr<InputManager> ptr_im = std::make_unique<InputManager>();
+    auto m_InputManager = ptr_im.get();
 
-	std::unique_ptr<REN> ptr_ren = std::make_unique<REN>("Wishbone", 800, 600);
-	auto m_Renderer = ptr_ren.get();
+    std::unique_ptr<REN> ptr_ren = std::make_unique<REN>("Wishbone", 800, 600);
+    auto m_Renderer = ptr_ren.get();
 
-	std::unique_ptr<World> ptr_wo = std::make_unique<World>();
-	auto m_World = ptr_wo.get();
+    std::unique_ptr<World> ptr_wo = std::make_unique<World>();
+    auto m_World = ptr_wo.get();
 
-	double delta = 16.0;
-	// Loop Start
-	bool quit = false;
-	while (!quit) {
+    double delta = 16.0;
+    // Loop Start
+    bool quit = false;
+    while (!quit) {
 
-		delta = m_Timer->getDelta();
+        delta = m_Timer->getDelta();
 
-		quit = m_InputManager->poll();
+        quit = m_InputManager->poll();
 
-		m_World->step(delta);
+        m_World->step(delta);
 
-		m_Renderer->submit(&m_World->m_gameObjects);
-		m_Renderer->clear(0.3f, 0.3f, 0.3f);
-		m_Renderer->draw();
+        m_Renderer->submit(&m_World->m_gameObjects);
+        m_Renderer->clear(0.3f, 0.3f, 0.3f);
+        m_Renderer->draw();
 
-		// Debug Draw
+        // Debug Draw
 
-		m_Renderer->swap();
-	}
+        m_Renderer->swap();
+    }
 
-	// Clean up
+    // Clean up
 
-	return 0;
+    return 0;
 }

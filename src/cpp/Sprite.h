@@ -25,16 +25,16 @@ public:
     }
 
     // Use a subset of a texture, dictated by a spritesheet
-	Sprite(SpriteSheet* ss, int i)
-	{ 
-		tex = ss->GetTexture();
+    Sprite(SpriteSheet* ss, int i)
+    {
+        tex = ss->GetTexture();
         x = ss->GetSpriteX(i);
         y = ss->GetSpriteY(i);
         w = ss->GetSpriteW(i);
         h = ss->GetSpriteH(i);
-	}
+    }
 
- private:
+private:
     Texture* tex;
     float x;
     float y;

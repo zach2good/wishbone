@@ -4,11 +4,11 @@
 
 class Component
 {
- public:
-  std::string type;
+public:
+    std::string type;
 
- protected:
-  
- private:
+protected:
+
+private:
 
 };
