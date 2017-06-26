@@ -24,25 +24,25 @@ class SpriteSheet
     
     ~SpriteSheet() { } 
 
-    float GetSpriteX(int index)
+    float GetSpriteX(int x, int y)
     {
         // TODO: Debug me
         float x_mult = (float)((texture->width / x_split) / texture->width);
-        int row_index = index / x_split;
+        int row_index = 0 / x_split;
         return x_mult * (float)row_index;
     }
 
-    float GetSpriteY(int index)
+    float GetSpriteY(int x, int y)
     {
         return 0.0f;
     }
 
-    float GetSpriteW(int index)
+    float GetSpriteW(int x, int y)
     {
         return texture->width / x_split;;
     }
 
-    float GetSpriteH(int index)
+    float GetSpriteH(int x, int y)
     {
         return texture->height / y_split;
     }

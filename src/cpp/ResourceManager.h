@@ -9,21 +9,26 @@
 #include "SpriteSheet.h"
 #include "Sprite.h"
 
-// TiledMap
-
 class ResourceManager
 {
 public:
+ 
+    static ResourceManager& Instance()
+    {
+        static ResourceManager rm;
+        return rm;
+    }
 
-    // static
     ResourceManager();
     ~ResourceManager();
 
-    // TODO: Upgrade to use std::string?
     Shader* LoadShader(std::string name, std::string vertexPath, std::string fragmentPath, std::string geometryPath = std::string());
 
     // TODO: const
     Texture* LoadTexture(std::string name, std::string filename);
+
+    Sprite* LoadSprite(std::string name, Texture* tex);
+    SpriteSheet* LoadSpriteSheet(std::string name, Texture* tex, int x, int y);
 
     // Make SpriteSheets and Sprites public?
 
@@ -34,6 +39,8 @@ public:
 
     Shader* GetShader(std::string name);
     Texture* GetTexture(std::string name);
+    Sprite* GetSprite(std::string name);
+    SpriteSheet* GetSpriteSheet(std::string name);
 
     // TiledMap* GetTiledMap(std::string name)
     // Music* GetMusic(std::string name)

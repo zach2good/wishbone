@@ -8,6 +8,8 @@
 #include "stb_image.h"
 #endif
 
+#include "ResourceManager.h"
+
 int main(int argc, char* argv[])
 {
     std::unique_ptr<Timer> ptr_time = std::make_unique<Timer>();
@@ -21,6 +23,7 @@ int main(int argc, char* argv[])
 
     std::unique_ptr<World> ptr_wo = std::make_unique<World>();
     auto m_World = ptr_wo.get();
+
 
     double delta = 16.0;
     // Loop Start

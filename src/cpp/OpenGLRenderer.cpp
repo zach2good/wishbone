@@ -70,9 +70,9 @@ OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
 
     m_clearColor = ImColor(50, 50, 50);
 
-    rm = new ResourceManager();
+    ResourceManager rm = ResourceManager::Instance();
 
-    spriteShader = rm->GetShader("sprite");
+    spriteShader = rm.GetShader("sprite");
 
     glm::mat4 projection =
         glm::ortho(0.0f, static_cast<GLfloat>(_width),
@@ -132,6 +132,8 @@ void OpenGLRenderer::clear() {
 
 void OpenGLRenderer::drawDebug() {
 
+    ResourceManager rm = ResourceManager::Instance();
+
     ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
 
     if (ImGui::CollapsingHeader("Options##Main")) {
@@ -155,7 +157,7 @@ void OpenGLRenderer::drawDebug() {
     // draw calls 
 
     if (ImGui::CollapsingHeader("Textures")) {
-        for (auto &tex : rm->m_mapTextures) {
+        for (auto &tex : rm.m_mapTextures) {
             auto t = tex.second;
             std::string title = std::to_string(t->ID) + " : " + t->filename;
             if (ImGui::CollapsingHeader(title.c_str())) {

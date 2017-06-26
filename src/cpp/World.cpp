@@ -8,24 +8,24 @@
 
 #include <iostream>
 
-#include "ResourceManager.h"
+
 #include "Player.h"
 
 #include "Texture.h"
 #include "Sprite.h"
+#include "SpriteSheet.h"
+#include "ResourceManager.h"
 
 World::World()
 {
-    // Set world information
-    isActive = true;
+    ResourceManager rm = ResourceManager::Instance();
 
     //TODO: Load everything from a JSON file
     // TODO: Write a pool to hold all components and game objects
     // Create World
     GameObject* go = new GameObject("player", 50, 500);
 
-    Texture* tex = new Texture("res/graphics/player.png");
-    Sprite* sp = new Sprite(tex);
+    Sprite* sp = rm.GetSprite("player");
 
     Player* p = new Player();
 
@@ -33,6 +33,9 @@ World::World()
     go->m_Components.push_back(sp);
 
     m_gameObjects.push_back(go);
+
+    // Set world information
+    isActive = true;
 }
 
 World:: ~World()
@@ -62,6 +65,10 @@ bool World::save(std::string filename)
 
 void World::step(double delta)
 {
+    // TODO: Do I really want a singleton? Its not that big a deal to just create the resource manager and pass it around...
+
+    ResourceManager rm = ResourceManager::Instance();
+
     if (!isActive) { return; }
     for (int i = 0; i < m_gameObjects.size(); ++i)
     {
