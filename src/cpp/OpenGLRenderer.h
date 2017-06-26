@@ -5,6 +5,8 @@
 #include <map>
 #include <string>
 
+#include "imgui.h"
+
 class ResourceManager;
 class GameObject;
 class Component;
@@ -20,14 +22,11 @@ public:
   OpenGLRenderer(const char *_title, const int _width, const int _height);
   ~OpenGLRenderer() override;
 
-  void clear(float _r, float _g, float _b) override;
+  void clear() override;
   void drawDebug();
-  void submit(std::vector<GameObject *> *gameObjects) override;
+  void submit(World* _world) override;
   void draw() override;
   void swap() override;
-
-  // SDL_Texture* loadTexture(const std::string& filepath, const std::string&
-  // name);
 
   void drawSprite(GameObject *go, Sprite *sp);
 
@@ -35,21 +34,15 @@ public:
 
   bool isActive;
 
-  void setWorld(World* w);
-  World* m_World;
-
 private:
   SDL_Window *m_pWindow;
   SDL_GLContext m_GLContext;
 
   ResourceManager* rm;
-
+  World* m_World;
   Shader *spriteShader;
 
-  std::vector<GameObject *> *m_gameObjects;
-
-  std::map<std::string, Texture *> m_mapTextures;
-  void loadTexture(const std::string &filepath, const std::string &name);
-
   GLuint VAO, VBO;
+
+  ImColor m_clearColor;
 };

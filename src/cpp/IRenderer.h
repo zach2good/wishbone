@@ -9,15 +9,15 @@
 #include <glad/glad.h>
 
 #include <vector>
-class GameObject;
+class World;
 
 class IRenderer
 {
 public:
     virtual ~IRenderer() {};
 
-    virtual void clear(float _r, float _g, float _b) = 0;
-    virtual void submit(std::vector<GameObject*>* gameObjects) = 0;
+    virtual void clear() = 0;
+    virtual void submit(World* _world) = 0;
     virtual void draw() = 0;
     virtual void swap() = 0;
 

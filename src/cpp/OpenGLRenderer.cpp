@@ -68,6 +68,8 @@ OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
     io.IniFilename = NULL; // Disables ini file output
     ImGui_ImplSdlGL3_Init(m_pWindow);
 
+    m_clearColor = ImColor(50, 50, 50);
+
     rm = new ResourceManager();
 
     spriteShader = rm->GetShader("sprite");
@@ -118,40 +120,39 @@ OpenGLRenderer::~OpenGLRenderer() {
     SDL_Quit();
 }
 
-void OpenGLRenderer::submit(std::vector<GameObject *> *gameObjects) {
-    m_gameObjects = gameObjects;
+void OpenGLRenderer::submit(World* _world){
+    m_World = _world;
 }
 
-void OpenGLRenderer::clear(float _r, float _g, float _b) {
-    glClearColor(_r, _g, _b, 1.0f);
+void OpenGLRenderer::clear() {
+    glClearColor(m_clearColor.Value.x, m_clearColor.Value.y, m_clearColor.Value.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     ImGui_ImplSdlGL3_NewFrame(m_pWindow);
 }
 
-void OpenGLRenderer::setWorld(World* w)
-{
-    m_World = w;
-}
-
 void OpenGLRenderer::drawDebug() {
 
-    ImGui::Checkbox("Renderer", &isActive);  ImGui::SameLine(150);
-    ImGui::Checkbox("World", &m_World->isActive);
-
-  // TODO: show delta
     ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
-    if (ImGui::CollapsingHeader("OpenGL Information")) {
-        ImGui::Text("GL_VERSION: %s \n", glGetString(GL_VERSION));
-        ImGui::Text("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
-        ImGui::Text("GL_SHADING_LANGUAGE_VERSION: %s \n",
-            glGetString(GL_SHADING_LANGUAGE_VERSION));
-    }
 
+    if (ImGui::CollapsingHeader("Options##Main")) {
+        ImGui::Checkbox("Renderer##CheckBox1", &isActive);  ImGui::SameLine(150); ImGui::Checkbox("World##CheckBox2", &m_World->isActive);
+    }
+    
+    if (ImGui::CollapsingHeader("Renderer")) {
+        ImGui::ColorEdit3("Clear Colour", (float*)&m_clearColor);
+        if (ImGui::CollapsingHeader("OpenGL Information")) {
+            ImGui::Text("GL_VERSION: %s \n", glGetString(GL_VERSION));
+            ImGui::Text("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
+            ImGui::Text("GL_SHADING_LANGUAGE_VERSION: %s \n",
+                glGetString(GL_SHADING_LANGUAGE_VERSION));
+        }
+    }
     // TODO: World / GO / Component breakdown and inspection
 
     // TODO: Menu to pull JSON world state into text editor, edit, then push back onto world
 
     // TODO: Query and get more opengGL information on the fly, VAOs, VBOs etc.
+    // draw calls 
 
     if (ImGui::CollapsingHeader("Textures")) {
         for (auto &tex : rm->m_mapTextures) {
@@ -169,8 +170,8 @@ void OpenGLRenderer::drawDebug() {
 void OpenGLRenderer::draw() {
     if (!isActive) return;
 
-    for (int i = 0; i < m_gameObjects->size(); ++i) {
-        auto go = m_gameObjects->at(i);
+    for (int i = 0; i < m_World->m_gameObjects.size(); ++i) {
+        auto go = m_World->m_gameObjects.at(i);
         if (!go)
             return;
 
@@ -239,9 +240,4 @@ void OpenGLRenderer::swap() {
     drawDebug();
     ImGui::Render();
     SDL_GL_SwapWindow(m_pWindow);
-}
-
-void OpenGLRenderer::loadTexture(const std::string &filepath, const std::string &name) {
-    Texture *tex = new Texture(filepath.c_str());
-    m_mapTextures[name] = tex;
 }
