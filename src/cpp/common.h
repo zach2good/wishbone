@@ -5,6 +5,8 @@
 #include <memory>
 #include <vector>
 
+// TODO: rang and json throw a bunch of strange errors, whats the deal?
+
 //https://github.com/agauniyal/rang
 //#include "rang.hpp"
 
@@ -25,6 +27,7 @@
 #include "World.h"
 #include "Sprite.h"
 #include "AnimatedSprite.h"
+//#include "ResourceManager.h"
 
 // Memory leak detection in debug
 #ifdef _DEBUG

@@ -18,14 +18,14 @@
 
 World::World()
 {
-    ResourceManager rm = ResourceManager::Instance();
+    // ResourceManager rm = ResourceManager::Instance();
 
     //TODO: Load everything from a JSON file
     // TODO: Write a pool to hold all components and game objects
     // Create World
     GameObject* go = new GameObject("player", 50, 500);
 
-    Sprite* sp = rm.GetSprite("player");
+    Sprite* sp = nullptr; //rm.GetSprite("player");
 
     Player* p = new Player();
 
@@ -53,6 +53,8 @@ World:: ~World()
     }
 }
 
+void World::setResourceManager(ResourceManager *rm) { m_ResourceManager = rm; }
+
 bool World::load(std::string filename)
 {
     return false;
@@ -67,7 +69,7 @@ void World::step(double delta)
 {
     // TODO: Do I really want a singleton? Its not that big a deal to just create the resource manager and pass it around...
 
-    ResourceManager rm = ResourceManager::Instance();
+    //  ResourceManager rm = ResourceManager::Instance();
 
     if (!isActive) { return; }
     for (int i = 0; i < m_gameObjects.size(); ++i)

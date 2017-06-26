@@ -5,8 +5,14 @@ ResourceManager::ResourceManager()
     LoadShader("sprite", "res/shaders/sprite.vs", "res/shaders/sprite.fs");
 
     auto player_texture = LoadTexture("player", "res/graphics/player.png");
+
+    // Drawing this should draw the whole spritesheet
     LoadSprite("player", player_texture);
-    LoadSpriteSheet("player2", player_texture, 0, 0);
+    
+    SpriteSheet* player_spritesheet = LoadSpriteSheet("player", player_texture, 4, 2);
+
+    // Drawing this should only draw the first sprite on the sheet
+    // LoadSprite(player_spritesheet, 0, 0);
 }
 
 ResourceManager::~ResourceManager()
@@ -18,7 +24,7 @@ ResourceManager::~ResourceManager()
 
     for (auto& tex : m_mapTextures)
     {
-        // Destroy Texture
+      // Destroy Texture
     }
 }
 
@@ -52,6 +58,7 @@ SpriteSheet* ResourceManager::LoadSpriteSheet(std::string name, Texture* tex, in
 
 Shader* ResourceManager::GetShader(std::string name)
 {
+    // TODO: Replace these asserts with a runtime warning and load the resource anyway
     assert(m_mapShaders[name]);
     return m_mapShaders[name];
 }

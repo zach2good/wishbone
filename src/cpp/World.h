@@ -8,6 +8,7 @@
 
 class AnimatedSprite;
 class Player;
+class ResourceManager;
 
 class World {
 public:
@@ -15,6 +16,8 @@ public:
     World();
     ~World();
 
+    void setResourceManager(ResourceManager* rm);
+    
     bool load(std::string filename);
     bool save(std::string filename);
 
@@ -27,5 +30,8 @@ public:
     void updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double delta);
     void handlePlayer(GameObject* go, Player* player, double delta);
 
+    
+    ResourceManager* m_ResourceManager;
+    
     bool isActive;
 };

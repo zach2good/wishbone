@@ -14,6 +14,8 @@ public:
         type = "anim_sprite";
     }
 
+
+    // TODO: This is pretty abstract, it should just work with the new renderer, but test it to be sure 
     double frametime;
     double accumulator;
     int currentFrame;

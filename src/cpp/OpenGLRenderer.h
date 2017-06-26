@@ -28,6 +28,8 @@ public:
   void draw() override;
   void swap() override;
 
+  void setResourceManager(ResourceManager* rm);
+  
   void drawSprite(GameObject *go, Sprite *sp);
 
   SDL_Window *getWindow() override { return m_pWindow; }
@@ -44,5 +46,7 @@ private:
 
   GLuint VAO, VBO;
 
+  ResourceManager* m_ResourceManager;
+  
   ImColor m_clearColor;
 };

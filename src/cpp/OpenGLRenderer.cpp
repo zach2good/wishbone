@@ -36,7 +36,7 @@ OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
     }
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
-        SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+    SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
@@ -70,19 +70,15 @@ OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
 
     m_clearColor = ImColor(50, 50, 50);
 
-    ResourceManager rm = ResourceManager::Instance();
-
-    spriteShader = rm.GetShader("sprite");
-
     glm::mat4 projection =
         glm::ortho(0.0f, static_cast<GLfloat>(_width),
             static_cast<GLfloat>(_height), 0.0f, -1.0f, 1.0f);
 
     // VS
-    spriteShader->Use().SetMatrix4("projection", projection);
+    //spriteShader->Use().SetMatrix4("projection", projection);
 
     // FS
-    spriteShader->Use().SetInteger("image", 0);
+    //spriteShader->Use().SetInteger("image", 0);
 
     // TODO: Get from ResourceManager
     // loadTexture("res/graphics/player.png", "player");
@@ -120,7 +116,7 @@ OpenGLRenderer::~OpenGLRenderer() {
     SDL_Quit();
 }
 
-void OpenGLRenderer::submit(World* _world){
+void OpenGLRenderer::submit(World* _world) {
     m_World = _world;
 }
 
@@ -130,10 +126,16 @@ void OpenGLRenderer::clear() {
     ImGui_ImplSdlGL3_NewFrame(m_pWindow);
 }
 
+void OpenGLRenderer::setResourceManager(ResourceManager* rm)
+{
+    m_ResourceManager = rm;
+}
+
 void OpenGLRenderer::drawDebug() {
 
-    ResourceManager rm = ResourceManager::Instance();
-
+    ResourceManager* rm = m_ResourceManager;
+    //if (!rm) return;
+    
     ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
 
     if (ImGui::CollapsingHeader("Options##Main")) {
@@ -155,9 +157,9 @@ void OpenGLRenderer::drawDebug() {
 
     // TODO: Query and get more opengGL information on the fly, VAOs, VBOs etc.
     // draw calls 
-
+    
     if (ImGui::CollapsingHeader("Textures")) {
-        for (auto &tex : rm.m_mapTextures) {
+        for (auto &tex : rm->m_mapTextures) {
             auto t = tex.second;
             std::string title = std::to_string(t->ID) + " : " + t->filename;
             if (ImGui::CollapsingHeader(title.c_str())) {
@@ -170,6 +172,7 @@ void OpenGLRenderer::drawDebug() {
 }
 
 void OpenGLRenderer::draw() {
+
     if (!isActive) return;
 
     for (int i = 0; i < m_World->m_gameObjects.size(); ++i) {
@@ -199,6 +202,9 @@ void OpenGLRenderer::draw() {
 
 void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
 
+    // TODO: Set up sprite shader uniforms
+    
+    // if (!rm) return;
   glm::vec2 position = glm::vec2(go->x, go->y);
   glm::vec2 size = glm::vec2(sp->w, sp->h);
   GLfloat rotate = 0.0f;
@@ -221,6 +227,8 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
   glm::vec2 offset(4, 2);
   spriteShader->SetVector2f("offset", offset);
 
+  // TODO: This is super broken, fix me
+  
   float x = (sp->x * 0.25f);
   float y = 0; // (sp->position * 0.5f);
   glm::vec2 add(x, y);
@@ -229,6 +237,10 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
   // FS
   spriteShader->SetVector3f("spriteColor", color);
 
+  // TODO: Is it ok to be binding different textures every time we see them? Should I just
+  // bind everything at the start and keep track of which slot they were bound in?
+
+  // OR create one giant spritesheet and only bind that one giant texture? Is that good?
   glActiveTexture(GL_TEXTURE0);
   sp->tex->Bind();
 

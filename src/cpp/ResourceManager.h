@@ -12,13 +12,7 @@
 class ResourceManager
 {
 public:
- 
-    static ResourceManager& Instance()
-    {
-        static ResourceManager rm;
-        return rm;
-    }
-
+    
     ResourceManager();
     ~ResourceManager();
 
@@ -52,10 +46,11 @@ public:
 
     // Debug UI
     // Produce manifest of memory usage/allocation and buffer content where possible
-    // ImGui will only be called from the Renderer, so this information has to be
-    // passed in a sane format 
+    // ImGui will only be called from the Renderer, so this information has to
+    // be
+    // passed in a sane format
 
-//private:
+    // private:
 
     std::map<std::string, Shader*> m_mapShaders;
     std::map<std::string, Texture*> m_mapTextures;
