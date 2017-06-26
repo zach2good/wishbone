@@ -1,6 +1,11 @@
 #pragma once
 
-#include "IRenderer.h"
+#ifdef _WIN32
+#include <SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
+#include <glad/glad.h>
 
 #include <map>
 #include <string>
@@ -17,22 +22,22 @@ class Texture;
 
 class World;
 
-class OpenGLRenderer : public IRenderer {
+class OpenGLRenderer {
 public:
   OpenGLRenderer(const char *_title, const int _width, const int _height);
-  ~OpenGLRenderer() override;
+  ~OpenGLRenderer();
 
-  void clear() override;
+  void clear();
   void drawDebug();
-  void submit(World* _world) override;
-  void draw() override;
-  void swap() override;
+  void submit(World* _world);
+  void draw();
+  void swap();
 
-  void setResourceManager(ResourceManager* rm);
+  void init(ResourceManager* rm);
   
   void drawSprite(GameObject *go, Sprite *sp);
 
-  SDL_Window *getWindow() override { return m_pWindow; }
+  SDL_Window *getWindow() { return m_pWindow; }
 
   bool isActive;
 
@@ -45,8 +50,6 @@ private:
   Shader *spriteShader;
 
   GLuint VAO, VBO;
-
-  ResourceManager* m_ResourceManager;
   
   ImColor m_clearColor;
 };
