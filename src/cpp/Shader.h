@@ -22,7 +22,7 @@ class Shader
 public:
     unsigned int ID;
 
-    Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
+    Shader(std::string vertexPath, std::string fragmentPath, std::string geometryPath = std::string());
     ~Shader();
 
     // TODO: Make everything chainable like this

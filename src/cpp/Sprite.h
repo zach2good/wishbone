@@ -34,7 +34,6 @@ public:
         h = ss->GetSpriteH(i);
     }
 
-private:
     Texture* tex;
     float x;
     float y;

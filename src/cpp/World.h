@@ -27,5 +27,5 @@ public:
     void updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double delta);
     void handlePlayer(GameObject* go, Player* player, double delta);
 
-    bool isPaused;
+    bool isActive;
 };

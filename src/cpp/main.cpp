@@ -33,6 +33,9 @@ int main(int argc, char* argv[])
 
         m_World->step(delta);
 
+        // TODO: Temporary, refactor this away
+        m_Renderer->setWorld(m_World);
+
         m_Renderer->submit(&m_World->m_gameObjects);
         m_Renderer->clear(0.3f, 0.3f, 0.3f);
         m_Renderer->draw();

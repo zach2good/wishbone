@@ -18,7 +18,7 @@
 class Texture
 {
 public:
-    Texture(const char* filename);
+    Texture(std::string filename);
     ~Texture();
 
     GLuint ID;

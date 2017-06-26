@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
+Shader::Shader(std::string vertexPath, std::string fragmentPath, std::string geometryPath)
 {
     std::string vertexCode;
     std::string fragmentCode;

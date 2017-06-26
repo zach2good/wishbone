@@ -1,12 +1,12 @@
 #include "Texture.h"
 #include "stb_image.h"
 
-Texture::Texture(const char* filename)
+Texture::Texture(std::string filename)
 {
-    this->filename = filename;
+    this->filename = filename.c_str();
 
     stbi_set_flip_vertically_on_load(false);
-    unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load(this->filename, &width, &height, &nrChannels, 0);
     if (data)
     {
         glGenTextures(1, &ID);

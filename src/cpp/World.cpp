@@ -9,27 +9,28 @@
 #include <iostream>
 
 #include "ResourceManager.h"
-#include "Sprite.h"
-#include "AnimatedSprite.h"
 #include "Player.h"
+
+#include "Texture.h"
+#include "Sprite.h"
 
 World::World()
 {
     // Set world information
-    isPaused = false;
+    isActive = true;
 
     //TODO: Load everything from a JSON file
     // TODO: Write a pool to hold all components and game objects
-  // Create World
+    // Create World
     GameObject* go = new GameObject("player", 50, 500);
 
-    for (int i = 0; i < 100; i++)
-    {
-        m_gameObjects.push_back(new GameObject("", 0, 0));
-    }
+    Texture* tex = new Texture("res/graphics/player.png");
+    Sprite* sp = new Sprite(tex);
 
     Player* p = new Player();
+
     go->m_Components.push_back(p);
+    go->m_Components.push_back(sp);
 
     m_gameObjects.push_back(go);
 }
@@ -61,7 +62,7 @@ bool World::save(std::string filename)
 
 void World::step(double delta)
 {
-    if (isPaused) { return; }
+    if (!isActive) { return; }
     for (int i = 0; i < m_gameObjects.size(); ++i)
     {
         auto go = m_gameObjects.at(i);

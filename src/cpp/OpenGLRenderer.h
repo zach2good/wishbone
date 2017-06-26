@@ -5,12 +5,15 @@
 #include <map>
 #include <string>
 
+class ResourceManager;
 class GameObject;
 class Component;
 class Sprite;
 class AnimatedSprite;
 class Shader;
 class Texture;
+
+class World;
 
 class OpenGLRenderer : public IRenderer {
 public:
@@ -32,9 +35,14 @@ public:
 
   bool isActive;
 
+  void setWorld(World* w);
+  World* m_World;
+
 private:
   SDL_Window *m_pWindow;
   SDL_GLContext m_GLContext;
+
+  ResourceManager* rm;
 
   Shader *spriteShader;
 

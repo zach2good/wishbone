@@ -13,6 +13,8 @@
 #include "Sprite.h"
 #include "Texture.h"
 
+#include "World.h"
+
 OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
     const int _height) {
     // Start SDL
@@ -66,8 +68,10 @@ OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
     io.IniFilename = NULL; // Disables ini file output
     ImGui_ImplSdlGL3_Init(m_pWindow);
 
-    // TODO: Get from ResourceManager
-    spriteShader = new Shader("res/shaders/sprite.vs", "res/shaders/sprite.fs");
+    rm = new ResourceManager();
+
+    spriteShader = rm->GetShader("sprite");
+
     glm::mat4 projection =
         glm::ortho(0.0f, static_cast<GLfloat>(_width),
             static_cast<GLfloat>(_height), 0.0f, -1.0f, 1.0f);
@@ -124,12 +128,15 @@ void OpenGLRenderer::clear(float _r, float _g, float _b) {
     ImGui_ImplSdlGL3_NewFrame(m_pWindow);
 }
 
+void OpenGLRenderer::setWorld(World* w)
+{
+    m_World = w;
+}
+
 void OpenGLRenderer::drawDebug() {
 
-    ImGui::Selectable("Renderer", &isActive);
-
-    // world->isPaused
-    // ImGUI::Selectable("Pause", &);
+    ImGui::Checkbox("Renderer", &isActive);  ImGui::SameLine(150);
+    ImGui::Checkbox("World", &m_World->isActive);
 
   // TODO: show delta
     ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
@@ -147,7 +154,7 @@ void OpenGLRenderer::drawDebug() {
     // TODO: Query and get more opengGL information on the fly, VAOs, VBOs etc.
 
     if (ImGui::CollapsingHeader("Textures")) {
-        for (auto &tex : m_mapTextures) {
+        for (auto &tex : rm->m_mapTextures) {
             auto t = tex.second;
             std::string title = std::to_string(t->ID) + " : " + t->filename;
             if (ImGui::CollapsingHeader(title.c_str())) {
@@ -172,13 +179,13 @@ void OpenGLRenderer::draw() {
             if (!comp)
                 return;
             if (comp->type == "sprite") {
-                //auto sprite = static_cast<Sprite *>(comp);
-                //drawSprite(go, sprite);
+                auto sprite = static_cast<Sprite *>(comp);
+                drawSprite(go, sprite);
             }
             else if (comp->type == "anim_sprite") {
-                //auto anim_sprite = static_cast<AnimatedSprite *>(comp);
-                //Sprite *sprite = anim_sprite->frames->at(anim_sprite->currentFrame);
-                //drawSprite(go, sprite);
+                auto anim_sprite = static_cast<AnimatedSprite *>(comp);
+                Sprite *sprite = anim_sprite->frames->at(anim_sprite->currentFrame);
+                drawSprite(go, sprite);
             }
             else if (comp->type == "gui") {
                 //===
@@ -188,9 +195,9 @@ void OpenGLRenderer::draw() {
 }
 
 void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
-    /*
+
   glm::vec2 position = glm::vec2(go->x, go->y);
-  glm::vec2 size = glm::vec2(sp->rect.w, sp->rect.h);
+  glm::vec2 size = glm::vec2(sp->w, sp->h);
   GLfloat rotate = 0.0f;
   glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
@@ -211,7 +218,7 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
   glm::vec2 offset(4, 2);
   spriteShader->SetVector2f("offset", offset);
 
-  float x = (sp->position * 0.25f);
+  float x = (sp->x * 0.25f);
   float y = 0; // (sp->position * 0.5f);
   glm::vec2 add(x, y);
   spriteShader->SetVector2f("add", add);
@@ -220,23 +227,21 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
   spriteShader->SetVector3f("spriteColor", color);
 
   glActiveTexture(GL_TEXTURE0);
-  m_mapTextures[sp->name]->Bind();
+  sp->tex->Bind();
 
   glBindVertexArray(this->VAO);
   glDrawArrays(GL_TRIANGLES, 0, 6);
   glBindVertexArray(0);
-    */
+
 }
 
 void OpenGLRenderer::swap() {
-
     drawDebug();
     ImGui::Render();
     SDL_GL_SwapWindow(m_pWindow);
 }
 
-void OpenGLRenderer::loadTexture(const std::string &filepath,
-    const std::string &name) {
+void OpenGLRenderer::loadTexture(const std::string &filepath, const std::string &name) {
     Texture *tex = new Texture(filepath.c_str());
     m_mapTextures[name] = tex;
 }

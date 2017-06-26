@@ -20,10 +20,10 @@ public:
     ~ResourceManager();
 
     // TODO: Upgrade to use std::string?
-    Shader* LoadShader(const char* name, const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
+    Shader* LoadShader(std::string name, std::string vertexPath, std::string fragmentPath, std::string geometryPath = std::string());
 
     // TODO: const
-    Texture* LoadTexture(const char* name, const char* filename);
+    Texture* LoadTexture(std::string name, std::string filename);
 
     // Make SpriteSheets and Sprites public?
 
@@ -32,8 +32,8 @@ public:
     // Sound* LoadSound(std::string name, std::string filename)
     // JSON* LoadJSON(std::string name, std::string filename)
 
-    Shader* GetShader(const char* name);
-    Texture* GetTexture(const char* name);
+    Shader* GetShader(std::string name);
+    Texture* GetTexture(std::string name);
 
     // TiledMap* GetTiledMap(std::string name)
     // Music* GetMusic(std::string name)
@@ -48,12 +48,12 @@ public:
     // ImGui will only be called from the Renderer, so this information has to be
     // passed in a sane format 
 
-private:
+//private:
 
-    std::map<const char*, Shader*> m_mapShaders;
-    std::map<const char*, Texture*> m_mapTextures;
-    std::map<const char*, SpriteSheet*> m_mapSpriteSheets;
-    std::map<const char*, Sprite*> m_mapSprites;
+    std::map<std::string, Shader*> m_mapShaders;
+    std::map<std::string, Texture*> m_mapTextures;
+    std::map<std::string, SpriteSheet*> m_mapSpriteSheets;
+    std::map<std::string, Sprite*> m_mapSprites;
 
     // std::map<std::string, TiledMap*> m_TiledMaps;
     // std::map<std::string, Music*> m_Music;
