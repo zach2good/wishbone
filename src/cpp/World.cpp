@@ -8,9 +8,7 @@
 
 #include <iostream>
 
-
 #include "Player.h"
-
 #include "Texture.h"
 #include "Sprite.h"
 #include "SpriteSheet.h"
@@ -22,7 +20,6 @@ World::World()
 
 World:: ~World()
 {
-    // TODO: Add logging here
     for (const auto& go : m_gameObjects)
     {
         for (const auto& comp : go->m_Components)
@@ -41,18 +38,29 @@ void World::init(ResourceManager *rm)
 
 	// Player
 	GameObject* go = new GameObject("player", 50, 500);
-
 	std::vector<Sprite*>* vec = new std::vector<Sprite*>();
 	vec->push_back(rm->GetSprite("player2"));
 	vec->push_back(rm->GetSprite("player1"));
 	vec->push_back(rm->GetSprite("player2"));
 	vec->push_back(rm->GetSprite("player3"));
 	AnimatedSprite* asp = new AnimatedSprite(200, vec);
-
 	Player* p = new Player();
 	go->m_Components.push_back(p);
 	go->m_Components.push_back(asp);
 	m_gameObjects.push_back(go);
+	
+	for (size_t i = 0; i < 10; i++)
+	{
+		GameObject* go2 = new GameObject("enemy", rand() % 800, rand() % 600);
+		std::vector<Sprite*>* vec2 = new std::vector<Sprite*>();
+		vec2->push_back(rm->GetSprite("eye2"));
+		vec2->push_back(rm->GetSprite("eye1"));
+		vec2->push_back(rm->GetSprite("eye3"));
+		vec2->push_back(rm->GetSprite("eye1"));
+		AnimatedSprite* asp2 = new AnimatedSprite(200, vec2);
+		go2->m_Components.push_back(asp2);
+		m_gameObjects.push_back(go2);
+	}
 
 	// Set world information
 	isActive = true;

@@ -99,12 +99,14 @@ void OpenGLRenderer::clear() {
 void OpenGLRenderer::init(ResourceManager* rm)
 {
     this->rm = rm;
-	m_clearColor = ImColor(50, 50, 50);
+	m_clearColor = ImColor(0, 50, 50);
 	spriteShader = rm->GetShader("sprite");
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(m_Width),
 		static_cast<GLfloat>(m_Height), 0.0f, -1.0f, 1.0f);
+
 	spriteShader->Use().SetInteger("image", 0);
+
 	spriteShader->SetMatrix4("projection", projection);
 
 	// Configure VAO/VBO
@@ -239,9 +241,6 @@ void OpenGLRenderer::draw() {
                 auto anim_sprite = static_cast<AnimatedSprite *>(comp);
                 drawSprite(go, anim_sprite->frames->at(anim_sprite->currentFrame));
             }
-            else if (comp->type == "gui") {
-                //===
-            }
         }
     }
 }
@@ -254,12 +253,13 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
 	glm::vec3 color = glm::vec3(1, 1, 1);
 	glm::vec4 srcRect = glm::vec4(sp->x, sp->y, sp->w, sp->h);
 
-	// Prepare transformations
 	spriteShader->Use();
-	glm::mat4 model;
-	model = glm::translate(model, glm::vec3(position, 0.0f)); 
 
+	glm::mat4 model;
+
+	model = glm::translate(model, glm::vec3(position, 0.0f)); 
 	model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
+
 	model = glm::rotate(model, rotate, glm::vec3(0.0f, 0.0f, 1.0f));
 	model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
 
@@ -269,6 +269,7 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
 	spriteShader->SetVector3f("spriteColor", color);
 	spriteShader->SetVector4f("srcRect", srcRect);
 
+	// TODO: This is expensive, do some sorting and do this as little as possible
 	glActiveTexture(GL_TEXTURE0);
 	sp->tex->Bind();
 

@@ -6,9 +6,11 @@ ResourceManager::ResourceManager()
 
     auto player_texture = LoadTexture("player", "res/graphics/player.png");
 	auto enemies_texture = LoadTexture("enemies", "res/graphics/enemies.png");
+	auto tiles_texture = LoadTexture("enemies", "res/graphics/tiles.png");
 
 	auto player_spritesheet = LoadSpriteSheet("player_spritesheet", player_texture, 4, 2);
 	auto enemies_spritesheet = LoadSpriteSheet("enemies_spritesheet", enemies_texture, 4, 3);
+	auto tiles_spritesheet = LoadSpriteSheet("tiles_spritesheet", tiles_texture, 8, 6);
 
 	LoadSprite("player1", player_spritesheet, 0, 0);
 	LoadSprite("player2", player_spritesheet, 1, 0);
@@ -16,6 +18,10 @@ ResourceManager::ResourceManager()
 	LoadSprite("player4", player_spritesheet, 3, 0);
 	LoadSprite("player5", player_spritesheet, 0, 1);
 	LoadSprite("player6", player_spritesheet, 1, 1);
+
+	LoadSprite("eye1", enemies_spritesheet, 0, 2);
+	LoadSprite("eye2", enemies_spritesheet, 1, 2);
+	LoadSprite("eye3", enemies_spritesheet, 2, 2);
 }
 
 ResourceManager::~ResourceManager()
