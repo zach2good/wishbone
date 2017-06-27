@@ -17,6 +17,10 @@
 
 OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
     const int _height) {
+
+	m_Width = _width;
+	m_Height = _height;
+
     // Start SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cout << "SDL Error" << std::endl;
@@ -61,8 +65,14 @@ OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
     std::cout << "GL_SHADING_LANGUAGE_VERSION: "
         << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
+	glEnable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_SCISSOR_TEST);
+
+	glViewport(0, 0, m_Width, m_Height);
 
     ImGuiIO &io = ImGui::GetIO();
     io.IniFilename = NULL; // Disables ini file output
@@ -89,42 +99,36 @@ void OpenGLRenderer::clear() {
 void OpenGLRenderer::init(ResourceManager* rm)
 {
     this->rm = rm;
-
 	m_clearColor = ImColor(50, 50, 50);
+	spriteShader = rm->GetShader("sprite");
 
-	//glm::mat4 projection =
-	//	glm::ortho(0.0f, static_cast<GLfloat>(_width),
-	//		static_cast<GLfloat>(_height), 0.0f, -1.0f, 1.0f);
-
-	// VS
-	//spriteShader->Use().SetMatrix4("projection", projection);
-
-	// FS
-	//spriteShader->Use().SetInteger("image", 0);
-
-	// TODO: Get from ResourceManager
-	// loadTexture("res/graphics/player.png", "player");
-	//loadTexture("res/graphics/enemies.png", "enemies");
-	//loadTexture("res/graphics/tiles.png", "tiles");
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(m_Width),
+		static_cast<GLfloat>(m_Height), 0.0f, -1.0f, 1.0f);
+	spriteShader->Use().SetInteger("image", 0);
+	spriteShader->SetMatrix4("projection", projection);
 
 	// Configure VAO/VBO
 	GLuint VBO;
 	GLfloat vertices[] = {
 		// Pos      // Tex
-		0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f,
 
-		0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f };
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f
+	};
 
-	glGenVertexArrays(1, &this->VAO);
+	glGenVertexArrays(1, &this->quadVAO);
 	glGenBuffers(1, &VBO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glBindVertexArray(this->VAO);
+	glBindVertexArray(this->quadVAO);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat),
-		(GLvoid *)0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
@@ -208,8 +212,6 @@ void OpenGLRenderer::drawDebug()
             }
         }
     }
-
-	// TODO: Live Shader Editor
 }
 
 void OpenGLRenderer::draw() {
@@ -231,8 +233,7 @@ void OpenGLRenderer::draw() {
             }
             else if (comp->type == "anim_sprite") {
                 auto anim_sprite = static_cast<AnimatedSprite *>(comp);
-                Sprite *sprite = anim_sprite->frames->at(anim_sprite->currentFrame);
-                drawSprite(go, sprite);
+                drawSprite(go, anim_sprite->frames->at(anim_sprite->currentFrame));
             }
             else if (comp->type == "gui") {
                 //===
@@ -243,54 +244,33 @@ void OpenGLRenderer::draw() {
 
 void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
 
-	/*
-    // TODO: Set up sprite shader uniforms
-    
-    // if (!rm) return;
-  glm::vec2 position = glm::vec2(go->x, go->y);
-  glm::vec2 size = glm::vec2(sp->w, sp->h);
-  GLfloat rotate = 0.0f;
-  glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec2 position = glm::vec2(go->x, go->y);
+	glm::vec2 size = glm::vec2(100, 100);
+	GLfloat rotate = 0;
+	glm::vec3 color = glm::vec3(1, 1, 1);
+	glm::vec4 srcRect = glm::vec4(sp->x, sp->y, sp->w, sp->h);
 
-  //spriteShader->Use();
-  glm::mat4 model;
-  model = glm::translate(model, glm::vec3(position, 0.0f));
+	// Prepare transformations
+	spriteShader->Use();
+	glm::mat4 model;
+	model = glm::translate(model, glm::vec3(position, 0.0f)); 
 
-  model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
-  model = glm::rotate(model, rotate, glm::vec3(0.0f, 0.0f, 1.0f));
-  model =
-      glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
+	model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
+	model = glm::rotate(model, rotate, glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
 
-  model = glm::scale(model, glm::vec3(size, 1.0f));
+	model = glm::scale(model, glm::vec3(size, 1.0f));
 
-  // VS
-  //spriteShader->SetMatrix4("model", model);
+	spriteShader->SetMatrix4("model", model);
+	spriteShader->SetVector3f("spriteColor", color);
+	spriteShader->SetVector4f("srcRect", srcRect);
 
-  glm::vec2 offset(4, 2);
-  //spriteShader->SetVector2f("offset", offset);
+	glActiveTexture(GL_TEXTURE0);
+	sp->tex->Bind();
 
-  // TODO: This is super broken, fix me
-  
-  float x = (sp->x * 0.25f);
-  float y = 0; // (sp->position * 0.5f);
-  glm::vec2 add(x, y);
-  //spriteShader->SetVector2f("add", add);
-
-  // FS
-  //spriteShader->SetVector3f("spriteColor", color);
-
-  // TODO: Is it ok to be binding different textures every time we see them? Should I just
-  // bind everything at the start and keep track of which slot they were bound in?
-
-  // OR create one giant spritesheet and only bind that one giant texture? Is that good?
-  glActiveTexture(GL_TEXTURE0);
-  //sp->tex->Bind();
-
-  glBindVertexArray(this->VAO);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
-  glBindVertexArray(0);
-
-  */
+	glBindVertexArray(this->quadVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
 }
 
 void OpenGLRenderer::swap() {

@@ -39,14 +39,19 @@ void World::init(ResourceManager *rm)
 {
 	this->rm = rm;
 
+	// Player
 	GameObject* go = new GameObject("player", 50, 500);
 
-	Sprite* sp = rm->GetSprite("player");
+	std::vector<Sprite*>* vec = new std::vector<Sprite*>();
+	vec->push_back(rm->GetSprite("player2"));
+	vec->push_back(rm->GetSprite("player1"));
+	vec->push_back(rm->GetSprite("player2"));
+	vec->push_back(rm->GetSprite("player3"));
+	AnimatedSprite* asp = new AnimatedSprite(200, vec);
+
 	Player* p = new Player();
-
 	go->m_Components.push_back(p);
-	go->m_Components.push_back(sp);
-
+	go->m_Components.push_back(asp);
 	m_gameObjects.push_back(go);
 
 	// Set world information

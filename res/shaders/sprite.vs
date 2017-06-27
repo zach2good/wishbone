@@ -5,12 +5,17 @@ out vec2 TexCoords;
 
 uniform mat4 model;
 uniform mat4 projection;
-
-uniform vec2 offset;
-uniform vec2 add;
+uniform vec4 srcRect;
 
 void main()
 {
-    TexCoords = vec2((vertex.z / offset.x) + add.x, (vertex.w / offset.y) + add.y);
+	TexCoords = vertex.xy;
+	
+	TexCoords.x /= srcRect.x;
+	TexCoords.x += (srcRect.z/srcRect.x);
+	
+	TexCoords.y /= srcRect.y;
+	TexCoords.y += (srcRect.w/srcRect.y);
+
     gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);
 }

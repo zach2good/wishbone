@@ -5,14 +5,17 @@ ResourceManager::ResourceManager()
     LoadShader("sprite", "res/shaders/sprite.vs", "res/shaders/sprite.fs");
 
     auto player_texture = LoadTexture("player", "res/graphics/player.png");
+	auto enemies_texture = LoadTexture("enemies", "res/graphics/enemies.png");
 
-    // Drawing this should draw the whole spritesheet
-    LoadSprite("player", player_texture);
-    
-    SpriteSheet* player_spritesheet = LoadSpriteSheet("player", player_texture, 4, 2);
+	auto player_spritesheet = LoadSpriteSheet("player_spritesheet", player_texture, 4, 2);
+	auto enemies_spritesheet = LoadSpriteSheet("enemies_spritesheet", enemies_texture, 4, 3);
 
-    // Drawing this should only draw the first sprite on the sheet
-    // LoadSprite(player_spritesheet, 0, 0);
+	LoadSprite("player1", player_spritesheet, 0, 0);
+	LoadSprite("player2", player_spritesheet, 1, 0);
+	LoadSprite("player3", player_spritesheet, 2, 0);
+	LoadSprite("player4", player_spritesheet, 3, 0);
+	LoadSprite("player5", player_spritesheet, 0, 1);
+	LoadSprite("player6", player_spritesheet, 1, 1);
 }
 
 ResourceManager::~ResourceManager()
@@ -47,6 +50,13 @@ Sprite* ResourceManager::LoadSprite(std::string name, Texture* tex)
     Sprite* sp = new Sprite(tex);
     m_mapSprites[name] = sp;
     return sp;
+}
+
+Sprite* ResourceManager::LoadSprite(std::string name, SpriteSheet* ss, int x, int y)
+{
+	Sprite* sp = new Sprite(ss, x, y);
+	m_mapSprites[name] = sp;
+	return sp;
 }
 
 SpriteSheet* ResourceManager::LoadSpriteSheet(std::string name, Texture* tex, int x, int y)

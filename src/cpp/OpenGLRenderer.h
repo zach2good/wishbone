@@ -45,11 +45,14 @@ private:
   SDL_Window *m_pWindow;
   SDL_GLContext m_GLContext;
 
+  int m_Width, m_Height;
+
   ResourceManager* rm;
   World* m_World;
-  Shader *spriteShader;
 
-  GLuint VAO, VBO;
+  // OGL
+  Shader* spriteShader;
+  GLuint quadVAO;
   
   ImColor m_clearColor;
 };

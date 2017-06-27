@@ -22,6 +22,7 @@ public:
     Texture* LoadTexture(std::string name, std::string filename);
 
     Sprite* LoadSprite(std::string name, Texture* tex);
+	Sprite* LoadSprite(std::string name, SpriteSheet* ss, int x, int y);
     SpriteSheet* LoadSpriteSheet(std::string name, Texture* tex, int x, int y);
 
     // Make SpriteSheets and Sprites public?

@@ -17,6 +17,7 @@ public:
     // Use whole texture
     Sprite(Texture* _tex)
     {
+		// TODO: Fix me
         type = "sprite";
 
         tex = _tex;
@@ -27,15 +28,16 @@ public:
     }
 
     // Use a subset of a texture, dictated by a spritesheet
-    Sprite(SpriteSheet* ss, int x, int y)
+    Sprite(SpriteSheet* _ss, int _x, int _y)
     {
         type = "sprite";
 
-        tex = ss->GetTexture();
-        x = ss->GetSpriteX(x, y);
-        y = ss->GetSpriteY(x, y);
-        w = ss->GetSpriteW(x, y);
-        h = ss->GetSpriteH(x, y);
+		tex = _ss->GetTexture();
+		auto ss = _ss->getSrcRect(_x, _y);
+		x = ss.x;
+		y = ss.y;
+		w = ss.z;
+		h = ss.w;
     }
 
     Texture* tex;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Texture.h"
+#include "glm/vec4.hpp"
 
 class SpriteSheet
 {
@@ -24,28 +25,10 @@ class SpriteSheet
     
     ~SpriteSheet() { } 
 
-    float GetSpriteX(int x, int y)
-    {
-        // TODO: Debug me
-        float x_mult = (float)((texture->width / x_split) / texture->width);
-        int row_index = 0 / x_split;
-        return x_mult * (float)row_index;
-    }
-
-    float GetSpriteY(int x, int y)
-    {
-        return 0.0f;
-    }
-
-    float GetSpriteW(int x, int y)
-    {
-        return texture->width / x_split;;
-    }
-
-    float GetSpriteH(int x, int y)
-    {
-        return texture->height / y_split;
-    }
+	glm::vec4 getSrcRect(int x, int y)
+	{
+		return glm::vec4(x_split, y_split, x, y);
+	}
 
     Texture* GetTexture()
     {
@@ -54,6 +37,6 @@ class SpriteSheet
     
  private:
     Texture* texture;
-    int x_split; // 4
-    int y_split; // 2    
+    int x_split; 
+    int y_split;    
 };
