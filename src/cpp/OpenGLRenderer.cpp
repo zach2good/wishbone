@@ -12,7 +12,7 @@
 #include "Shader.h"
 #include "Sprite.h"
 #include "Texture.h"
-
+#include "Player.h"
 #include "World.h"
 
 OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
@@ -190,10 +190,14 @@ void OpenGLRenderer::drawDebug()
 					}
 					else if (comp->type == "anim_sprite") {
 						auto anim_sprite = static_cast<AnimatedSprite *>(comp);
-						Sprite *sprite = anim_sprite->frames->at(anim_sprite->currentFrame);
+						auto sprite = anim_sprite->frames->at(anim_sprite->currentFrame);
 						ImGui::Text("AnimatedSprite");
 						ImGui::Text("Frames:"); ImGui::SameLine();
-						ImGui::Text("%.0f/%.0f", anim_sprite->currentFrame, anim_sprite->frames->size());
+						ImGui::Text("%d/%d", anim_sprite->currentFrame, anim_sprite->frames->size());
+					}
+					else if (comp->type == "player") {
+						auto player = static_cast<Player *>(comp);
+						ImGui::Text("Player");
 					}
 				}
 				ImGui::TreePop();
