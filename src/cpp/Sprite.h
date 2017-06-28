@@ -14,7 +14,6 @@ class Sprite : public Component
 {
 public:
 
-    // Use whole texture
     Sprite(Texture* _tex)
     {
 		// TODO: Fix me
@@ -46,10 +45,6 @@ public:
     float w;
     float h;
 
-    // TODO:
-    // Rotation
-    // Color
-    // Scale
-    // etc.
+	bool flip = false;
 };
 

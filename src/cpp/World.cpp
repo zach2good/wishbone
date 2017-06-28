@@ -87,9 +87,6 @@ bool World::save(std::string filename)
 
 void World::step(double delta)
 {
-	auto timer = Timer::getInstance();
-	timer.profile("World step start");
-
     if (!isActive) { return; }
     for (int i = 0; i < m_gameObjects.size(); ++i)
     {
@@ -121,7 +118,6 @@ void World::step(double delta)
             }
         }
     }
-	timer.profile("World step end");
 }
 
 void World::updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double delta)

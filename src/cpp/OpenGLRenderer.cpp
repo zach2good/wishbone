@@ -132,8 +132,6 @@ void OpenGLRenderer::init(ResourceManager* rm)
 }
 
 void OpenGLRenderer::draw() {
-	auto timer = Timer::getInstance();
-	timer.profile("Renderer draw start");
 
     if (!isActive) return;
 
@@ -156,7 +154,6 @@ void OpenGLRenderer::draw() {
             }
         }
     }
-	timer.profile("Renderer draw end");
 }
 
 void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
@@ -166,6 +163,11 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
 	GLfloat rotate = 0;
 	glm::vec3 color = glm::vec3(1, 1, 1);
 	glm::vec4 srcRect = glm::vec4(sp->x, sp->y, sp->w, sp->h);
+	
+	if (sp->flip)
+	{
+		srcRect.x *= -1.0f;
+	}
 
 	spriteShader->Use();
 

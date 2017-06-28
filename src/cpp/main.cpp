@@ -40,28 +40,29 @@ int main(int argc, char* argv[])
 	double delta = 16.0;
     bool quit = false;
     while (!quit) {
+		m_DebugRenderer->submit(m_ResourceManager, m_Renderer, m_World);
+		m_DebugRenderer->clear();
 		timer.startFrame();
 
-		timer.profile("Get Delta");
         delta = timer.getDelta();
 
-		timer.profile("InputManager->poll()");
+		
         quit = m_InputManager->poll();
+		timer.profile("InputManager->poll()");
+
 		
-		timer.profile("World Step");
         m_World->step(delta);
+		timer.profile("World Step");
+
 		
-		timer.profile("Renderer Draw");
         m_Renderer->submit(m_World);
         m_Renderer->clear();
         m_Renderer->draw();
-
-#ifdef _DEBUG
-		m_DebugRenderer->submit(m_ResourceManager, m_Renderer, m_World);
-		m_DebugRenderer->clear();
+		timer.profile("Renderer Draw");
+		
 		m_DebugRenderer->draw();
 		m_DebugRenderer->swap();
-#endif
+		timer.profile("Debug Draw");
 
         m_Renderer->swap();
 
