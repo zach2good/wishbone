@@ -18,7 +18,6 @@ public:
 
     Shader* LoadShader(std::string name, std::string vertexPath, std::string fragmentPath, std::string geometryPath = std::string());
 
-    // TODO: const
     Texture* LoadTexture(std::string name, std::string filename);
 
     Sprite* LoadSprite(std::string name, Texture* tex);
@@ -45,11 +44,6 @@ public:
     // bool SaveTiledMap(std::string name)
     // bool SaveJSON(std::string name)
 
-    // Debug UI
-    // Produce manifest of memory usage/allocation and buffer content where possible
-    // ImGui will only be called from the Renderer, so this information has to
-    // be
-    // passed in a sane format
 
     // private:
 
@@ -62,4 +56,6 @@ public:
     // std::map<std::string, Music*> m_Music;
     // std::map<std::string, Sound*> m_Sounds;
     // std::map<std:;string, JSON*> m_JSON;
+
+	//TODO: Keep track of GOs and Comps?
 };

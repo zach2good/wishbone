@@ -28,7 +28,6 @@ public:
   ~OpenGLRenderer();
 
   void clear();
-  void drawDebug();
   void submit(World* _world);
   void draw();
   void swap();
@@ -41,7 +40,6 @@ public:
 
   bool isActive;
 
-private:
   SDL_Window *m_pWindow;
   SDL_GLContext m_GLContext;
 

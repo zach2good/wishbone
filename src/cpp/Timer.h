@@ -8,6 +8,12 @@
 class Timer
 {
 public:
+	static Timer& getInstance()
+	{
+		static Timer instance; 
+		return instance;
+	}
+
     Timer();
     ~Timer();
 
@@ -15,10 +21,14 @@ public:
     void profile(const char* name);
     double getDelta();
 
-private:
+	void startFrame();
+	void endFrame();
+	std::vector<std::pair<std::string, double>>* getStamps();
+
     double NOW;
     double LAST;
     double delta;
 
-    std::vector<std::pair<const char*, double>> timestamps;
+    std::vector<std::pair<std::string, double>>* current_timestamps;
+	std::vector<std::pair<std::string, double>>* last_timestamps;
 };

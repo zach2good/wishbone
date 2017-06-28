@@ -9,6 +9,8 @@
 class AnimatedSprite;
 class Player;
 class ResourceManager;
+class Physics;
+class Enemy;
 
 class World {
 public:
@@ -29,6 +31,8 @@ public:
 
     void updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double delta);
     void handlePlayer(GameObject* go, Player* player, double delta);
+	void handleEnemy(GameObject* go, Enemy* em, double delta);
+	void handlePhysics(GameObject* go, Physics* phys, double delta);
    
 	ResourceManager* rm;
 

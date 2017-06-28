@@ -8,7 +8,8 @@
 
 Timer::Timer()
 {
-
+	current_timestamps = new std::vector<std::pair<std::string, double>>();
+	last_timestamps = new std::vector<std::pair<std::string, double>>();
 }
 
 Timer::~Timer()
@@ -21,18 +22,27 @@ void Timer::setup()
     NOW = SDL_GetPerformanceCounter();
     LAST = 0;
     delta = 0;
-
-    //timestamps.push_back(std::make_pair<const char*, double>("Timer Start", 0.0));
 }
 
 void Timer::profile(const char*  name)
 {
-    // timestamps.push_back(std::make_pair<const char*, double>("", 0.0));
+    current_timestamps->push_back(std::make_pair<std::string, double>(std::string(name), SDL_GetPerformanceCounter()));
+}
+
+void Timer::startFrame()
+{
+	current_timestamps->push_back(std::make_pair<std::string, double>(std::string("start frame"), SDL_GetPerformanceCounter()));
+}
+
+void Timer::endFrame()
+{
+	current_timestamps->push_back(std::make_pair<std::string, double>(std::string("end frame"), SDL_GetPerformanceCounter()));
+
+	current_timestamps->clear();
 }
 
 double Timer::getDelta()
 {
-    // Delta 
     LAST = NOW;
     NOW = SDL_GetPerformanceCounter();
     delta = ((NOW - LAST) * 1000 / (double)SDL_GetPerformanceFrequency());
@@ -42,4 +52,9 @@ double Timer::getDelta()
         delta = 16.0;
     }
     return delta;
+}
+
+std::vector<std::pair<std::string, double>>* Timer::getStamps()
+{
+	return last_timestamps;
 }

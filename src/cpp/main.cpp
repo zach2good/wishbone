@@ -9,13 +9,11 @@
 #endif
 
 #include "ResourceManager.h"
+#include "DebugRenderer.h"
 
 int main(int argc, char* argv[])
 {
 	// Create
-    std::unique_ptr<Timer> ptr_time = std::make_unique<Timer>();
-    auto m_Timer = ptr_time.get();
-
     std::unique_ptr<InputManager> ptr_im = std::make_unique<InputManager>();
     auto m_InputManager = ptr_im.get();
 
@@ -28,31 +26,47 @@ int main(int argc, char* argv[])
     std::unique_ptr<World> ptr_wo = std::make_unique<World>();
     auto m_World = ptr_wo.get();
 
+	std::unique_ptr<DebugRenderer> ptr_dr = std::make_unique<DebugRenderer>(m_Renderer->getWindow());
+	auto m_DebugRenderer = ptr_dr.get();
 
 	// Init
     m_Renderer->init(m_ResourceManager);
     m_World->init(m_ResourceManager);
 
+	auto timer = Timer::getInstance();
+	timer.setup();
     
     // Loop Start
 	double delta = 16.0;
     bool quit = false;
     while (!quit) {
+		timer.startFrame();
 
-        delta = m_Timer->getDelta();
+		timer.profile("Get Delta");
+        delta = timer.getDelta();
 
+		timer.profile("InputManager->poll()");
         quit = m_InputManager->poll();
-
+		
+		timer.profile("World Step");
         m_World->step(delta);
-        
+		
+		timer.profile("Renderer Draw");
         m_Renderer->submit(m_World);
         m_Renderer->clear();
         m_Renderer->draw();
 
-        m_Renderer->swap();
-    }
+#ifdef _DEBUG
+		m_DebugRenderer->submit(m_ResourceManager, m_Renderer, m_World);
+		m_DebugRenderer->clear();
+		m_DebugRenderer->draw();
+		m_DebugRenderer->swap();
+#endif
 
-    // Clean up
+        m_Renderer->swap();
+
+		timer.endFrame();
+    }
 
     return 0;
 }

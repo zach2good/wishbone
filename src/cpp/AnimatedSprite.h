@@ -9,13 +9,12 @@ class AnimatedSprite : public Component
 {
 public:
     AnimatedSprite(double _frametime, std::vector<Sprite*>* _frames)
-        : frametime(_frametime), frames(_frames), currentFrame(0), accumulator(0.0)
+        : frametime(_frametime), frames(_frames), currentFrame(0)
     {
         type = "anim_sprite";
+		accumulator = rand() % 1000;
     }
 
-
-    // TODO: This is pretty abstract, it should just work with the new renderer, but test it to be sure 
     double frametime;
     double accumulator;
     int currentFrame;

@@ -6,7 +6,7 @@ ResourceManager::ResourceManager()
 
     auto player_texture = LoadTexture("player", "res/graphics/player.png");
 	auto enemies_texture = LoadTexture("enemies", "res/graphics/enemies.png");
-	auto tiles_texture = LoadTexture("enemies", "res/graphics/tiles.png");
+	auto tiles_texture = LoadTexture("tiles", "res/graphics/tiles.png");
 
 	auto player_spritesheet = LoadSpriteSheet("player_spritesheet", player_texture, 4, 2);
 	auto enemies_spritesheet = LoadSpriteSheet("enemies_spritesheet", enemies_texture, 4, 3);
@@ -22,6 +22,8 @@ ResourceManager::ResourceManager()
 	LoadSprite("eye1", enemies_spritesheet, 0, 2);
 	LoadSprite("eye2", enemies_spritesheet, 1, 2);
 	LoadSprite("eye3", enemies_spritesheet, 2, 2);
+
+	// TODO: Generate pools of GameObjects and Components
 }
 
 ResourceManager::~ResourceManager()
