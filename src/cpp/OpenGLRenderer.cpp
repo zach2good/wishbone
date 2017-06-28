@@ -150,7 +150,7 @@ void OpenGLRenderer::draw() {
             }
             else if (comp->type == "anim_sprite") {
                 auto anim_sprite = static_cast<AnimatedSprite *>(comp);
-                drawSprite(go, anim_sprite->frames->at(anim_sprite->currentFrame));
+                drawSprite(go, anim_sprite->frames.at(anim_sprite->currentFrame));
             }
         }
     }

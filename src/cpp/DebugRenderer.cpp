@@ -101,10 +101,10 @@ void DebugRenderer::draw()
 					}
 					else if (comp->type == "anim_sprite") {
 						auto anim_sprite = static_cast<AnimatedSprite *>(comp);
-						auto sprite = anim_sprite->frames->at(anim_sprite->currentFrame);
+						auto sprite = anim_sprite->frames.at(anim_sprite->currentFrame);
 						ImGui::Text("AnimatedSprite");
 						ImGui::Text("Frames:"); ImGui::SameLine();
-						ImGui::Text("%d/%d", anim_sprite->currentFrame, anim_sprite->frames->size());
+						ImGui::Text("%d/%d", anim_sprite->currentFrame, anim_sprite->frames.size());
 					}
 					else if (comp->type == "player") {
 						auto player = static_cast<Player *>(comp);

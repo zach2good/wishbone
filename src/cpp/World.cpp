@@ -43,12 +43,12 @@ void World::init(ResourceManager *rm)
 
 	// Player
 	GameObject* go = new GameObject("player", 50, 500);
-	std::vector<Sprite*>* vec = new std::vector<Sprite*>();
-	vec->push_back(rm->GetSprite("player2"));
-	vec->push_back(rm->GetSprite("player1"));
-	vec->push_back(rm->GetSprite("player2"));
-	vec->push_back(rm->GetSprite("player3"));
-	AnimatedSprite* asp = new AnimatedSprite(200, vec);
+	AnimatedSprite* asp = new AnimatedSprite(200, 
+											 4,
+											 rm->GetSprite("player2"),
+											 rm->GetSprite("player1"),
+											 rm->GetSprite("player2"),
+											 rm->GetSprite("player3"));
 	Player* p = new Player();
 	Physics* ph = new Physics();
 	go->m_Components.push_back(p);
@@ -59,12 +59,12 @@ void World::init(ResourceManager *rm)
 	for (size_t i = 0; i < 100; i++)
 	{
 		GameObject* go2 = new GameObject("enemy", rand() % 800, rand() % 600);
-		std::vector<Sprite*>* vec2 = new std::vector<Sprite*>();
-		vec2->push_back(rm->GetSprite("eye2"));
-		vec2->push_back(rm->GetSprite("eye1"));
-		vec2->push_back(rm->GetSprite("eye3"));
-		vec2->push_back(rm->GetSprite("eye1"));
-		AnimatedSprite* asp2 = new AnimatedSprite(200, vec2);
+		AnimatedSprite* asp2 = new AnimatedSprite(200, 
+												  4,
+												  rm->GetSprite("eye2"),
+												  rm->GetSprite("eye1"),
+												  rm->GetSprite("eye3"),
+												  rm->GetSprite("eye1"));
 		Enemy* e = new Enemy();
 		go2->m_Components.push_back(asp2);
 		go2->m_Components.push_back(e);
@@ -126,7 +126,7 @@ void World::updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double de
     anim->currentFrame = (int)anim->accumulator / (int)anim->frametime;
 
     // Repeat
-    if (anim->currentFrame > anim->frames->size() - 1)
+    if (anim->currentFrame > anim->frames.size() - 1)
     {
         anim->currentFrame = 0;
         anim->accumulator = 0.0;

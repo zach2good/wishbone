@@ -28,15 +28,25 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
-    for (auto& shader : m_mapShaders)
+    for (auto shader : m_mapShaders)
     {
-        // Destroy Shader
+		delete shader.second;
     }
 
-    for (auto& tex : m_mapTextures)
+    for (auto tex : m_mapTextures)
     {
-      // Destroy Texture
+		delete tex.second;
     }
+
+	for (auto ss : m_mapSpriteSheets)
+	{
+		delete ss.second;
+	}
+
+	for (auto sp : m_mapSprites)
+	{
+		delete sp.second;
+	}
 }
 
 Shader* ResourceManager::LoadShader(std::string name, std::string vertexPath, std::string fragmentPath, std::string geometryPath)
