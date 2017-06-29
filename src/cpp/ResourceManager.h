@@ -2,12 +2,15 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 // SDL
 #include "Shader.h"
 #include "Texture.h"
 #include "SpriteSheet.h"
 #include "Sprite.h"
+#include "GameObject.h"
+#include "Component.h"
 
 class ResourceManager
 {
@@ -44,14 +47,15 @@ public:
     // bool SaveTiledMap(std::string name)
     // bool SaveJSON(std::string name)
 
-
-    // private:
-
+    //private:
     std::map<std::string, Shader*> m_mapShaders;
     std::map<std::string, Texture*> m_mapTextures;
     std::map<std::string, SpriteSheet*> m_mapSpriteSheets;
     std::map<std::string, Sprite*> m_mapSprites;
 
+    std::vector<GameObject*> m_vGameObjects;
+    std::vector<Component*> m_vComponents;
+    
     // std::map<std::string, TiledMap*> m_TiledMaps;
     // std::map<std::string, Music*> m_Music;
     // std::map<std::string, Sound*> m_Sounds;

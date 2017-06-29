@@ -25,9 +25,9 @@ World::World()
 
 World:: ~World()
 {
-    for (const auto& go : m_gameObjects)
+    for (auto go : m_gameObjects)
     {
-        for (const auto& comp : go->m_Components)
+        for (auto comp : go->m_Components)
         {
             if (comp)
                 delete comp;
@@ -40,7 +40,7 @@ World:: ~World()
 void World::init(ResourceManager *rm)
 {
 	this->rm = rm;
-
+    
 	// Player
 	GameObject* go = new GameObject("player", 50, 500);
 	AnimatedSprite* asp = new AnimatedSprite(200, 
@@ -70,6 +70,7 @@ void World::init(ResourceManager *rm)
 		go2->m_Components.push_back(e);
 		m_gameObjects.push_back(go2);
 	}
+    
 
 	// Set world information
 	isActive = true;

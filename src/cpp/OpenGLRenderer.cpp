@@ -45,9 +45,10 @@ OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
 
+    // TODO: This is meant to disable VSync but it isn't working, the renderer is still
+    // capping out at 16ms even when there is no load...
 	SDL_GL_SetSwapInterval(0);
 
-    // Start OpenGL Context
     m_GLContext = SDL_GL_CreateContext(m_pWindow);
     if (!m_GLContext) {
         std::cout << "Context Error" << std::endl;
@@ -163,7 +164,9 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
 	GLfloat rotate = 0;
 	glm::vec3 color = glm::vec3(1, 1, 1);
 	glm::vec4 srcRect = glm::vec4(sp->x, sp->y, sp->w, sp->h);
-	
+
+    // TODO: Figure out how to do horizontal and vertical flipping only using srcRect
+    // Try not to touch the shaders (especially the fs)
 	if (sp->flip)
 	{
 		srcRect.x *= -1.0f;
@@ -186,6 +189,7 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
 	spriteShader->SetVector4f("srcRect", srcRect);
 
 	// TODO: This is expensive, do some sorting and do this as little as possible
+    // TODO: Also, implement a Z draw order so sprites can be sent ot the front or back
 	glActiveTexture(GL_TEXTURE0);
 	sp->tex->Bind();
 

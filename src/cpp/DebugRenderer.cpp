@@ -219,7 +219,7 @@ void DebugRenderer::PlotVar(const char* label, float value, float scale_min, flo
 	{
 		ImGui::PlotLines("##plot", &pvd.Data[0], buffer_size, pvd.DataInsertIdx, NULL, scale_min, scale_max, ImVec2(0, 40));
 		ImGui::SameLine();
-		ImGui::Text("%s\n%-3.4f", label, pvd.Data[display_idx]);	// Display last value in buffer
+		ImGui::Text("%s\n%-3.4f", label, pvd.Data[display_idx]/1000000.0f);	// Display last value in buffer
 		pvd.LastFrame = current_frame;
 	}
 

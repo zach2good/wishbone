@@ -24,6 +24,14 @@ ResourceManager::ResourceManager()
 	LoadSprite("eye3", enemies_spritesheet, 2, 2);
 
 	// TODO: Generate pools of GameObjects and Components
+    for (int i = 0; i < 500; i++) {
+        m_vGameObjects.push_back(new GameObject(""));
+    }
+
+    // TODO: What needs pooling?
+    // Create 100 of each kind of component? They're just data classes so they're essentially free
+    // (*as long as they're cleaned up correctly)
+    // -> Log warnings when components start getting reused, or expand the vector holding them and log warnings then
 }
 
 ResourceManager::~ResourceManager()
@@ -47,6 +55,11 @@ ResourceManager::~ResourceManager()
 	{
 		delete sp.second;
 	}
+
+    for(auto go : m_vGameObjects)
+    {
+        delete go;
+    }
 }
 
 Shader* ResourceManager::LoadShader(std::string name, std::string vertexPath, std::string fragmentPath, std::string geometryPath)
@@ -86,7 +99,7 @@ SpriteSheet* ResourceManager::LoadSpriteSheet(std::string name, Texture* tex, in
 
 Shader* ResourceManager::GetShader(std::string name)
 {
-    // TODO: Replace these asserts with a runtime warning and load the resource anyway
+    // TODO: Can you assert with a warning message? When these trigger its not immediatley clear why
     assert(m_mapShaders[name]);
     return m_mapShaders[name];
 }
