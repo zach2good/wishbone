@@ -20,9 +20,7 @@ public:
     ~ResourceManager();
 
     Shader* LoadShader(std::string name, std::string vertexPath, std::string fragmentPath, std::string geometryPath = std::string());
-
     Texture* LoadTexture(std::string name, std::string filename);
-
     Sprite* LoadSprite(std::string name, Texture* tex);
 	Sprite* LoadSprite(std::string name, SpriteSheet* ss, int x, int y);
     SpriteSheet* LoadSpriteSheet(std::string name, Texture* tex, int x, int y);
@@ -38,7 +36,8 @@ public:
     Texture* GetTexture(std::string name);
     Sprite* GetSprite(std::string name);
     SpriteSheet* GetSpriteSheet(std::string name);
-
+    GameObject* GetGameObject(std::string name);
+                              
     // TiledMap* GetTiledMap(std::string name)
     // Music* GetMusic(std::string name)
     // Sound* GetSound(std::string name)

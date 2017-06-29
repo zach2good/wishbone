@@ -122,3 +122,13 @@ SpriteSheet* ResourceManager::GetSpriteSheet(std::string name)
     return m_mapSpriteSheets[name];
 }
 
+GameObject* ResourceManager::GetGameObject(std::string name)
+{
+    // Index = GameObjectMap.size() (Remember size and capacity are different)
+    // if there isn't a GameObject at map[name], 
+    // claim a GO from the premade vector (perfect use of shared_ptr
+    // Remove from vector and insert into map?    
+    
+    return nullptr;
+}
+

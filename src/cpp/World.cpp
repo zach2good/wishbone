@@ -156,13 +156,18 @@ void World::handlePhysics(GameObject* go, Physics* phys, double delta)
 	double gravity = 9.8;
 
 	go->x += phys->dx * delta;
-	go->y += phys->dy * delta - 1;
+	go->y += phys->dy * delta;
 
-	//go->y += gravity * delta;
+	go->y += gravity * delta;
 
 	phys->dx *= 0.9;
 	phys->dy *= 0.9;
 
-	if (go->y > 750) go->y = 750;
+	if (go->y > 450) go->y = 450;
 	if (go->y < 0) go->y = 0;
+
+    if (rand() % 5 == 1)
+    {
+        phys->dy -=5;
+    }
 }

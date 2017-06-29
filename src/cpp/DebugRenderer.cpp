@@ -16,7 +16,7 @@
 #include "World.h"
 #include "Timer.h"
 #include "OpenGLRenderer.h"
-
+#include "Physics.h"
 
 DebugRenderer::DebugRenderer(SDL_Window* window)
 {
@@ -110,6 +110,12 @@ void DebugRenderer::draw()
 						auto player = static_cast<Player *>(comp);
 						ImGui::Text("Player");
 					}
+                    else if (comp->type == "physics")
+                    {
+                        auto phys = static_cast<Physics*>(comp);
+                        ImGui::Text("Physics");
+                        ImGui::Text("%.0f, %.0f", phys->dx, phys->dy);
+                    }
 				}
 				ImGui::TreePop();
 			}
@@ -154,11 +160,11 @@ void DebugRenderer::draw()
 			auto previous = stamps->at(i - 1);
 			auto current = stamps->at(i);
 			auto time = current.second - previous.second;
-			ImGui::Text("%s: %.0fns", std::string(current.first).c_str(), time);
-			PlotVar("var" + i, time);
+			ImGui::Text("%s: %.0fms", std::string(current.first).c_str(), time / 1000000);
+			PlotVar("var" + i, time / 1000000);
 		}
-		ImGui::Text("Frame Time: %.0fns", frame_time);
-		PlotVar("ft", frame_time);
+		ImGui::Text("Frame Time: %.0fms", frame_time / 1000000);
+		PlotVar("ft", frame_time / 1000000);
 	}
 }
 
