@@ -114,7 +114,7 @@ void DebugRenderer::draw()
                     {
                         auto phys = static_cast<Physics*>(comp);
                         ImGui::Text("Physics");
-                        ImGui::Text("%.0f, %.0f", phys->dx, phys->dy);
+                        ImGui::Text("dx:%.0f, dy:%.0f", phys->dx, phys->dy);
                     }
 				}
 				ImGui::TreePop();

@@ -22,15 +22,8 @@ bool InputManager::poll()
             {
                 quit = true;
             }
-
-            // TODO: Replace with InputManager and add a PlayerController Component
-            // InputManager singleton
-            // Command Pattern
-            // Record/Replay input and game state
-            // Dump to .dmp file on crash, on exception or assert?
             if (event.key.keysym.sym == SDLK_d)
             {
-                //go.x += 10;
             }
         }
     }

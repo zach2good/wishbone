@@ -126,6 +126,7 @@ void World::updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double de
     anim->currentFrame = (int)anim->accumulator / (int)anim->frametime;
 
     // Repeat
+    // TODO: I'm sure this can be done using mod...
     if (anim->currentFrame > anim->frames.size() - 1)
     {
         anim->currentFrame = 0;
