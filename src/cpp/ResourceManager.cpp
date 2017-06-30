@@ -32,6 +32,8 @@ ResourceManager::ResourceManager()
     // Create 100 of each kind of component? They're just data classes so they're essentially free
     // (*as long as they're cleaned up correctly)
     // -> Log warnings when components start getting reused, or expand the vector holding them and log warnings then
+
+    // Create loads of physics objects and make them inactive, when they're needed change their state and set them to active
 }
 
 ResourceManager::~ResourceManager()

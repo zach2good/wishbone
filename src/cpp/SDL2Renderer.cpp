@@ -1,3 +1,5 @@
+// TODO: I'm not using this anymore, but the stb_image to SDL_Surface thing is useful, put this on git or in a gist I guess?
+
 /*
 #include "SDL2Renderer.h"
 

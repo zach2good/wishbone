@@ -153,6 +153,10 @@ void OpenGLRenderer::draw() {
                 auto anim_sprite = static_cast<AnimatedSprite *>(comp);
                 drawSprite(go, anim_sprite->frames.at(anim_sprite->currentFrame));
             }
+            // TODO: Shader effects, I imagine I won't be changing the vertex shader, only the fragment shader,
+            // So these won't be that big of a deal
+
+            // TODO: Particals, no idea how to do these, especially with the current crappy OpenGL implementation
         }
     }
 }

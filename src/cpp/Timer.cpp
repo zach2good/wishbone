@@ -8,13 +8,16 @@
 
 Timer::Timer()
 {
+    // TODO: Use C++11 Pointers, I'm lazy and leaking a lot of memory, literally everywhere.
+    
 	current_timestamps = new std::vector<std::pair<std::string, double>>();
 	last_timestamps = new std::vector<std::pair<std::string, double>>();
 }
 
 Timer::~Timer()
 {
-
+    delete current_timestamps;
+    delete last_timestamps;
 }
 
 void Timer::setup()

@@ -51,9 +51,9 @@ void World::init(ResourceManager *rm)
 											 rm->GetSprite("player3"));
 	Player* p = new Player();
 	Physics* ph = new Physics();
-	go->m_Components.push_back(p);
-	go->m_Components.push_back(ph);
-	go->m_Components.push_back(asp);
+	go->AddComponent(p);
+	go->AddComponent(ph);
+	go->AddComponent(asp);
 	m_gameObjects.push_back(go);
 	
 	for (size_t i = 0; i < 100; i++)
@@ -66,12 +66,11 @@ void World::init(ResourceManager *rm)
 												  rm->GetSprite("eye3"),
 												  rm->GetSprite("eye1"));
 		Enemy* e = new Enemy();
-		go2->m_Components.push_back(asp2);
-		go2->m_Components.push_back(e);
+		go2->AddComponent(asp2);
+		go2->AddComponent(e);
 		m_gameObjects.push_back(go2);
 	}
     
-
 	// Set world information
 	isActive = true;
 }
@@ -153,6 +152,7 @@ void World::handleEnemy(GameObject* go, Enemy* em, double delta)
 
 void World::handlePhysics(GameObject* go, Physics* phys, double delta)
 {
+    // TODO: This is all awful and janky, either replace with Box2D or look up how to do it nicely
 	double gravity = 9.8;
 
 	go->x += phys->dx * delta;
