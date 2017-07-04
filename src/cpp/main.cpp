@@ -42,31 +42,31 @@ int main(int argc, char* argv[])
     while (!quit) {
 		m_DebugRenderer->submit(m_ResourceManager, m_Renderer, m_World);
 		m_DebugRenderer->clear();
-		timer.startFrame();
+		//timer.startFrame();
 
         delta = timer.getDelta();
 
 		
         quit = m_InputManager->poll();
-		timer.profile("InputManager->poll()");
+		//timer.profile("InputManager->poll()");
 
 		
         m_World->step(delta);
-		timer.profile("World Step");
+		//timer.profile("World Step");
 
 		
         m_Renderer->submit(m_World);
         m_Renderer->clear();
         m_Renderer->draw();
-		timer.profile("Renderer Draw");
+		//timer.profile("Renderer Draw");
 		
 		m_DebugRenderer->draw();
 		m_DebugRenderer->swap();
-		timer.profile("Debug Draw");
+		//timer.profile("Debug Draw");
 
         m_Renderer->swap();
 
-		timer.endFrame();
+		//timer.endFrame();
     }
 
     return 0;

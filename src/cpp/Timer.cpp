@@ -16,8 +16,9 @@ Timer::Timer()
 
 Timer::~Timer()
 {
-    delete current_timestamps;
-    delete last_timestamps;
+	// TODO: This was causing a crash? Hmmmmm
+    //delete current_timestamps;
+    //delete last_timestamps;
 }
 
 void Timer::setup()
