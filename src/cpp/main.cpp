@@ -8,8 +8,16 @@
 #include "stb_image.h"
 #endif
 
+#ifdef _WIN32
+#include <SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
+
+
 #include "ResourceManager.h"
 #include "DebugRenderer.h"
+#include "InputManager.h"
 
 int main(int argc, char* argv[])
 {
@@ -35,7 +43,10 @@ int main(int argc, char* argv[])
 
 	auto timer = Timer::getInstance();
 	timer.setup();
-    
+
+	InputManager& in = InputManager::getInstance();
+	SDL_Event event;
+
     // Loop Start
 	double delta = 16.0;
     bool quit = false;
@@ -46,8 +57,9 @@ int main(int argc, char* argv[])
 
         delta = timer.getDelta();
 
-		
-        quit = m_InputManager->poll();
+		while (SDL_PollEvent(&event)) {
+			quit = m_InputManager->handleEvent(event);
+		}
 		//timer.profile("InputManager->poll()");
 
 		
