@@ -55,6 +55,7 @@ void DebugRenderer::draw()
 	if (ImGui::CollapsingHeader("Options##Main")) {
 		ImGui::Checkbox("Renderer##CheckBox1", &m_Renderer->isActive);  ImGui::SameLine(150); ImGui::Checkbox("World##CheckBox2", &m_World->isActive);
 		ImGui::DragFloat("Time Multiplier", &timer->multiplier, 0.01f, 0.01f, 20.0f);
+		ImGui::DragFloat("Gravity", &m_World->gravity, 0.001f, 0.001f, 20.0f);
 	}
 
 	if (ImGui::CollapsingHeader("Renderer")) {
@@ -164,6 +165,8 @@ void DebugRenderer::draw()
 		ImGui::Checkbox("isPushingCeiling", &player->isPushingCeiling);
 		ImGui::Checkbox("isPushingLeftWall", &player->isPushingLeftWall);
 		ImGui::Checkbox("isPushingRightWall", &player->isPushingRightWall);
+		ImGui::DragFloat("walkSpeed", &player->walkSpeed, 0.1, 0, 20);
+		ImGui::DragFloat("jumpPower", &player->jumpPower, 0.1, 0, 20);
 	}
 }
 

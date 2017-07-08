@@ -76,10 +76,10 @@ public:
 	bool wasPushingCeiling;
 	bool isPushingCeiling;
 	
-	float jumpSpeed;
-	float walkSpeed;
+	float walkSpeed = 1.0f;
+	float jumpPower = 3.0f;
 
-	unsigned int health = 100;;
+	unsigned int health = 100;
     
 private:
 };

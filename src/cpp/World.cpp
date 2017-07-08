@@ -55,7 +55,7 @@ void World::init(ResourceManager *rm)
 	AnimatedSprite* standing = new AnimatedSprite(200, 1, rm->GetSprite("player6"));
 	AnimatedSprite* crouching = new AnimatedSprite(200, 1, rm->GetSprite("player4"));
 	AnimatedSprite* jumping = new AnimatedSprite(200, 1, rm->GetSprite("player5"));
-	AnimatedSprite* celebrating = new AnimatedSprite(500, 2, rm->GetSprite("player6"), rm->GetSprite("player7"));
+	AnimatedSprite* celebrating = new AnimatedSprite(400, 2, rm->GetSprite("player7"), rm->GetSprite("player6"));
 	AnimatedSprite* dead = new AnimatedSprite(200, 1, rm->GetSprite("player8"));
 
 	Animator* playerAnimator = new Animator();
@@ -73,9 +73,7 @@ void World::init(ResourceManager *rm)
 	go->AddComponent(p);
 	go->AddComponent(ph);
 
-	//go->AddComponent(standing);
 	go->AddComponent(playerAnimator);
-	m_gameObjects.push_back(go);
 	
 	for (size_t i = 0; i < 100; i++)
 	{
@@ -92,6 +90,8 @@ void World::init(ResourceManager *rm)
 		m_gameObjects.push_back(go2);
 	}
     
+	m_gameObjects.push_back(go);
+
 	// Set world information
 	isActive = true;
 }
@@ -189,7 +189,7 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 		if (in->isKeyDown(SDL_SCANCODE_W)) 
 		{
 			// One time impulse
-			phys->dy += -30;
+			phys->dy += -player->jumpPower;
 			player->playerState = PlayerState::Jump;
 		} 
 		else if (in->isKeyDown(SDL_SCANCODE_S)) 
@@ -226,11 +226,23 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 		anim->currentState = "walking";
 		if (in->isKeyDown(SDL_SCANCODE_A)) 
 		{
-			phys->dx = -1;
+			phys->dx = -player->walkSpeed;
+			if (in->isKeyDown(SDL_SCANCODE_W))
+			{
+				// One time impulse
+				phys->dy += -player->jumpPower;
+				player->playerState = PlayerState::Jump;
+			}
 		} 
 		else if (in->isKeyDown(SDL_SCANCODE_D)) 
 		{
-			phys->dx = 1;
+			phys->dx = player->walkSpeed;
+			if (in->isKeyDown(SDL_SCANCODE_W))
+			{
+				// One time impulse
+				phys->dy += -player->jumpPower;
+				player->playerState = PlayerState::Jump;
+			}
 		}
 		else
 		{
@@ -241,10 +253,9 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 
 	case PlayerState::Jump:
 		anim->currentState = "jumping";
-		// TODO
-		if (phys->dy >= 0)
+		if (go->y >= 500)
 		{
-			player->playerState = PlayerState::Fall;
+			player->playerState = PlayerState::Stand;
 		}
 		break;
 
@@ -285,14 +296,14 @@ void World::handleEnemy(GameObject* go, Enemy* em, double delta)
 void World::handlePhysics(GameObject* go, Physics* phys, double delta)
 {
 	// Gravity
-	phys->dy += 1.0 * delta;
+	phys->dy += gravity * delta;
 
 	// Movement
 	go->x += phys->dx * delta;
 	go->y += phys->dy * delta;
 
 	// Decay
-	phys->dx *= 0.95;
+	phys->dx *= 0.99;
 	phys->dy *= 0.95;
 
 	// Limits

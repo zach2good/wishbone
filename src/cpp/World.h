@@ -37,5 +37,5 @@ public:
 	ResourceManager* rm;
 
 	bool isActive;
-
+	float gravity = 0.011f;
 };
