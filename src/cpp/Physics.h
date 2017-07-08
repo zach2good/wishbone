@@ -11,6 +11,8 @@ public:
 		type = "physics";
 		dx = 0;
 		dy = 0;
+		ddx = 0;
+		ddy = 0;
 	}
     
     // TODO: Dig out old physics textbooks and find some mechanics equations to model all of this correctly

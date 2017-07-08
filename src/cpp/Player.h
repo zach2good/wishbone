@@ -8,6 +8,17 @@
 #include <SDL2/SDL.h>
 #endif
 
+enum PlayerState {
+	Stand,
+	Walk,
+	Crouch,
+	Jump,
+	Fall,
+	GrabLedge,
+	Celebrate,
+	Dead
+
+};
 class Player : public Component {
 public:
     // NOTE: Remember that these component classes are meant to act as data containers
@@ -16,15 +27,59 @@ public:
     {
         type = "player";
     }
-    ~Player();
+    //~Player();
+	
+	// https://gamedevelopment.tutsplus.com/tutorials/basic-2d-platformer-physics-part-1--cms-25799
+	// State Management
+	PlayerState playerState = PlayerState::Stand;
+	const char* getStateString() {
+		switch (playerState)
+		{
+		case PlayerState::Stand:
+			return "Stand";
+			break;
+		case PlayerState::Crouch:
+			return "Crouch";
+			break;
+		case PlayerState::Walk:
+			return "Walk";
+			break;
+		case PlayerState::Jump:
+			return "Jump";
+			break;
+		case PlayerState::Fall:
+			return "Fall";
+			break;
+		case PlayerState::GrabLedge:
+			return "GrabLedge";
+			break;
+		case PlayerState::Celebrate:
+			return "Celebrate";
+			break;
+		case PlayerState::Dead:
+			return "Dead";
+			break;
+		default:
+			return "Unknown";
+			break;
+		}
+	}
+	bool wasOnGround;
+	bool isOnGround;
 
-    unsigned int health;
-    
-    unsigned int stamina;
-    
-    unsigned int score;
-    
-    bool hasJetpack;
+	bool wasPushingRightWall;
+	bool isPushingRightWall;
+
+	bool wasPushingLeftWall;
+	bool isPushingLeftWall;
+
+	bool wasPushingCeiling;
+	bool isPushingCeiling;
+	
+	float jumpSpeed;
+	float walkSpeed;
+
+	unsigned int health = 100;;
     
 private:
 };

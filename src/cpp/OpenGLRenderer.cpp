@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "World.h"
 #include "Timer.h"
+#include "Animator.h"
 
 OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
     const int _height) {
@@ -94,7 +95,7 @@ void OpenGLRenderer::clear() {
 void OpenGLRenderer::init(ResourceManager* rm)
 {
     this->rm = rm;
-	m_clearColor = ImColor(0, 50, 50);
+	m_clearColor = ImColor(180, 180, 180);
 	spriteShader = rm->GetShader("sprite");
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(m_Width),
@@ -146,13 +147,19 @@ void OpenGLRenderer::draw() {
             if (!comp)
                 return;
             if (comp->type == "sprite") {
-                auto sprite = static_cast<Sprite *>(comp);
+                auto sprite = static_cast<Sprite*>(comp);
                 drawSprite(go, sprite);
             }
             else if (comp->type == "anim_sprite") {
-                auto anim_sprite = static_cast<AnimatedSprite *>(comp);
+                auto anim_sprite = static_cast<AnimatedSprite*>(comp);
                 drawSprite(go, anim_sprite->frames.at(anim_sprite->currentFrame));
             }
+			else if (comp->type == "animator") {
+				auto animator = static_cast<Animator*>(comp);
+				auto anim_sprite = animator->getState(animator->currentState);
+				drawSprite(go, anim_sprite->frames.at(anim_sprite->currentFrame));
+			}
+
             // TODO: Shader effects, I imagine I won't be changing the vertex shader, only the fragment shader,
             // So these won't be that big of a deal
 

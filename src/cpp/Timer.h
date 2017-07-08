@@ -5,15 +5,11 @@
 #include <memory>
 #include <vector>
 
+#include "Singleton.h"
+
 class Timer
 {
 public:
-	static Timer& getInstance()
-	{
-		static Timer instance; 
-		return instance;
-	}
-
     Timer();
     ~Timer();
 
@@ -28,7 +24,10 @@ public:
     double NOW;
     double LAST;
     double delta;
+	float multiplier = 1;
 
     std::vector<std::pair<std::string, double>>* current_timestamps;
 	std::vector<std::pair<std::string, double>>* last_timestamps;
 };
+
+typedef Singleton<Timer> TimerSingleton;

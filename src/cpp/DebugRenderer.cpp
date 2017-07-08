@@ -45,8 +45,8 @@ void DebugRenderer::clear()
 
 void DebugRenderer::draw()
 {
-	auto timer = Timer::getInstance();
-	timer.profile("Debug draw start");
+	auto timer = TimerSingleton::Instance();
+	timer->profile("Debug draw start");
 
 	auto in = InputManagerSingleton::Instance();
 
@@ -54,6 +54,7 @@ void DebugRenderer::draw()
 
 	if (ImGui::CollapsingHeader("Options##Main")) {
 		ImGui::Checkbox("Renderer##CheckBox1", &m_Renderer->isActive);  ImGui::SameLine(150); ImGui::Checkbox("World##CheckBox2", &m_World->isActive);
+		ImGui::DragFloat("Time Multiplier", &timer->multiplier, 0.01f, 0.01f, 20.0f);
 	}
 
 	if (ImGui::CollapsingHeader("Renderer")) {
@@ -111,6 +112,7 @@ void DebugRenderer::draw()
 					else if (comp->type == "player") {
 						auto player = static_cast<Player *>(comp);
 						ImGui::Text("Player");
+						ImGui::Text("State: %s", player->getStateString());
 					}
                     else if (comp->type == "physics")
                     {
@@ -141,6 +143,27 @@ void DebugRenderer::draw()
 			if (i % 20 == 0) ImGui::NewLine();
 			ImGui::Text("%s", (in->keyState[i]?"X":"_")); ImGui::SameLine();
 		}
+	}
+
+	if (ImGui::CollapsingHeader("Player")) {
+		Player* player = nullptr;
+		for (int i = 0; i < m_World->m_gameObjects.size(); ++i) {
+			auto go = m_World->m_gameObjects.at(i);
+			if (!go) return;
+			for (int j = 0; j < go->m_Components.size(); j++) {
+				auto comp = go->m_Components[j];
+				if (!comp) return;
+				else if (comp->type == "player") {
+					player = static_cast<Player *>(comp);
+				}
+			}
+		}
+		ImGui::Text("State: %s", player->getStateString());
+		ImGui::Text("Health: %i", player->health);
+		ImGui::Checkbox("isOnGround", &player->isOnGround);
+		ImGui::Checkbox("isPushingCeiling", &player->isPushingCeiling);
+		ImGui::Checkbox("isPushingLeftWall", &player->isPushingLeftWall);
+		ImGui::Checkbox("isPushingRightWall", &player->isPushingRightWall);
 	}
 }
 

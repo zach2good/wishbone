@@ -41,8 +41,8 @@ int main(int argc, char* argv[])
     m_Renderer->init(m_ResourceManager);
     m_World->init(m_ResourceManager);
 
-	auto timer = Timer::getInstance();
-	timer.setup();
+	auto timer = TimerSingleton::Instance();
+	timer->setup();
 
 	auto in = InputManagerSingleton::Instance();
 	SDL_Event event;
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 		m_DebugRenderer->clear();
 		//timer.startFrame();
 
-        delta = timer.getDelta();
+        delta = timer->getDelta();
 
 		while (SDL_PollEvent(&event)) {
 			quit = in->handleEvent(event);

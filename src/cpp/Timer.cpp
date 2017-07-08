@@ -55,7 +55,7 @@ double Timer::getDelta()
         // Artificially large delta, clamp back to 16
         delta = 16.0;
     }
-    return delta;
+    return delta / (1 / multiplier);
 }
 
 std::vector<std::pair<std::string, double>>* Timer::getStamps()

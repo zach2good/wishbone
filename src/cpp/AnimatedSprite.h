@@ -18,7 +18,7 @@ public:
 
 		va_list vl;
 		va_start(vl, n);
-		for (int i = 0; i<n-1; i++)
+		for (int i = 0; i<n; i++)
 		{
 			auto val = va_arg(vl, Sprite*);
 			frames.push_back(val);

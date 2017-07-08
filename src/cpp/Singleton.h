@@ -5,17 +5,19 @@ class Singleton
 {
 public:
 	static T* Instance() {
-		if (!m_pInstance) m_pInstance = new T;
-		assert(m_pInstance != nullptr);
+		if (!m_pInstance) {
+			m_pInstance = new T;
+		}
+		assert(m_pInstance != NULL);
 		return m_pInstance;
 	}
 protected:
-	Singleton();
-	~Singleton();
+	//Singleton();
+	//~Singleton();
 
 private:
-	Singleton(Singleton const&);
-	Singleton& operator=(Singleton const&);
+	//Singleton(Singleton const&);
+	//Singleton& operator=(Singleton const&);
 	static T* m_pInstance;
 };
 

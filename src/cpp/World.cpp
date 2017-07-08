@@ -17,6 +17,7 @@
 #include "Physics.h"
 #include "Enemy.h"
 #include "InputManager.h"
+#include "Animator.h"
 
 #define PI 3.14159265
 
@@ -44,17 +45,36 @@ void World::init(ResourceManager *rm)
     
 	// Player
 	GameObject* go = new GameObject("player", 50, 500);
-	AnimatedSprite* asp = new AnimatedSprite(200, 
+	AnimatedSprite* walking = new AnimatedSprite(200, 
 											 4,
 											 rm->GetSprite("player2"),
 											 rm->GetSprite("player1"),
 											 rm->GetSprite("player2"),
 											 rm->GetSprite("player3"));
+
+	AnimatedSprite* standing = new AnimatedSprite(200, 1, rm->GetSprite("player6"));
+	AnimatedSprite* crouching = new AnimatedSprite(200, 1, rm->GetSprite("player4"));
+	AnimatedSprite* jumping = new AnimatedSprite(200, 1, rm->GetSprite("player5"));
+	AnimatedSprite* celebrating = new AnimatedSprite(500, 2, rm->GetSprite("player6"), rm->GetSprite("player7"));
+	AnimatedSprite* dead = new AnimatedSprite(200, 1, rm->GetSprite("player8"));
+
+	Animator* playerAnimator = new Animator();
+	playerAnimator->addState("walking", walking);
+	playerAnimator->addState("standing", standing);
+	playerAnimator->addState("crouching", crouching);
+	playerAnimator->addState("jumping", jumping);
+	playerAnimator->addState("celebrating", celebrating);
+	playerAnimator->addState("dead", dead);
+
+	playerAnimator->currentState = "standing";
+
 	Player* p = new Player();
 	Physics* ph = new Physics();
 	go->AddComponent(p);
 	go->AddComponent(ph);
-	go->AddComponent(asp);
+
+	//go->AddComponent(standing);
+	go->AddComponent(playerAnimator);
 	m_gameObjects.push_back(go);
 	
 	for (size_t i = 0; i < 100; i++)
@@ -102,6 +122,12 @@ void World::step(double delta)
                 auto anim_sprite = static_cast<AnimatedSprite*>(comp);
                 updateAnimatedSprite(go, anim_sprite, delta);
             }
+			if (comp->type == "animator")
+			{
+				auto animator = static_cast<Animator*>(comp);
+				auto anim_sprite = animator->getCurrentState();
+				updateAnimatedSprite(go, anim_sprite, delta);
+			}
             if (comp->type == "player")
             {
                 auto player = static_cast<Player*>(comp);
@@ -139,19 +165,113 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 {
 	auto in = InputManagerSingleton::Instance();
 
-	if (in->isKeyDown(SDL_SCANCODE_W)) {
-		go->y -= 10 * delta;
+	// Dirty find components
+	Physics* phys = nullptr;
+	Animator* anim = nullptr;
+	for (int i = 0; i < go->m_Components.size(); i++)
+	{
+		if (go->m_Components.at(i)->type == "physics")
+		{
+			phys = static_cast<Physics*>(go->m_Components.at(i));
+		}
+		if (go->m_Components.at(i)->type == "animator")
+		{
+			anim = static_cast<Animator*>(go->m_Components.at(i));
+			break;
+		}
 	}
 
-	if (in->isKeyDown(SDL_SCANCODE_W)) {
-		go->y += 10 * delta;
+	switch (player->playerState) {
+	case PlayerState::Stand: {
+		anim->currentState = "standing";
+		phys->dx = 0;
+		phys->dy = 0;
+		if (in->isKeyDown(SDL_SCANCODE_W)) 
+		{
+			// One time impulse
+			phys->dy += -30;
+			player->playerState = PlayerState::Jump;
+		} 
+		else if (in->isKeyDown(SDL_SCANCODE_S)) 
+		{
+			player->playerState = PlayerState::Crouch;
+		} 
+		else if (in->isKeyDown(SDL_SCANCODE_A)) 
+		{
+			player->playerState = PlayerState::Walk;
+		} 
+		else if (in->isKeyDown(SDL_SCANCODE_D)) 
+		{
+			player->playerState = PlayerState::Walk;
+		}
+		else if (in->isKeyDown(SDL_SCANCODE_Z))
+		{
+			player->playerState = PlayerState::Celebrate;
+		}
+		else if (in->isKeyDown(SDL_SCANCODE_X))
+		{
+			player->playerState = PlayerState::Dead;
+		}
+		break;
 	}
+	case PlayerState::Crouch:
+		anim->currentState = "crouching";
+		if (!in->isKeyDown(SDL_SCANCODE_S)) 
+		{
+			player->playerState = PlayerState::Stand;
+		}
+		break;
 
-    static int sign = 1;
-    if (go->x > 800.0f - 16.0f || go->x < 0.0f) sign *= -1;
-    go->x += 0.20f * delta * sign;
+	case PlayerState::Walk:
+		anim->currentState = "walking";
+		if (in->isKeyDown(SDL_SCANCODE_A)) 
+		{
+			phys->dx = -1;
+		} 
+		else if (in->isKeyDown(SDL_SCANCODE_D)) 
+		{
+			phys->dx = 1;
+		}
+		else
+		{
+			player->playerState = PlayerState::Stand;
+		}
+
+		break;
+
+	case PlayerState::Jump:
+		anim->currentState = "jumping";
+		// TODO
+		if (phys->dy >= 0)
+		{
+			player->playerState = PlayerState::Fall;
+		}
+		break;
+
+	case PlayerState::Fall:
+		player->playerState = PlayerState::Stand;
+		break;
+
+	case PlayerState::GrabLedge:
+		break;
+
+	case PlayerState::Celebrate:
+		anim->currentState = "celebrating";
+		if (!in->isKeyDown(SDL_SCANCODE_Z))
+		{
+			player->playerState = PlayerState::Stand;
+		}
+		break;
+
+	case PlayerState::Dead:
+		anim->currentState = "dead";
+		if (!in->isKeyDown(SDL_SCANCODE_X))
+		{
+			player->playerState = PlayerState::Stand;
+		}
+		break;
+	}
 }
-
 
 void World::handleEnemy(GameObject* go, Enemy* em, double delta)
 {	
@@ -164,5 +284,24 @@ void World::handleEnemy(GameObject* go, Enemy* em, double delta)
 
 void World::handlePhysics(GameObject* go, Physics* phys, double delta)
 {
- 
+	// Gravity
+	phys->dy += 1.0 * delta;
+
+	// Movement
+	go->x += phys->dx * delta;
+	go->y += phys->dy * delta;
+
+	// Decay
+	phys->dx *= 0.95;
+	phys->dy *= 0.95;
+
+	// Limits
+	if (go->y > 500) {
+		go->y = 500;
+		phys->dy = 0;
+	}
+
+	if (go->y < 0) {
+		go->y = 0;
+	}
 }
