@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 	auto timer = Timer::getInstance();
 	timer.setup();
 
-	InputManager& in = InputManager::getInstance();
+	auto in = InputManagerSingleton::Instance();
 	SDL_Event event;
 
     // Loop Start
@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
         delta = timer.getDelta();
 
 		while (SDL_PollEvent(&event)) {
-			quit = m_InputManager->handleEvent(event);
+			quit = in->handleEvent(event);
 		}
 		//timer.profile("InputManager->poll()");
 

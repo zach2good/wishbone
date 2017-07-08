@@ -7,25 +7,22 @@
 #endif
 #include <array>
 
+#include "Singleton.h"
+
 class InputManager
 {
 public:
-	static InputManager& getInstance()
-	{
-		static InputManager instance;
-		return instance;
-	}
+	InputManager();
+	~InputManager();
 
 	bool handleEvent(const SDL_Event& event);
 
 	bool isKeyDown(SDL_Scancode code) const;
 	bool isKeyUpdated(SDL_Scancode code, Uint32 timestamp) const;
 
-	// Singleton
-	InputManager();
-	~InputManager();
-
 	// Keys
 	std::array<bool, SDL_NUM_SCANCODES> keyState = std::array<bool, SDL_NUM_SCANCODES>{ {false} };
 	std::array<Uint32, SDL_NUM_SCANCODES> keyStateTimestamp = std::array<Uint32, SDL_NUM_SCANCODES> { {0} };
 };
+
+typedef Singleton<InputManager> InputManagerSingleton; 

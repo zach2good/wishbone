@@ -16,6 +16,7 @@
 #include "Timer.h"
 #include "Physics.h"
 #include "Enemy.h"
+#include "InputManager.h"
 
 #define PI 3.14159265
 
@@ -136,6 +137,16 @@ void World::updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double de
 
 void World::handlePlayer(GameObject* go, Player* player, double delta)
 {
+	auto in = InputManagerSingleton::Instance();
+
+	if (in->isKeyDown(SDL_SCANCODE_W)) {
+		go->y -= 10 * delta;
+	}
+
+	if (in->isKeyDown(SDL_SCANCODE_W)) {
+		go->y += 10 * delta;
+	}
+
     static int sign = 1;
     if (go->x > 800.0f - 16.0f || go->x < 0.0f) sign *= -1;
     go->x += 0.20f * delta * sign;
@@ -153,22 +164,5 @@ void World::handleEnemy(GameObject* go, Enemy* em, double delta)
 
 void World::handlePhysics(GameObject* go, Physics* phys, double delta)
 {
-    // TODO: This is all awful and janky, either replace with Box2D or look up how to do it nicely
-	double gravity = 9.8;
-
-	go->x += phys->dx * delta;
-	go->y += phys->dy * delta;
-
-	go->y += gravity * delta;
-
-	phys->dx *= 0.9;
-	phys->dy *= 0.9;
-
-	if (go->y > 450) go->y = 450;
-	if (go->y < 0) go->y = 0;
-
-    if (rand() % 5 == 1)
-    {
-        phys->dy -=5;
-    }
+ 
 }

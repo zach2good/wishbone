@@ -48,6 +48,8 @@ void DebugRenderer::draw()
 	auto timer = Timer::getInstance();
 	timer.profile("Debug draw start");
 
+	auto in = InputManagerSingleton::Instance();
+
 	ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
 
 	if (ImGui::CollapsingHeader("Options##Main")) {
@@ -131,6 +133,13 @@ void DebugRenderer::draw()
 				ImGui::Image((void *)(GLuint)t->ID, v);
 				ImGui::TreePop();
 			}
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Input")) {
+		for (int i = 0; i < in->keyState.size(); i++) {
+			if (i % 20 == 0) ImGui::NewLine();
+			ImGui::Text("%s", (in->keyState[i]?"X":"_")); ImGui::SameLine();
 		}
 	}
 }
