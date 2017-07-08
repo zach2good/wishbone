@@ -52,6 +52,14 @@ void DebugRenderer::draw()
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
 
+	if (ImGui::CollapsingHeader("Instructions##Main")) {
+		ImGui::TextWrapped("Controls:");
+		ImGui::TextWrapped("WASD - Movement");
+		ImGui::TextWrapped("Z - Celebrate");
+		ImGui::TextWrapped("X - Play Dead");
+		ImGui::TextWrapped("ESC - Quit");
+	}
+
 	if (ImGui::CollapsingHeader("Options##Main")) {
 		ImGui::Checkbox("Renderer##CheckBox1", &m_Renderer->isActive);  ImGui::SameLine(150); ImGui::Checkbox("World##CheckBox2", &m_World->isActive);
 		ImGui::DragFloat("Time Multiplier", &timer->multiplier, 0.01f, 0.01f, 20.0f);

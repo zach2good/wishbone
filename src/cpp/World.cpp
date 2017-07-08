@@ -75,7 +75,7 @@ void World::init(ResourceManager *rm)
 
 	go->AddComponent(playerAnimator);
 	
-	for (size_t i = 0; i < 100; i++)
+	for (size_t i = 0; i < 5; i++)
 	{
 		GameObject* go2 = new GameObject("enemy", rand() % 800, rand() % 600);
 		AnimatedSprite* asp2 = new AnimatedSprite(200, 
@@ -307,12 +307,22 @@ void World::handlePhysics(GameObject* go, Physics* phys, double delta)
 	phys->dy *= 0.95;
 
 	// Limits
+	// Ground
 	if (go->y > 500) {
 		go->y = 500;
 		phys->dy = 0;
 	}
-
+	// Ceiling
 	if (go->y < 0) {
 		go->y = 0;
+	}
+
+	if (go->x > 750) {
+		go->x = 750;
+		phys->dx = 0;
+	}
+	if (go->x < 0) {
+		go->x = 0;
+		phys->dx = 0;
 	}
 }
