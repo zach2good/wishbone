@@ -51,13 +51,11 @@ void World::init(ResourceManager *rm)
 											 rm->GetSprite("player1"),
 											 rm->GetSprite("player2"),
 											 rm->GetSprite("player3"));
-
 	AnimatedSprite* standing = new AnimatedSprite(200, 1, rm->GetSprite("player6"));
 	AnimatedSprite* crouching = new AnimatedSprite(200, 1, rm->GetSprite("player4"));
 	AnimatedSprite* jumping = new AnimatedSprite(200, 1, rm->GetSprite("player5"));
 	AnimatedSprite* celebrating = new AnimatedSprite(400, 2, rm->GetSprite("player7"), rm->GetSprite("player6"));
 	AnimatedSprite* dead = new AnimatedSprite(200, 1, rm->GetSprite("player8"));
-
 	Animator* playerAnimator = new Animator();
 	playerAnimator->addState("walking", walking);
 	playerAnimator->addState("standing", standing);
@@ -65,17 +63,15 @@ void World::init(ResourceManager *rm)
 	playerAnimator->addState("jumping", jumping);
 	playerAnimator->addState("celebrating", celebrating);
 	playerAnimator->addState("dead", dead);
-
 	playerAnimator->currentState = "standing";
-
 	Player* p = new Player();
 	Physics* ph = new Physics();
 	go->AddComponent(p);
 	go->AddComponent(ph);
-
 	go->AddComponent(playerAnimator);
 	
-	for (size_t i = 0; i < 5; i++)
+	// Enemies
+	for (size_t i = 0; i < 50; i++)
 	{
 		GameObject* go2 = new GameObject("enemy", rand() % 800, rand() % 600);
 		AnimatedSprite* asp2 = new AnimatedSprite(200, 
@@ -85,11 +81,24 @@ void World::init(ResourceManager *rm)
 												  rm->GetSprite("eye3"),
 												  rm->GetSprite("eye1"));
 		Enemy* e = new Enemy();
+		Physics* phe = new Physics();
+		phe->useGravity = false;
+		go2->AddComponent(phe);
 		go2->AddComponent(asp2);
 		go2->AddComponent(e);
 		m_gameObjects.push_back(go2);
 	}
     
+	// Block
+	GameObject* go3 = new GameObject("block", 500, 500);
+	Physics* ph2 = new Physics();
+	ph2->useGravity = false;
+	go3->AddComponent(ph2);
+	AnimatedSprite* tile = new AnimatedSprite(200, 1, rm->GetSprite("tile1"));
+	go3->AddComponent(tile);
+
+	// Finish
+	m_gameObjects.push_back(go3);
 	m_gameObjects.push_back(go);
 
 	// Set world information
@@ -109,6 +118,20 @@ bool World::save(std::string filename)
 void World::step(double delta)
 {
     if (!isActive) { return; }
+
+	// Sorting and filtering
+	physicsItems.clear();
+	for (int i = 0; i < m_gameObjects.size(); ++i)
+	{
+		auto go = m_gameObjects.at(i);
+		if (!go) return;
+		Physics* phys = go->GetComponent<Physics>("physics");
+		if (phys) {
+			physicsItems.push_back(phys);
+		}
+	}
+
+	// Actions
     for (int i = 0; i < m_gameObjects.size(); ++i)
     {
         auto go = m_gameObjects.at(i);
@@ -166,20 +189,8 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 	auto in = InputManagerSingleton::Instance();
 
 	// Dirty find components
-	Physics* phys = nullptr;
-	Animator* anim = nullptr;
-	for (int i = 0; i < go->m_Components.size(); i++)
-	{
-		if (go->m_Components.at(i)->type == "physics")
-		{
-			phys = static_cast<Physics*>(go->m_Components.at(i));
-		}
-		if (go->m_Components.at(i)->type == "animator")
-		{
-			anim = static_cast<Animator*>(go->m_Components.at(i));
-			break;
-		}
-	}
+	Physics* phys = go->GetComponent<Physics>("physics");
+	Animator* anim = go->GetComponent<Animator>("animator");;
 
 	switch (player->playerState) {
 	case PlayerState::Stand: {
@@ -296,7 +307,8 @@ void World::handleEnemy(GameObject* go, Enemy* em, double delta)
 void World::handlePhysics(GameObject* go, Physics* phys, double delta)
 {
 	// Gravity
-	phys->dy += gravity * delta;
+	if (phys->useGravity)
+		phys->dy += gravity * delta;
 
 	// Movement
 	go->x += phys->dx * delta;
@@ -324,5 +336,36 @@ void World::handlePhysics(GameObject* go, Physics* phys, double delta)
 	if (go->x < 0) {
 		go->x = 0;
 		phys->dx = 0;
+	}
+
+	// Collision (Brute Force)
+	for (int i = 0; i < physicsItems.size(); i++)
+	{
+		for (int j = 0; j < physicsItems.size(); j++)
+		{
+			auto itemA = physicsItems[i];
+			auto itemB = physicsItems[j];
+			auto parentA = itemA->parent;
+			auto parentB = itemB->parent;
+
+			if (itemA == itemB) continue;
+
+			int spriteW = 64;
+			int spriteH = 64;
+
+			// Check collision
+			if (itemA->parent->x < itemB->parent->x + spriteW &&
+				itemA->parent->x + spriteW > itemB->parent->x &&
+				itemA->parent->y < itemB->parent->y + spriteH &&
+				itemA->parent->y + spriteH > itemB->parent->y)
+			{
+				itemA->isColliding = true;
+				itemB->isColliding = true;
+			}
+			else {
+				itemA->isColliding = false;
+				itemB->isColliding = false;
+			}
+		}
 	}
 }

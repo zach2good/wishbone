@@ -176,6 +176,14 @@ void DebugRenderer::draw()
 		ImGui::DragFloat("walkSpeed", &player->walkSpeed, 0.1, 0, 20);
 		ImGui::DragFloat("jumpPower", &player->jumpPower, 0.1, 0, 20);
 	}
+
+	if (ImGui::CollapsingHeader("Physics")) {
+		for (int i = 0; i < m_World->physicsItems.size(); i++)
+		{
+			ImGui::Text("%s: %s", m_World->physicsItems[i]->parent->name.c_str(), m_World->physicsItems[i]->isColliding? "Yes" : "No");
+		}
+		
+	}
 }
 
 void DebugRenderer::swap()

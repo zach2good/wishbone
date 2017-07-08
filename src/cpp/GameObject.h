@@ -22,11 +22,16 @@ public:
         m_Components.push_back(comp);
     }
 
-    // TODO: Write this, consumer will have to cast the resulting object up themselves
-    // unless there is a way to return different types in newer versions of C++?
-    
-    //template T
-    //Component* GetComponent<T>
+	template <typename T>
+	T* GetComponent(std::string type) {
+		for (int i = 0; i < m_Components.size(); i++)
+		{
+			if (m_Components.at(i)->type == type)
+			{
+				return static_cast<T*>(m_Components.at(i));
+			}
+		}
+	}
     
     //private:
     std::vector<Component *> m_Components;

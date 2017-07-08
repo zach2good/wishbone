@@ -38,4 +38,6 @@ public:
 
 	bool isActive;
 	float gravity = 0.011f;
+
+	std::vector<Physics*> physicsItems;
 };

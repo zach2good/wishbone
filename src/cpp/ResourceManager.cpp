@@ -26,6 +26,8 @@ ResourceManager::ResourceManager()
 	LoadSprite("eye2", enemies_spritesheet, 1, 2);
 	LoadSprite("eye3", enemies_spritesheet, 2, 2);
 
+	LoadSprite("tile1", tiles_spritesheet, 0, 0);
+
 	// TODO: Generate pools of GameObjects and Components
     for (int i = 0; i < 500; i++) {
         m_vGameObjects.push_back(new GameObject(""));

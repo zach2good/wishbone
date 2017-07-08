@@ -2,6 +2,15 @@
 
 #include "Component.h"
 
+enum CollisionLayer {
+	NoCollide,
+	One,
+	Two,
+	Three,
+	Four,
+	All
+};
+
 class Physics : public Component
 {
 public:
@@ -17,6 +26,10 @@ public:
     
     // TODO: Dig out old physics textbooks and find some mechanics equations to model all of this correctly
     // TODO: Collision will also need to be in here, using collision layers, things on the same layer will not collide
+
+	bool useGravity = true;
+	bool isColliding = false;
+	CollisionLayer layer = CollisionLayer::All;
 
     double dx;
 	double dy;
