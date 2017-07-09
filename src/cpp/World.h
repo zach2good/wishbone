@@ -40,4 +40,6 @@ public:
 	float gravity = 0.011f;
 
 	std::vector<Physics*> physicsItems;
+
+	int mapSize = 100;
 };

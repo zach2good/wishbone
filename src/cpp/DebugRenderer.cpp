@@ -180,7 +180,7 @@ void DebugRenderer::draw()
 	if (ImGui::CollapsingHeader("Physics")) {
 		for (int i = 0; i < m_World->physicsItems.size(); i++)
 		{
-			ImGui::Text("%s: %s", m_World->physicsItems[i]->parent->name.c_str(), m_World->physicsItems[i]->isColliding? "Yes" : "No");
+			//ImGui::Text("%s: %s", m_World->physicsItems[i]->parent->name.c_str(), m_World->physicsItems[i]->isColliding? "Yes" : "No");
 		}
 		
 	}

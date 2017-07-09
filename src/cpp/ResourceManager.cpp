@@ -11,7 +11,7 @@ ResourceManager::ResourceManager()
 
 	auto player_spritesheet = LoadSpriteSheet("player_spritesheet", player_texture, 4, 2);
 	auto enemies_spritesheet = LoadSpriteSheet("enemies_spritesheet", enemies_texture, 4, 3);
-	auto tiles_spritesheet = LoadSpriteSheet("tiles_spritesheet", tiles_texture, 8, 6);
+	auto tiles_spritesheet = LoadSpriteSheet("tiles_spritesheet", tiles_texture, 8, 5);
 
 	LoadSprite("player1", player_spritesheet, 0, 0);
 	LoadSprite("player2", player_spritesheet, 1, 0);
@@ -26,12 +26,21 @@ ResourceManager::ResourceManager()
 	LoadSprite("eye2", enemies_spritesheet, 1, 2);
 	LoadSprite("eye3", enemies_spritesheet, 2, 2);
 
-	LoadSprite("tile1", tiles_spritesheet, 0, 0);
+	// Load Tilemap (1-based)
+	for (int i = 0; i < 8 * 5; i++)
+	{
+		int x = i % 8;
+		int y = i / 8;
+		std::string tileString = "tile" + std::to_string(i + 1);
+		LoadSprite(tileString, tiles_spritesheet, x, y);
+	}
 
 	// TODO: Generate pools of GameObjects and Components
     for (int i = 0; i < 500; i++) {
         m_vGameObjects.push_back(new GameObject(""));
     }
+
+	map = new Map("res/graphics/map1.tmx");
 
     // TODO: What needs pooling?
     // Create 100 of each kind of component? They're just data classes so they're essentially free

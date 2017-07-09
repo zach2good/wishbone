@@ -1,0 +1,2 @@
+gradle cleanVisualStudio wishboneVisualStudio 
+vs\wishboneExe.sln

@@ -42,15 +42,54 @@ World:: ~World()
 void World::init(ResourceManager *rm)
 {
 	this->rm = rm;
+
+	// Load Map
+	auto map = rm->map->layerMap["bg"];
+	for (int i = 0; i < map.data.size(); i++)
+	{
+		GameObject* block = new GameObject("bg_mapblock", (i % map.width) * mapSize, (i / map.width) * mapSize);
+		std::string tileString = "tile" + std::to_string(map.data[i]);
+		AnimatedSprite* block_tile = new AnimatedSprite(200, 1, rm->GetSprite(tileString));
+		block->AddComponent(block_tile);
+		m_gameObjects.push_back(block);
+	}
+
+	// Enemies
+	for (size_t i = 0; i < 50; i++)
+	{
+		GameObject* go2 = new GameObject("enemy", rand() % 800, rand() % 600);
+		AnimatedSprite* asp2 = new AnimatedSprite(200, 
+												  4,
+												  rm->GetSprite("eye2"),
+												  rm->GetSprite("eye1"),
+												  rm->GetSprite("eye3"),
+												  rm->GetSprite("eye1"));
+		Enemy* e = new Enemy();
+		//Physics* phe = new Physics();
+		//phe->useGravity = false;
+		//go2->AddComponent(phe);
+		go2->AddComponent(asp2);
+		go2->AddComponent(e);
+		m_gameObjects.push_back(go2);
+	}
     
+	// Block
+	GameObject* go3 = new GameObject("block", 500, 500);
+	Physics* ph2 = new Physics();
+	ph2->useGravity = false;
+	go3->AddComponent(ph2);
+	AnimatedSprite* tile = new AnimatedSprite(200, 1, rm->GetSprite("tile20"));
+	go3->AddComponent(tile);
+	m_gameObjects.push_back(go3);
+
 	// Player
 	GameObject* go = new GameObject("player", 50, 500);
-	AnimatedSprite* walking = new AnimatedSprite(200, 
-											 4,
-											 rm->GetSprite("player2"),
-											 rm->GetSprite("player1"),
-											 rm->GetSprite("player2"),
-											 rm->GetSprite("player3"));
+	AnimatedSprite* walking = new AnimatedSprite(200,
+		4,
+		rm->GetSprite("player2"),
+		rm->GetSprite("player1"),
+		rm->GetSprite("player2"),
+		rm->GetSprite("player3"));
 	AnimatedSprite* standing = new AnimatedSprite(200, 1, rm->GetSprite("player6"));
 	AnimatedSprite* crouching = new AnimatedSprite(200, 1, rm->GetSprite("player4"));
 	AnimatedSprite* jumping = new AnimatedSprite(200, 1, rm->GetSprite("player5"));
@@ -69,36 +108,6 @@ void World::init(ResourceManager *rm)
 	go->AddComponent(p);
 	go->AddComponent(ph);
 	go->AddComponent(playerAnimator);
-	
-	// Enemies
-	for (size_t i = 0; i < 50; i++)
-	{
-		GameObject* go2 = new GameObject("enemy", rand() % 800, rand() % 600);
-		AnimatedSprite* asp2 = new AnimatedSprite(200, 
-												  4,
-												  rm->GetSprite("eye2"),
-												  rm->GetSprite("eye1"),
-												  rm->GetSprite("eye3"),
-												  rm->GetSprite("eye1"));
-		Enemy* e = new Enemy();
-		Physics* phe = new Physics();
-		phe->useGravity = false;
-		go2->AddComponent(phe);
-		go2->AddComponent(asp2);
-		go2->AddComponent(e);
-		m_gameObjects.push_back(go2);
-	}
-    
-	// Block
-	GameObject* go3 = new GameObject("block", 500, 500);
-	Physics* ph2 = new Physics();
-	ph2->useGravity = false;
-	go3->AddComponent(ph2);
-	AnimatedSprite* tile = new AnimatedSprite(200, 1, rm->GetSprite("tile1"));
-	go3->AddComponent(tile);
-
-	// Finish
-	m_gameObjects.push_back(go3);
 	m_gameObjects.push_back(go);
 
 	// Set world information
@@ -353,6 +362,7 @@ void World::handlePhysics(GameObject* go, Physics* phys, double delta)
 			int spriteW = 64;
 			int spriteH = 64;
 
+			/*
 			// Check collision
 			if (itemA->parent->x < itemB->parent->x + spriteW &&
 				itemA->parent->x + spriteW > itemB->parent->x &&
@@ -366,6 +376,7 @@ void World::handlePhysics(GameObject* go, Physics* phys, double delta)
 				itemA->isColliding = false;
 				itemB->isColliding = false;
 			}
+			*/
 		}
 	}
 }

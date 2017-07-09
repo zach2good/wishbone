@@ -186,6 +186,47 @@ model {
                 }
             }
         }
+		
+		tinyxml2(NativeLibrarySpec) {
+
+            //targetPlatform "x86"
+            targetPlatform "x64"
+
+            sources {
+                cpp {
+                    source {
+                        srcDirs "libs/tinyxml2"
+                        include "**/*.cpp"
+                    }
+                    exportedHeaders {
+                        srcDirs "libs/tinyxml2"
+                        include "**/*.hpp", "**/*.h"
+                    }
+                }
+            }
+
+            binaries.all {
+                // Define toolchain-specific compiler and linker options
+                if (toolChain in Gcc) {
+                    cppCompiler.args "-std=c++0x", "-w"
+                }
+                if (toolChain in VisualCpp) {
+
+                    // General
+                    cppCompiler.args "/EHsc"
+                    cppCompiler.args "/FS"
+
+                    if (buildType == buildTypes.Debug) {
+                        linker.args "/DEBUG"
+                        cppCompiler.args "/DEBUG"
+                        cppCompiler.args "/Zi"
+                        cppCompiler.args "/MTd"
+                    } else {
+                        cppCompiler.args "/MT"
+                    }
+                }
+            }
+        }
 
         wishbone(NativeExecutableSpec) {
 
@@ -262,6 +303,7 @@ model {
                 lib library: "rang", linkage: "api"
                 lib library: "json", linkage: "api"
                 lib library: "glm", linkage: "api"
+				lib library: "tinyxml2", linkage: "static"
             }
         }
     }

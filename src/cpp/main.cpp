@@ -14,7 +14,6 @@
 #include <SDL2/SDL.h>
 #endif
 
-
 #include "ResourceManager.h"
 #include "DebugRenderer.h"
 #include "InputManager.h"
@@ -61,12 +60,10 @@ int main(int argc, char* argv[])
 			quit = in->handleEvent(event);
 		}
 		//timer.profile("InputManager->poll()");
-
-		
+	
         m_World->step(delta);
 		//timer.profile("World Step");
 
-		
         m_Renderer->submit(m_World);
         m_Renderer->clear();
         m_Renderer->draw();

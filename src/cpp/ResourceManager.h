@@ -11,6 +11,7 @@
 #include "Sprite.h"
 #include "GameObject.h"
 #include "Component.h"
+#include "Map.h"
 
 class ResourceManager
 {
@@ -55,6 +56,8 @@ public:
     std::vector<GameObject*> m_vGameObjects;
     std::vector<Component*> m_vComponents;
     
+	Map* map;
+
     // std::map<std::string, TiledMap*> m_TiledMaps;
     // std::map<std::string, Music*> m_Music;
     // std::map<std::string, Sound*> m_Sounds;

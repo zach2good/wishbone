@@ -184,9 +184,9 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
 	glm::vec3 color = glm::vec3(1, 1, 1);
 	glm::vec4 srcRect = glm::vec4(sp->x, sp->y, sp->w, sp->h);
 
-	if (phys->isColliding) {
-		color = glm::vec3(1, 0, 0);
-	}
+	//if (phys->isColliding) {
+	//	color = glm::vec3(1, 0, 0);
+	//}
 
     // TODO: Figure out how to do horizontal and vertical flipping only using srcRect
     // Try not to touch the shaders (especially the fs)
