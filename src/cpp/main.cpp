@@ -44,11 +44,11 @@ int main(int argc, char* argv[])
 	timer->setup();
 
 	auto in = InputManagerSingleton::Instance();
-	SDL_Event event;
-
+	
     // Loop Start
 	double delta = 16.0;
     bool quit = false;
+	SDL_Event event;
     while (!quit) {
 		m_DebugRenderer->submit(m_ResourceManager, m_Renderer, m_World);
 		m_DebugRenderer->clear();

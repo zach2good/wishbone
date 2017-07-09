@@ -4,7 +4,12 @@
 #include <map>
 #include <vector>
 
-// SDL
+#ifdef _WIN32
+#include <SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
+
 #include "Shader.h"
 #include "Texture.h"
 #include "SpriteSheet.h"
