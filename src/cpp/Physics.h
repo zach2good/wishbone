@@ -15,9 +15,8 @@ class Physics : public Component
 {
 public:
 
-	Physics()
+	Physics() : Component(typeid(Physics))
 	{
-		type = "physics";
 		dx = 0;
 		dy = 0;
 		ddx = 0;

@@ -6,9 +6,8 @@ class Enemy : public Component
 {
 public:
 
-	Enemy()
+	Enemy() : Component(typeid(Enemy))
 	{
-		type = "enemy";
 		accumulator = rand() % 1000;
 	}
 

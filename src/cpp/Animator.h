@@ -12,9 +12,8 @@
 class Animator : public Component
 {
 public:
-	Animator()
+	Animator() : Component(typeid(Animator))
 	{
-		type = "animator";
 	}
 
 	void addState(std::string name, AnimatedSprite* state) {

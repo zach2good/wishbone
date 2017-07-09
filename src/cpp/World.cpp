@@ -47,6 +47,7 @@ void World::init(ResourceManager *rm)
 	auto map = rm->map->layerMap["bg"];
 	for (int i = 0; i < map.data.size(); i++)
 	{
+		if (map.data[i] == 0) continue;
 		GameObject* block = new GameObject("bg_mapblock", (i % map.width) * mapSize, (i / map.width) * mapSize);
 		std::string tileString = "tile" + std::to_string(map.data[i]);
 		AnimatedSprite* block_tile = new AnimatedSprite(200, 1, rm->GetSprite(tileString));
@@ -54,6 +55,17 @@ void World::init(ResourceManager *rm)
 		m_gameObjects.push_back(block);
 	}
 
+	map = rm->map->layerMap["main"];
+	for (int i = 0; i < map.data.size(); i++)
+	{
+		if (map.data[i] == 0) continue;
+		GameObject* block = new GameObject("main_mapblock", (i % map.width) * mapSize, (i / map.width) * mapSize);
+		std::string tileString = "tile" + std::to_string(map.data[i]);
+		AnimatedSprite* block_tile = new AnimatedSprite(200, 1, rm->GetSprite(tileString));
+		block->AddComponent(block_tile);
+		m_gameObjects.push_back(block);
+	}
+	
 	// Enemies
 	for (size_t i = 0; i < 50; i++)
 	{
@@ -134,7 +146,7 @@ void World::step(double delta)
 	{
 		auto go = m_gameObjects.at(i);
 		if (!go) return;
-		Physics* phys = go->GetComponent<Physics>("physics");
+		Physics* phys = go->GetComponentByType<Physics>();
 		if (phys) {
 			physicsItems.push_back(phys);
 		}
@@ -149,28 +161,28 @@ void World::step(double delta)
         {
             auto comp = go->m_Components[j];
             if (!comp) return;
-            if (comp->type == "anim_sprite")
+            if (comp->IsOfType<AnimatedSprite>())
             {
                 auto anim_sprite = static_cast<AnimatedSprite*>(comp);
                 updateAnimatedSprite(go, anim_sprite, delta);
             }
-			if (comp->type == "animator")
+			if (comp->IsOfType<Animator>())
 			{
 				auto animator = static_cast<Animator*>(comp);
 				auto anim_sprite = animator->getCurrentState();
 				updateAnimatedSprite(go, anim_sprite, delta);
 			}
-            if (comp->type == "player")
+            if (comp->IsOfType<Player>())
             {
                 auto player = static_cast<Player*>(comp);
                 handlePlayer(go, player, delta);
             }
-            if (comp->type == "enemy")
+            if (comp->IsOfType<Enemy>())
             {
                 auto enemy = static_cast<Enemy*>(comp);
                 handleEnemy(go, enemy, delta);
             }
-            if (comp->type == "physics")
+            if (comp->IsOfType<Physics>())
             {
                 auto phys = static_cast<Physics*>(comp);
                 handlePhysics(go, phys, delta);
@@ -198,8 +210,8 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 	auto in = InputManagerSingleton::Instance();
 
 	// Dirty find components
-	Physics* phys = go->GetComponent<Physics>("physics");
-	Animator* anim = go->GetComponent<Animator>("animator");;
+	Physics* phys = go->GetComponentByType<Physics>();
+	Animator* anim = go->GetComponentByType<Animator>();;
 
 	switch (player->playerState) {
 	case PlayerState::Stand: {
@@ -354,8 +366,8 @@ void World::handlePhysics(GameObject* go, Physics* phys, double delta)
 		{
 			auto itemA = physicsItems[i];
 			auto itemB = physicsItems[j];
-			auto parentA = itemA->parent;
-			auto parentB = itemB->parent;
+			//auto parentA = itemA->parent;
+			//auto parentB = itemB->parent;
 
 			if (itemA == itemB) continue;
 

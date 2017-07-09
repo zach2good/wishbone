@@ -14,11 +14,8 @@ class Sprite : public Component
 {
 public:
 
-    Sprite(Texture* _tex)
+    Sprite(Texture* _tex) : Component(typeid(Sprite))
     {
-		// TODO: Fix me
-        type = "sprite";
-
         tex = _tex;
         x = 0.0f;
         y = 0.0f;
@@ -27,10 +24,8 @@ public:
     }
 
     // Use a subset of a texture, dictated by a spritesheet
-    Sprite(SpriteSheet* _ss, int _x, int _y)
+    Sprite(SpriteSheet* _ss, int _x, int _y) : Component(typeid(Sprite))
     {
-        type = "sprite";
-
 		tex = _ss->GetTexture();
 		auto ss = _ss->getSrcRect(_x, _y);
 		x = ss.x;

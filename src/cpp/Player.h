@@ -23,9 +23,8 @@ class Player : public Component {
 public:
     // NOTE: Remember that these component classes are meant to act as data containers
     // There should be no logic in here really
-    Player()
+    Player() : Component(typeid(Player))
     {
-        type = "player";
     }
     //~Player();
 	

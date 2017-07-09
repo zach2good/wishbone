@@ -147,15 +147,15 @@ void OpenGLRenderer::draw() {
             auto comp = go->m_Components[j];
             if (!comp)
                 return;
-            if (comp->type == "sprite") {
+            if (comp->IsOfType<Sprite>()) {
                 auto sprite = static_cast<Sprite*>(comp);
                 drawSprite(go, sprite);
             }
-            else if (comp->type == "anim_sprite") {
+            else if (comp->IsOfType<AnimatedSprite>()) {
                 auto anim_sprite = static_cast<AnimatedSprite*>(comp);
                 drawSprite(go, anim_sprite->frames.at(anim_sprite->currentFrame));
             }
-			else if (comp->type == "animator") {
+			else if (comp->IsOfType<Animator>()) {
 				auto animator = static_cast<Animator*>(comp);
 				auto anim_sprite = animator->getState(animator->currentState);
 				drawSprite(go, anim_sprite->frames.at(anim_sprite->currentFrame));
@@ -173,7 +173,7 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
 	Physics* phys = nullptr;
 	for (int j = 0; j < go->m_Components.size(); j++) {
 
-		if (go->m_Components.at(j)->type == "physics") {
+		if (go->m_Components.at(j)->IsOfType<Physics>()) {
 			phys = static_cast<Physics*>(go->m_Components.at(j));
 		}
 	}

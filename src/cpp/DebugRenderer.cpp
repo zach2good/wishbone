@@ -106,24 +106,24 @@ void DebugRenderer::draw()
 					auto comp = go->m_Components[j];
 					if (!comp) return;
 
-					if (comp->type == "sprite") {
-						auto sprite = static_cast<Sprite *>(comp);
+					if (comp->IsOfType<Sprite*>()) {
+						auto sprite = static_cast<Sprite*>(comp);
 						ImGui::Text("Sprite");
 						ImGui::Text("W:%.0f H:%.0f", sprite->w, sprite->h);
 					}
-					else if (comp->type == "anim_sprite") {
-						auto anim_sprite = static_cast<AnimatedSprite *>(comp);
+					else if (comp->IsOfType<AnimatedSprite*>()) {
+						auto anim_sprite = static_cast<AnimatedSprite*>(comp);
 						auto sprite = anim_sprite->frames.at(anim_sprite->currentFrame);
 						ImGui::Text("AnimatedSprite");
 						ImGui::Text("Frames:"); ImGui::SameLine();
 						ImGui::Text("%d/%d", anim_sprite->currentFrame, anim_sprite->frames.size());
 					}
-					else if (comp->type == "player") {
-						auto player = static_cast<Player *>(comp);
+					else if (comp->IsOfType<Player*>()) {
+						auto player = static_cast<Player*>(comp);
 						ImGui::Text("Player");
 						ImGui::Text("State: %s", player->getStateString());
 					}
-                    else if (comp->type == "physics")
+                    else if (comp->IsOfType<Physics*>())
                     {
                         auto phys = static_cast<Physics*>(comp);
                         ImGui::Text("Physics");
@@ -162,7 +162,7 @@ void DebugRenderer::draw()
 			for (int j = 0; j < go->m_Components.size(); j++) {
 				auto comp = go->m_Components[j];
 				if (!comp) return;
-				else if (comp->type == "player") {
+				else if (comp->IsOfType<Player>()) {
 					player = static_cast<Player *>(comp);
 				}
 			}

@@ -10,9 +10,8 @@ class AnimatedSprite : public Component
 {
 public:
     AnimatedSprite(double _frametime, int n, ...)
-        : frametime(_frametime), currentFrame(0)
+        : frametime(_frametime), currentFrame(0), Component(typeid(AnimatedSprite))
     {
-        type = "anim_sprite";
 		accumulator = rand() % 1000;
 		frames = std::vector<Sprite*>();
 
