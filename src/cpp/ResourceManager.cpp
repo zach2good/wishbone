@@ -40,7 +40,7 @@ ResourceManager::ResourceManager()
         m_vGameObjects.push_back(new GameObject(""));
     }
 
-	map = new Map("res/graphics/map1.tmx");
+	map = std::make_unique<Map>("res/graphics/map1.tmx");
 
     // TODO: What needs pooling?
     // Create 100 of each kind of component? They're just data classes so they're essentially free

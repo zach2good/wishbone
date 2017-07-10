@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <memory>
 
 #ifdef _WIN32
 #include <SDL.h>
@@ -61,7 +62,7 @@ public:
     std::vector<GameObject*> m_vGameObjects;
     std::vector<Component*> m_vComponents;
     
-	Map* map;
+	std::unique_ptr<Map> map;
 
     // std::map<std::string, TiledMap*> m_TiledMaps;
     // std::map<std::string, Music*> m_Music;

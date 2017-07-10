@@ -16,6 +16,13 @@ public:
 	{
 	}
 
+	~Animator()
+	{
+		for (auto state : states) {
+			delete state.second;
+		}
+	}
+
 	void addState(std::string name, AnimatedSprite* state) {
 		states[name] = state;
 	}
