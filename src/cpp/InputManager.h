@@ -7,11 +7,23 @@
 #endif
 #include <array>
 
-#include "Singleton.h"
+#define gInput InputManager::Instance()
 
 class InputManager
 {
 public:
+	static InputManager& Instance()
+	{
+		static InputManager myInstance;
+		return myInstance;
+	}
+
+	// delete copy and move constructors and assign operators
+	InputManager(InputManager const&) = delete;             // Copy construct
+	InputManager(InputManager&&) = delete;                  // Move construct
+	InputManager& operator=(InputManager const&) = delete;  // Copy assign
+	InputManager& operator=(InputManager &&) = delete;      // Move assign
+
 	InputManager();
 	~InputManager();
 
@@ -24,5 +36,3 @@ public:
 	std::array<bool, SDL_NUM_SCANCODES> keyState = std::array<bool, SDL_NUM_SCANCODES>{ {false} };
 	std::array<Uint32, SDL_NUM_SCANCODES> keyStateTimestamp = std::array<Uint32, SDL_NUM_SCANCODES> { {0} };
 };
-
-typedef Singleton<InputManager> InputManagerSingleton; 

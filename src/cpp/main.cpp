@@ -40,13 +40,12 @@ int main(int argc, char* argv[])
     m_Renderer->init(m_ResourceManager);
     m_World->init(m_ResourceManager);
 
-	auto timer = TimerSingleton::Instance();
-	timer->setup();
-
-	auto in = InputManagerSingleton::Instance();
+	//auto timer = TimerSingleton::Instance();
+	//timer->setup();
 	
     // Loop Start
 	double delta = 16.0;
+	double accumulator = 0.0;
     bool quit = false;
 	SDL_Event event;
     while (!quit) {
@@ -54,14 +53,21 @@ int main(int argc, char* argv[])
 		m_DebugRenderer->clear();
 		//timer.startFrame();
 
-        delta = timer->getDelta();
+        delta = gTimer.getDelta();
+		accumulator += delta;
 
 		while (SDL_PollEvent(&event)) {
-			quit = in->handleEvent(event);
+			quit = gInput.handleEvent(event);
 		}
 		//timer.profile("InputManager->poll()");
 	
-        m_World->step(delta);
+		m_World->step(delta);
+
+		if (accumulator > 16.0) {
+			//m_World->step(delta);
+			//accumulator = 0.0;
+		}
+        
 		//timer.profile("World Step");
 
         m_Renderer->submit(m_World);
@@ -74,7 +80,7 @@ int main(int argc, char* argv[])
 		//timer.profile("Debug Draw");
 
         m_Renderer->swap();
-
+	
 		//timer.endFrame();
     }
 

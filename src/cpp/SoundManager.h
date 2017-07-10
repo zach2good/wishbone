@@ -10,8 +10,6 @@
 #include <string>
 #include <iostream>
 
-#include "Singleton.h"
-
 struct Sound {
 	Sound(std::string path) {	
 	}
@@ -19,9 +17,19 @@ struct Sound {
 	}
 };
 
-class SoundManager
-{
-public:
+class SoundManager{
+
+	static SoundManager& Instance()
+	{
+		static SoundManager myInstance;
+		return myInstance;
+	}
+	// delete copy and move constructors and assign operators
+	SoundManager(SoundManager const&) = delete;             // Copy construct
+	SoundManager(SoundManager&&) = delete;                  // Move construct
+	SoundManager& operator=(SoundManager const&) = delete;  // Copy assign
+	SoundManager& operator=(SoundManager &&) = delete;      // Move assign
+
 	SoundManager();
 	~SoundManager();
 
@@ -30,5 +38,3 @@ public:
 
 	std::unordered_map<std::string, Sound*> loadedSounds;
 };
-
-typedef Singleton<SoundManager> SoundManagerSingleton;

@@ -45,10 +45,8 @@ void DebugRenderer::clear()
 
 void DebugRenderer::draw()
 {
-	auto timer = TimerSingleton::Instance();
-	timer->profile("Debug draw start");
-
-	auto in = InputManagerSingleton::Instance();
+	//auto timer = TimerSingleton::Instance();
+	//timer->profile("Debug draw start");
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
 
@@ -62,7 +60,7 @@ void DebugRenderer::draw()
 
 	if (ImGui::CollapsingHeader("Options##Main")) {
 		ImGui::Checkbox("Renderer##CheckBox1", &m_Renderer->isActive);  ImGui::SameLine(150); ImGui::Checkbox("World##CheckBox2", &m_World->isActive);
-		ImGui::DragFloat("Time Multiplier", &timer->multiplier, 0.01f, 0.01f, 20.0f);
+		ImGui::DragFloat("Time Multiplier", &gTimer.multiplier, 0.01f, 0.01f, 20.0f);
 		ImGui::DragFloat("Gravity", &m_World->gravity, 0.001f, 0.001f, 20.0f);
 	}
 
@@ -148,9 +146,9 @@ void DebugRenderer::draw()
 	}
 
 	if (ImGui::CollapsingHeader("Input")) {
-		for (int i = 0; i < in->keyState.size(); i++) {
+		for (int i = 0; i < gInput.keyState.size(); i++) {
 			if (i % 20 == 0) ImGui::NewLine();
-			ImGui::Text("%s", (in->keyState[i]?"X":"_")); ImGui::SameLine();
+			ImGui::Text("%s", (gInput.keyState[i]?"X":"_")); ImGui::SameLine();
 		}
 	}
 

@@ -29,11 +29,6 @@ World:: ~World()
 {
     for (auto go : m_gameObjects)
     {
-        for (auto comp : go->m_Components)
-        {
-            if (comp)
-                delete comp;
-        }
         if (go)
             delete go;
     }
@@ -102,6 +97,7 @@ void World::init(ResourceManager *rm)
 		rm->GetSprite("player1"),
 		rm->GetSprite("player2"),
 		rm->GetSprite("player3"));
+
 	AnimatedSprite* standing = new AnimatedSprite(200, 1, rm->GetSprite("player6"));
 	AnimatedSprite* crouching = new AnimatedSprite(200, 1, rm->GetSprite("player4"));
 	AnimatedSprite* jumping = new AnimatedSprite(200, 1, rm->GetSprite("player5"));
@@ -207,8 +203,6 @@ void World::updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double de
 
 void World::handlePlayer(GameObject* go, Player* player, double delta)
 {
-	auto in = InputManagerSingleton::Instance();
-
 	// Dirty find components
 	Physics* phys = go->GetComponentByType<Physics>();
 	Animator* anim = go->GetComponentByType<Animator>();;
@@ -218,29 +212,29 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 		anim->currentState = "standing";
 		phys->dx = 0;
 		phys->dy = 0;
-		if (in->isKeyDown(SDL_SCANCODE_W)) 
+		if (gInput.isKeyDown(SDL_SCANCODE_W))
 		{
 			// One time impulse
 			phys->dy += -player->jumpPower;
 			player->playerState = PlayerState::Jump;
 		} 
-		else if (in->isKeyDown(SDL_SCANCODE_S)) 
+		else if (gInput.isKeyDown(SDL_SCANCODE_S))
 		{
 			player->playerState = PlayerState::Crouch;
 		} 
-		else if (in->isKeyDown(SDL_SCANCODE_A)) 
+		else if (gInput.isKeyDown(SDL_SCANCODE_A))
 		{
 			player->playerState = PlayerState::Walk;
 		} 
-		else if (in->isKeyDown(SDL_SCANCODE_D)) 
+		else if (gInput.isKeyDown(SDL_SCANCODE_D))
 		{
 			player->playerState = PlayerState::Walk;
 		}
-		else if (in->isKeyDown(SDL_SCANCODE_Z))
+		else if (gInput.isKeyDown(SDL_SCANCODE_Z))
 		{
 			player->playerState = PlayerState::Celebrate;
 		}
-		else if (in->isKeyDown(SDL_SCANCODE_X))
+		else if (gInput.isKeyDown(SDL_SCANCODE_X))
 		{
 			player->playerState = PlayerState::Dead;
 		}
@@ -248,7 +242,7 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 	}
 	case PlayerState::Crouch:
 		anim->currentState = "crouching";
-		if (!in->isKeyDown(SDL_SCANCODE_S)) 
+		if (!gInput.isKeyDown(SDL_SCANCODE_S))
 		{
 			player->playerState = PlayerState::Stand;
 		}
@@ -256,20 +250,20 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 
 	case PlayerState::Walk:
 		anim->currentState = "walking";
-		if (in->isKeyDown(SDL_SCANCODE_A)) 
+		if (gInput.isKeyDown(SDL_SCANCODE_A))
 		{
 			phys->dx = -player->walkSpeed;
-			if (in->isKeyDown(SDL_SCANCODE_W))
+			if (gInput.isKeyDown(SDL_SCANCODE_W))
 			{
 				// One time impulse
 				phys->dy += -player->jumpPower;
 				player->playerState = PlayerState::Jump;
 			}
 		} 
-		else if (in->isKeyDown(SDL_SCANCODE_D)) 
+		else if (gInput.isKeyDown(SDL_SCANCODE_D))
 		{
 			phys->dx = player->walkSpeed;
-			if (in->isKeyDown(SDL_SCANCODE_W))
+			if (gInput.isKeyDown(SDL_SCANCODE_W))
 			{
 				// One time impulse
 				phys->dy += -player->jumpPower;
@@ -300,7 +294,7 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 
 	case PlayerState::Celebrate:
 		anim->currentState = "celebrating";
-		if (!in->isKeyDown(SDL_SCANCODE_Z))
+		if (!gInput.isKeyDown(SDL_SCANCODE_Z))
 		{
 			player->playerState = PlayerState::Stand;
 		}
@@ -308,7 +302,7 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 
 	case PlayerState::Dead:
 		anim->currentState = "dead";
-		if (!in->isKeyDown(SDL_SCANCODE_X))
+		if (!gInput.isKeyDown(SDL_SCANCODE_X))
 		{
 			player->playerState = PlayerState::Stand;
 		}

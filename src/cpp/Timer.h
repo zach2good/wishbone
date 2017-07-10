@@ -5,11 +5,22 @@
 #include <memory>
 #include <vector>
 
-#include "Singleton.h"
+#define gTimer Timer::Instance()
 
 class Timer
 {
 public:
+	static Timer& Instance()
+	{
+		static Timer myInstance;
+		return myInstance;
+	}
+	// delete copy and move constructors and assign operators
+	Timer(Timer const&) = delete;             // Copy construct
+	Timer(Timer&&) = delete;                  // Move construct
+	Timer& operator=(Timer const&) = delete;  // Copy assign
+	Timer& operator=(Timer &&) = delete;      // Move assign
+
     Timer();
     ~Timer();
 
@@ -29,5 +40,3 @@ public:
     std::vector<std::pair<std::string, double>>* current_timestamps;
 	std::vector<std::pair<std::string, double>>* last_timestamps;
 };
-
-typedef Singleton<Timer> TimerSingleton;
