@@ -18,6 +18,16 @@ model {
                     }
                 }
             }
+			sdl2main {
+                headers.srcDirs "libs/SDL2-2.0.5/include"
+                binaries.withType(StaticLibraryBinary) {
+                    if (targetPlatform == platforms.x64) {
+                        staticLibraryFile = file("libs/SDL2-2.0.5/lib/x64/sdl2main.lib")
+                    } else {
+                        staticLibraryFile = file("libs/SDL2-2.0.5/lib/x86/sdl2main.lib")
+                    }
+                }
+            }
 			sdl2mixer {
                 headers.srcDirs "libs/SDL2_mixer-2.0.1/include"
                 binaries.withType(SharedLibraryBinary) {
@@ -295,19 +305,17 @@ model {
                         cppCompiler.args "/Zi"
                         cppCompiler.args "/MTd"
                         cppCompiler.args "/Od"
+						linker.args "/SUBSYSTEM:CONSOLE"
 
                     } else {
                         cppCompiler.args "/O2"
+						linker.args "/SUBSYSTEM:WINDOWS"
                     }
 
-                    linker.args "/SUBSYSTEM:CONSOLE"
-
-                    lib library: "sdl2", linkage: "shared"    
+                    lib library: "sdl2", linkage: "shared"   
+					lib library: "sdl2main", linkage: "static"					
 					lib library: "sdl2mixer", linkage: "shared"  
                 }
-                cppCompiler.define "SDL_MAIN_HANDLED"
-				
-				//cppCompiler.define "SDL2_RENDERER"
 
 				lib library: "glad", linkage: "static"
                 lib library: "imgui", linkage: "static"
