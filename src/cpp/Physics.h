@@ -2,15 +2,6 @@
 
 #include "Component.h"
 
-enum CollisionLayer {
-	NoCollide,
-	One,
-	Two,
-	Three,
-	Four,
-	All
-};
-
 class Physics : public Component
 {
 public:
@@ -28,7 +19,16 @@ public:
 
 	bool useGravity = true;
 	bool isColliding = false;
-	CollisionLayer layer = CollisionLayer::All;
+
+	enum CollisionLayer {
+		NoCollide,
+		One,
+		Two,
+		Three,
+		Four,
+		All
+	};
+	CollisionLayer collisionLayer = CollisionLayer::All;
 
     double dx;
 	double dy;

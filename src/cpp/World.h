@@ -32,7 +32,7 @@ public:
     void updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double delta);
     void handlePlayer(GameObject* go, Player* player, double delta);
 	void handleEnemy(GameObject* go, Enemy* em, double delta);
-	void handlePhysics(GameObject* go, Physics* phys, double delta);
+	void handlePhysics(std::vector<Physics*>& items, double delta);
    
 	ResourceManager* rm;
 

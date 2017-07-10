@@ -2,23 +2,35 @@
 
 #ifdef _WIN32
 #include <SDL.h>
+#include <SDL_mixer.h>
 #else
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #endif
 
 #include <unordered_map>
 #include <string>
 #include <iostream>
 
-struct Sound {
-	Sound(std::string path) {	
+struct Sound 
+{
+	Sound(std::string path) 
+	{	
+		wave = Mix_LoadWAV(path.c_str());
 	}
-	~Sound() {
+
+	~Sound() 
+	{
+		Mix_FreeChunk(wave);
 	}
+
+	Mix_Chunk *wave = NULL;
 };
 
-class SoundManager{
+#define gSound SoundManager::Instance()
 
+class SoundManager{
+public:
 	static SoundManager& Instance()
 	{
 		static SoundManager myInstance;
@@ -32,9 +44,12 @@ class SoundManager{
 
 	SoundManager();
 	~SoundManager();
+	void Init();
 
 	void Load(std::string path, std::string name);
 	void Play(std::string name);
 
 	std::unordered_map<std::string, Sound*> loadedSounds;
+
+	bool isInit;
 };

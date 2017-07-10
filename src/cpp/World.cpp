@@ -18,6 +18,7 @@
 #include "Enemy.h"
 #include "InputManager.h"
 #include "Animator.h"
+#include "SoundManager.h"
 
 #define PI 3.14159265
 
@@ -27,11 +28,11 @@ World::World()
 
 World:: ~World()
 {
-    for (auto go : m_gameObjects)
-    {
-        if (go)
-            delete go;
-    }
+	for (auto go : m_gameObjects)
+	{
+		if (go)
+			delete go;
+	}
 }
 
 void World::init(ResourceManager *rm)
@@ -60,34 +61,26 @@ void World::init(ResourceManager *rm)
 		block->AddComponent(block_tile);
 		m_gameObjects.push_back(block);
 	}
-	
+
 	// Enemies
-	for (size_t i = 0; i < 50; i++)
+	for (size_t i = 0; i < 100; i++)
 	{
 		GameObject* go2 = new GameObject("enemy", rand() % 800, rand() % 600);
-		AnimatedSprite* asp2 = new AnimatedSprite(200, 
-												  4,
-												  rm->GetSprite("eye2"),
-												  rm->GetSprite("eye1"),
-												  rm->GetSprite("eye3"),
-												  rm->GetSprite("eye1"));
+		AnimatedSprite* asp2 = new AnimatedSprite(200,
+			4,
+			rm->GetSprite("eye2"),
+			rm->GetSprite("eye1"),
+			rm->GetSprite("eye3"),
+			rm->GetSprite("eye1"));
 		Enemy* e = new Enemy();
-		//Physics* phe = new Physics();
-		//phe->useGravity = false;
-		//go2->AddComponent(phe);
+		Physics* phe = new Physics();
+		phe->collisionLayer = Physics::CollisionLayer::One;
+		phe->useGravity = false;
+		go2->AddComponent(phe);
 		go2->AddComponent(asp2);
 		go2->AddComponent(e);
 		m_gameObjects.push_back(go2);
 	}
-    
-	// Block
-	GameObject* go3 = new GameObject("block", 500, 500);
-	Physics* ph2 = new Physics();
-	ph2->useGravity = false;
-	go3->AddComponent(ph2);
-	AnimatedSprite* tile = new AnimatedSprite(200, 1, rm->GetSprite("tile20"));
-	go3->AddComponent(tile);
-	m_gameObjects.push_back(go3);
 
 	// Player
 	GameObject* go = new GameObject("player", 50, 500);
@@ -124,17 +117,17 @@ void World::init(ResourceManager *rm)
 
 bool World::load(std::string filename)
 {
-    return false;
+	return false;
 }
 
 bool World::save(std::string filename)
 {
-    return false;
+	return false;
 }
 
 void World::step(double delta)
 {
-    if (!isActive) { return; }
+	if (!isActive) { return; }
 
 	// Sorting and filtering
 	physicsItems.clear();
@@ -143,62 +136,60 @@ void World::step(double delta)
 		auto go = m_gameObjects.at(i);
 		if (!go) return;
 		Physics* phys = go->GetComponentByType<Physics>();
-		if (phys) {
+		if (phys)
+		{
+			phys->isColliding = false;
 			physicsItems.push_back(phys);
 		}
 	}
+	handlePhysics(physicsItems, delta);
 
 	// Actions
-    for (int i = 0; i < m_gameObjects.size(); ++i)
-    {
-        auto go = m_gameObjects.at(i);
-        if (!go) return;
-        for (int j = 0; j < go->m_Components.size(); j++)
-        {
-            auto comp = go->m_Components[j];
-            if (!comp) return;
-            if (comp->IsOfType<AnimatedSprite>())
-            {
-                auto anim_sprite = static_cast<AnimatedSprite*>(comp);
-                updateAnimatedSprite(go, anim_sprite, delta);
-            }
+	for (int i = 0; i < m_gameObjects.size(); ++i)
+	{
+		auto go = m_gameObjects.at(i);
+		if (!go) return;
+		for (int j = 0; j < go->m_Components.size(); j++)
+		{
+			auto comp = go->m_Components[j];
+			if (!comp) return;
+			if (comp->IsOfType<AnimatedSprite>())
+			{
+				auto anim_sprite = static_cast<AnimatedSprite*>(comp);
+				updateAnimatedSprite(go, anim_sprite, delta);
+			}
 			if (comp->IsOfType<Animator>())
 			{
 				auto animator = static_cast<Animator*>(comp);
 				auto anim_sprite = animator->getCurrentState();
 				updateAnimatedSprite(go, anim_sprite, delta);
 			}
-            if (comp->IsOfType<Player>())
-            {
-                auto player = static_cast<Player*>(comp);
-                handlePlayer(go, player, delta);
-            }
-            if (comp->IsOfType<Enemy>())
-            {
-                auto enemy = static_cast<Enemy*>(comp);
-                handleEnemy(go, enemy, delta);
-            }
-            if (comp->IsOfType<Physics>())
-            {
-                auto phys = static_cast<Physics*>(comp);
-                handlePhysics(go, phys, delta);
-            }
-        }
-    }
+			if (comp->IsOfType<Player>())
+			{
+				auto player = static_cast<Player*>(comp);
+				handlePlayer(go, player, delta);
+			}
+			if (comp->IsOfType<Enemy>())
+			{
+				auto enemy = static_cast<Enemy*>(comp);
+				handleEnemy(go, enemy, delta);
+			}
+		}
+	}
 }
 
 void World::updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double delta)
 {
-    anim->accumulator += delta;
-    anim->currentFrame = (int)anim->accumulator / (int)anim->frametime;
+	anim->accumulator += delta;
+	anim->currentFrame = (int)anim->accumulator / (int)anim->frametime;
 
-    // Repeat
-    // TODO: I'm sure this can be done using mod...
-    if (anim->currentFrame > anim->frames.size() - 1)
-    {
-        anim->currentFrame = 0;
-        anim->accumulator = 0.0;
-    }
+	// Repeat
+	// TODO: I'm sure this can be done using mod...
+	if (anim->currentFrame > anim->frames.size() - 1)
+	{
+		anim->currentFrame = 0;
+		anim->accumulator = 0.0;
+	}
 }
 
 void World::handlePlayer(GameObject* go, Player* player, double delta)
@@ -206,6 +197,14 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 	// Dirty find components
 	Physics* phys = go->GetComponentByType<Physics>();
 	Animator* anim = go->GetComponentByType<Animator>();;
+
+	if (phys->isColliding) {
+		phys->dy += -player->jumpPower * 0.25;
+		phys->dx = 0;
+		phys->collisionLayer = Physics::CollisionLayer::NoCollide;
+		gSound.Play("laser");
+		player->playerState = PlayerState::Dead;
+	}
 
 	switch (player->playerState) {
 	case PlayerState::Stand: {
@@ -216,16 +215,17 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 		{
 			// One time impulse
 			phys->dy += -player->jumpPower;
+			gSound.Play("jump");
 			player->playerState = PlayerState::Jump;
-		} 
+		}
 		else if (gInput.isKeyDown(SDL_SCANCODE_S))
 		{
 			player->playerState = PlayerState::Crouch;
-		} 
+		}
 		else if (gInput.isKeyDown(SDL_SCANCODE_A))
 		{
 			player->playerState = PlayerState::Walk;
-		} 
+		}
 		else if (gInput.isKeyDown(SDL_SCANCODE_D))
 		{
 			player->playerState = PlayerState::Walk;
@@ -236,7 +236,7 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 		}
 		else if (gInput.isKeyDown(SDL_SCANCODE_X))
 		{
-			player->playerState = PlayerState::Dead;
+			//player->playerState = PlayerState::Dead;
 		}
 		break;
 	}
@@ -259,7 +259,7 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 				phys->dy += -player->jumpPower;
 				player->playerState = PlayerState::Jump;
 			}
-		} 
+		}
 		else if (gInput.isKeyDown(SDL_SCANCODE_D))
 		{
 			phys->dx = player->walkSpeed;
@@ -302,8 +302,10 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 
 	case PlayerState::Dead:
 		anim->currentState = "dead";
-		if (!gInput.isKeyDown(SDL_SCANCODE_X))
+		if (gInput.isKeyDown(SDL_SCANCODE_X))
 		{
+			phys->collisionLayer = Physics::CollisionLayer::All;
+			gSound.Play("pickup");
 			player->playerState = PlayerState::Stand;
 		}
 		break;
@@ -311,78 +313,90 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 }
 
 void World::handleEnemy(GameObject* go, Enemy* em, double delta)
-{	
+{
 	em->accumulator += delta;
-	double param = (em->accumulator + go->y)/10;
+	double param = (em->accumulator + go->y) / 10;
 	double offset = 200;
 	double mult = 100;
 	go->y = (sin(param * PI / 180)) * mult + offset;
 }
 
-void World::handlePhysics(GameObject* go, Physics* phys, double delta)
+void World::handlePhysics(std::vector<Physics*>& items, double delta)
 {
-	// Gravity
-	if (phys->useGravity)
-		phys->dy += gravity * delta;
+	for (auto& item : items) {
+		auto phys = item;
+		auto go = phys->getParent();
 
-	// Movement
-	go->x += phys->dx * delta;
-	go->y += phys->dy * delta;
+		// Gravity
+		if (phys->useGravity)
+			phys->dy += gravity * delta;
 
-	// Decay
-	phys->dx *= 0.99;
-	phys->dy *= 0.95;
+		// Movement
+		go->x += phys->dx * delta;
+		go->y += phys->dy * delta;
 
-	// Limits
-	// Ground
-	if (go->y > 500) {
-		go->y = 500;
-		phys->dy = 0;
-	}
-	// Ceiling
-	if (go->y < 0) {
-		go->y = 0;
-	}
+		// Decay
+		phys->dx *= 0.99;
+		phys->dy *= 0.95;
 
-	if (go->x > 750) {
-		go->x = 750;
-		phys->dx = 0;
-	}
-	if (go->x < 0) {
-		go->x = 0;
-		phys->dx = 0;
-	}
+		// Limits
+		// Ground
+		if (go->y > 500) {
+			go->y = 500;
+			phys->dy = 0;
+		}
+		// Ceiling
+		if (go->y < 0) {
+			go->y = 0;
+		}
 
-	// Collision (Brute Force)
-	for (int i = 0; i < physicsItems.size(); i++)
-	{
-		for (int j = 0; j < physicsItems.size(); j++)
+		if (go->x > 750) {
+			go->x = 750;
+			phys->dx = 0;
+		}
+		if (go->x < 0) {
+			go->x = 0;
+			phys->dx = 0;
+		}
+
+		// Collision (Brute Force)
+		for (int i = 0; i < physicsItems.size(); i++)
 		{
-			auto itemA = physicsItems[i];
-			auto itemB = physicsItems[j];
-			//auto parentA = itemA->parent;
-			//auto parentB = itemB->parent;
-
-			if (itemA == itemB) continue;
-
-			int spriteW = 64;
-			int spriteH = 64;
-
-			/*
-			// Check collision
-			if (itemA->parent->x < itemB->parent->x + spriteW &&
-				itemA->parent->x + spriteW > itemB->parent->x &&
-				itemA->parent->y < itemB->parent->y + spriteH &&
-				itemA->parent->y + spriteH > itemB->parent->y)
+			for (int j = 0; j < physicsItems.size(); j++)
 			{
-				itemA->isColliding = true;
-				itemB->isColliding = true;
+				auto itemA = physicsItems[i];
+				auto itemB = physicsItems[j];
+
+				if (itemA->collisionLayer == Physics::CollisionLayer::NoCollide ||
+					itemB->collisionLayer == Physics::CollisionLayer::NoCollide)
+				{
+					continue;
+				}
+
+				auto parentA = itemA->getParent();
+				auto parentB = itemB->getParent();
+
+				if (itemA == itemB ||
+					itemA->collisionLayer != Physics::CollisionLayer::All &&
+					itemB->collisionLayer != Physics::CollisionLayer::All &&
+					itemA->collisionLayer == itemB->collisionLayer) 
+				{
+					continue;
+				}
+
+				int spriteW = 100;
+				int spriteH = 100;
+
+				// Check collision
+				if (parentA->x < parentB->x + spriteW &&
+					parentA->x + spriteW > parentB->x &&
+					parentA->y < parentB->y + spriteH &&
+					parentA->y + spriteH > parentB->y)
+				{
+					itemA->isColliding = true;
+					itemB->isColliding = true;
+				}
 			}
-			else {
-				itemA->isColliding = false;
-				itemB->isColliding = false;
-			}
-			*/
 		}
 	}
 }

@@ -37,11 +37,11 @@ public:
 
 	template <typename T>
 	T* GetComponentByTypeVec() {
-		for (int i = 0; i < m_vecComponents.size(); i++)
+		for (int i = 0; i < m_Components.size(); i++)
 		{
-			if (m_vecComponents[i]->IsOfType<T>())
+			if (m_Components[i]->IsOfType<T>())
 			{
-				return dynamic_cast<T*>(m_vecComponents.at(i));
+				return dynamic_cast<T*>(m_Components.at(i));
 			}
 		}
 		return nullptr;
@@ -49,7 +49,7 @@ public:
 
 	template <typename T>
 	T* GetComponentByTypeMap() {
-		return m_mapComponents[std::type_index(typeid(T))] ?
+		return m_ComponentsMap[std::type_index(typeid(T))] ?
 			dynamic_cast<T*>(m_ComponentsMap[std::type_index(typeid(T))]) :
 			nullptr;
 	}
@@ -72,6 +72,7 @@ public:
 
 //private:
 	std::string name;
+	short id = rand() % 32000;
 	float x;
 	float y;
 	std::vector<Component*> m_Components;

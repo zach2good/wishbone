@@ -35,11 +35,6 @@ ResourceManager::ResourceManager()
 		LoadSprite(tileString, tiles_spritesheet, x, y);
 	}
 
-	// TODO: Generate pools of GameObjects and Components
-    for (int i = 0; i < 500; i++) {
-        m_vGameObjects.push_back(new GameObject(""));
-    }
-
 	map = std::make_unique<Map>("res/graphics/map1.tmx");
 
     // TODO: What needs pooling?

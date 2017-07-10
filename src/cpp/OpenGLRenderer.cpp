@@ -170,23 +170,17 @@ void OpenGLRenderer::draw() {
 }
 
 void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
-	Physics* phys = nullptr;
-	for (int j = 0; j < go->m_Components.size(); j++) {
-
-		if (go->m_Components.at(j)->IsOfType<Physics>()) {
-			phys = static_cast<Physics*>(go->m_Components.at(j));
-		}
-	}
-
+	
 	glm::vec2 position = glm::vec2(go->x, go->y);
 	glm::vec2 size = glm::vec2(100, 100);
 	GLfloat rotate = 0;
 	glm::vec3 color = glm::vec3(1, 1, 1);
 	glm::vec4 srcRect = glm::vec4(sp->x, sp->y, sp->w, sp->h);
 
-	//if (phys->isColliding) {
-	//	color = glm::vec3(1, 0, 0);
-	//}
+	Physics* phys = go->GetComponentByType<Physics>();
+	if (phys && phys->isColliding) {
+		color = glm::vec3(1, 0, 0);
+	}
 
     // TODO: Figure out how to do horizontal and vertical flipping only using srcRect
     // Try not to touch the shaders (especially the fs)

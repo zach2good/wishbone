@@ -27,12 +27,18 @@ public:
 		return ti == typeid(T);
 	}
 
+	GameObject* getParent()
+	{
+		return parent;
+	}
+
 	void setParent(GameObject* _parent)
 	{
 		parent = _parent;
 	}
 
 private:
+	
 	const std::type_info& ti;
 	GameObject* parent;
 };

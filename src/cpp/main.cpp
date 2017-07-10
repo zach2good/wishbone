@@ -17,6 +17,7 @@
 #include "ResourceManager.h"
 #include "DebugRenderer.h"
 #include "InputManager.h"
+#include "SoundManager.h"
 
 int main(int argc, char* argv[])
 {
@@ -42,7 +43,9 @@ int main(int argc, char* argv[])
 
 	//auto timer = TimerSingleton::Instance();
 	//timer->setup();
-	
+
+	gSound.Init();
+
     // Loop Start
 	double delta = 16.0;
 	double accumulator = 0.0;
