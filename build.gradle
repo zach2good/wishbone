@@ -291,7 +291,7 @@ model {
 
                 if (toolChain in Gcc) {
                     cppCompiler.args "-w", "-I /usr/include/SDL2/", "-fpermissive"
-                    linker.args "-lSDL2", "-ldl"
+                    linker.args "-lSDL2", "-lSDL2_mixer", "-ldl"
                 }
                 if (toolChain in VisualCpp) {
 
