@@ -30,8 +30,10 @@ World:: ~World()
 {
 	for (auto go : m_gameObjects)
 	{
-		if (go)
-			delete go;
+        if (go)
+        {
+            // ===
+        }
 	}
 }
 
@@ -44,9 +46,9 @@ void World::init(ResourceManager *rm)
 	for (int i = 0; i < map.data.size(); i++)
 	{
 		if (map.data[i] == 0) continue;
-		GameObject* block = new GameObject("bg_mapblock", (i % map.width) * mapSize, (i / map.width) * mapSize);
+		auto block = std::make_shared<GameObject>("bg_mapblock", (i % map.width) * mapSize, (i / map.width) * mapSize);
 		std::string tileString = "tile" + std::to_string(map.data[i]);
-		AnimatedSprite* block_tile = new AnimatedSprite(200, 1, rm->GetSprite(tileString));
+		auto block_tile = std::make_shared<AnimatedSprite>(200, 1, rm->GetSprite(tileString));
 		block->AddComponent(block_tile);
 		m_gameObjects.push_back(block);
 	}
@@ -55,13 +57,14 @@ void World::init(ResourceManager *rm)
 	for (int i = 0; i < map.data.size(); i++)
 	{
 		if (map.data[i] == 0) continue;
-		GameObject* block = new GameObject("main_mapblock", (i % map.width) * mapSize, (i / map.width) * mapSize);
+		auto block = std::make_shared<GameObject>("main_mapblock", (i % map.width) * mapSize, (i / map.width) * mapSize);
 		std::string tileString = "tile" + std::to_string(map.data[i]);
-		AnimatedSprite* block_tile = new AnimatedSprite(200, 1, rm->GetSprite(tileString));
+        auto block_tile = std::make_shared<AnimatedSprite>(200, 1, rm->GetSprite(tileString));
 		block->AddComponent(block_tile);
 		m_gameObjects.push_back(block);
 	}
 
+    /*
 	// Enemies
 	for (size_t i = 0; i < 100; i++)
 	{
@@ -111,6 +114,7 @@ void World::init(ResourceManager *rm)
 	go->AddComponent(playerAnimator);
 	m_gameObjects.push_back(go);
 
+    */
 	// Set world information
 	isActive = true;
 }
@@ -151,28 +155,28 @@ void World::step(double delta)
 		if (!go) return;
 		for (int j = 0; j < go->m_Components.size(); j++)
 		{
-			auto comp = go->m_Components[j];
+			auto comp = go->m_Components[j].get();
 			if (!comp) return;
 			if (comp->IsOfType<AnimatedSprite>())
 			{
 				auto anim_sprite = static_cast<AnimatedSprite*>(comp);
-				updateAnimatedSprite(go, anim_sprite, delta);
+				updateAnimatedSprite(go.get(), anim_sprite, delta);
 			}
 			if (comp->IsOfType<Animator>())
 			{
 				auto animator = static_cast<Animator*>(comp);
 				auto anim_sprite = animator->getCurrentState();
-				updateAnimatedSprite(go, anim_sprite, delta);
+				updateAnimatedSprite(go.get(), anim_sprite, delta);
 			}
 			if (comp->IsOfType<Player>())
 			{
 				auto player = static_cast<Player*>(comp);
-				handlePlayer(go, player, delta);
+				handlePlayer(go.get(), player, delta);
 			}
 			if (comp->IsOfType<Enemy>())
 			{
 				auto enemy = static_cast<Enemy*>(comp);
-				handleEnemy(go, enemy, delta);
+				handleEnemy(go.get(), enemy, delta);
 			}
 		}
 	}

@@ -144,21 +144,21 @@ void OpenGLRenderer::draw() {
             return;
 
         for (int j = 0; j < go->m_Components.size(); j++) {
-            auto comp = go->m_Components[j];
+            auto comp = go->m_Components[j].get();
             if (!comp)
                 return;
             if (comp->IsOfType<Sprite>()) {
                 auto sprite = static_cast<Sprite*>(comp);
-                drawSprite(go, sprite);
+                drawSprite(go.get(), sprite);
             }
             else if (comp->IsOfType<AnimatedSprite>()) {
                 auto anim_sprite = static_cast<AnimatedSprite*>(comp);
-                drawSprite(go, anim_sprite->frames.at(anim_sprite->currentFrame));
+                drawSprite(go.get(), anim_sprite->frames.at(anim_sprite->currentFrame));
             }
 			else if (comp->IsOfType<Animator>()) {
 				auto animator = static_cast<Animator*>(comp);
 				auto anim_sprite = animator->getState(animator->currentState);
-				drawSprite(go, anim_sprite->frames.at(anim_sprite->currentFrame));
+				drawSprite(go.get(), anim_sprite->frames.at(anim_sprite->currentFrame));
 			}
 
             // TODO: Shader effects, I imagine I won't be changing the vertex shader, only the fragment shader,
