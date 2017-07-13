@@ -101,7 +101,7 @@ void DebugRenderer::draw()
 				ImGui::Text("X:%.0f Y:%.0f", go->x, go->y);
 
 				for (int j = 0; j < go->m_Components.size(); j++) {
-					auto comp = go->m_Components[j].get();
+					auto comp = go->m_Components[j];
 					if (!comp) return;
 
 					if (comp->IsOfType<Sprite*>()) {
@@ -158,7 +158,7 @@ void DebugRenderer::draw()
 			auto go = m_World->m_gameObjects.at(i);
 			if (!go) return;
 			for (int j = 0; j < go->m_Components.size(); j++) {
-				auto comp = go->m_Components[j].get();
+				auto comp = go->m_Components[j];
 				if (!comp) return;
 				else if (comp->IsOfType<Player>()) {
 					player = static_cast<Player *>(comp);

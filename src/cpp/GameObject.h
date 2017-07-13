@@ -16,11 +16,11 @@ public:
 	~GameObject()
 	{
 		for (auto& comp : m_Components) {
-			//delete comp;
+			delete comp;
 		}
 	}
 
-	void AddComponent(std::shared_ptr<Component> comp)
+	void AddComponent(Component* comp)
 	{
 		comp->setParent(this);
 
@@ -58,7 +58,7 @@ public:
 	T* GetComponentByTypeDynCast() {
 		for (int i = 0; i < m_Components.size(); i++)
 		{
-			if (auto result = dynamic_cast<T*>(m_Components.at(i).get())) {
+			if (auto result = dynamic_cast<T*>(m_Components.at(i))) {
 				return result;
 			}
 		}
@@ -75,6 +75,6 @@ public:
 	short id = rand() % 32000;
 	float x;
 	float y;
-	std::vector<std::shared_ptr<Component>> m_Components;
-	std::unordered_map<std::type_index, std::shared_ptr<Component>> m_ComponentsMap;
+	std::vector<Component*> m_Components;
+	std::unordered_map<std::type_index, Component*> m_ComponentsMap;
 };
