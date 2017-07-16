@@ -136,6 +136,8 @@ void OpenGLRenderer::init(ResourceManager* rm)
 
 void OpenGLRenderer::draw() {
 
+	drawLine(0, 0, 500, 500);
+
     if (!isActive) return;
 
     for (int i = 0; i < m_World->m_gameObjects.size(); ++i) {
@@ -158,6 +160,16 @@ void OpenGLRenderer::draw() {
 				auto anim_sprite = animator->getState(animator->currentState);
 				drawSprite(go, anim_sprite->frames.at(anim_sprite->currentFrame));
 			}
+			else if (comp->IsOfType<Physics>()) {
+				auto phys = static_cast<Physics*>(comp);
+				for (auto& col : phys->colliders)
+				{
+					drawSquare(glm::vec4(col.offset.x, 
+										 col.offset.y,
+										 col.offset.x + col.size.x,
+										 col.offset.y + col.size.y));
+				}
+			}
 
             // TODO: Shader effects, I imagine I won't be changing the vertex shader, only the fragment shader,
             // So these won't be that big of a deal
@@ -167,9 +179,32 @@ void OpenGLRenderer::draw() {
     }
 }
 
-void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
+void OpenGLRenderer::drawLine(int x1, int y1, int x2, int y2)
+{
+	GLuint vao;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	// TODO
+}
+
+void OpenGLRenderer::drawLine(glm::vec2 p1, glm::vec2 p2)
+{
+	drawLine(p1.x, p1.y, p2.x, p2.y);
+}
+
+void OpenGLRenderer::drawSquare(glm::vec4 sq)
+{
+	drawLine(sq.x, sq.y, sq.z, sq.y);
+	drawLine(sq.w, sq.y, sq.z, sq.w);
+	drawLine(sq.z, sq.w, sq.x, sq.w);
+	drawLine(sq.x, sq.w, sq.x, sq.y);
+}
+
+void OpenGLRenderer::drawSprite(GameObject* go, Sprite* sp) {
 	
 	glm::vec2 position = glm::vec2(go->x, go->y);
+	//glm::vec2 size = glm::vec2(sp->width, sp->height);
 	glm::vec2 size = glm::vec2(100, 100);
 	GLfloat rotate = 0;
 	glm::vec3 color = glm::vec3(1, 1, 1);
@@ -181,10 +216,9 @@ void OpenGLRenderer::drawSprite(GameObject *go, Sprite *sp) {
 	}
 
     // TODO: Figure out how to do horizontal and vertical flipping only using srcRect
-    // Try not to touch the shaders (especially the fs)
-	if (sp->flip)
+	//if (sp->flip)
 	{
-		srcRect.x *= -1.0f;
+		//srcRect *= -1;
 	}
 
 	spriteShader->Use();

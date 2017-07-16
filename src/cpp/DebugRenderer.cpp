@@ -45,8 +45,7 @@ void DebugRenderer::clear()
 
 void DebugRenderer::draw()
 {
-	//auto timer = TimerSingleton::Instance();
-	//timer->profile("Debug draw start");
+	gTimer.profile("Debug draw start");
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
 
@@ -171,12 +170,10 @@ void DebugRenderer::draw()
 	}
 
 	if (ImGui::CollapsingHeader("Physics")) {
-		/*
 		for (int i = 0; i < m_World->physicsItems.size(); i++)
 		{
 			ImGui::Text("%s: %s", m_World->physicsItems[i]->getParent()->name.c_str(), m_World->physicsItems[i]->isColliding ? "Yes" : "No");
 		}
-		*/		
 	}
 }
 

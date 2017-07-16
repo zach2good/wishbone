@@ -32,6 +32,9 @@ public:
 		y = ss.y;
 		w = ss.z;
 		h = ss.w;
+
+		width = _ss->width;
+		height = _ss->height;
     }
 
     Texture* tex;
@@ -39,6 +42,9 @@ public:
     float y;
     float w;
     float h;
+
+	float width;
+	float height;
 
 	bool flip = false;
 };

@@ -1,6 +1,26 @@
 #pragma once
 
+#include <vector>
+#include <glm/vec2.hpp> // glm::vec2
+
 #include "Component.h"
+
+struct Collider {
+public:
+	// NOTE: Always a rectangle
+	//CollisionShape collisionShape;
+
+	Collider(float width, float height, float offsetX = 0.0f, float offsetY = 0.0f) {
+		size.x = width;
+		size.y = height;
+
+		offset.x = offsetX;
+		offset.y = offsetY;
+	}
+
+	glm::vec2 size;
+	glm::vec2 offset;
+};
 
 class Physics : public Component
 {
@@ -10,8 +30,10 @@ public:
 	{
 		dx = 0;
 		dy = 0;
-		ddx = 0;
-		ddy = 0;
+	}
+
+	void AddCollider(float width, float height, float offsetX = 0.0f, float offsetY = 0.0f) {
+		colliders.push_back(Collider(width, height, offsetX, offsetY));
 	}
     
     // TODO: Dig out old physics textbooks and find some mechanics equations to model all of this correctly
@@ -32,15 +54,11 @@ public:
 
     double dx;
 	double dy;
-    
-    double ddx;
-    double ddy;
 
     double friction;
     double torque;
     double angularMomentum;
 
-    // AABB aabb;
-    // CollisionShape Square?
+	std::vector<Collider> colliders;
 };
 

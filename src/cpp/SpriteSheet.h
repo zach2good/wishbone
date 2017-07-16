@@ -15,12 +15,13 @@ class SpriteSheet
     //
     // Texture -> Sprite (Component)
     //
-    // When it comes to rendering, these should be indhisinguishable from eachother
+    // When it comes to rendering, these should be indisinguishable from eachother
     //
     SpriteSheet(Texture* tex, int x, int y)
         : texture(tex), x_split(x), y_split(y)
     {
-        // ===
+		width = tex->width;
+		height = tex->height;
     }
     
     ~SpriteSheet() { } 
@@ -35,8 +36,12 @@ class SpriteSheet
         return texture;
     }
     
- private:
+ //private:
     Texture* texture;
+
     int x_split; 
-    int y_split;    
+    int y_split;  
+
+	int width;
+	int height;
 };

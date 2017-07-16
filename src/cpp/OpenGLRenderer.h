@@ -7,6 +7,8 @@
 #endif
 #include <glad/glad.h>
 
+#include <glm/vec2.hpp> // glm::vec2
+
 #include <map>
 #include <string>
 
@@ -35,6 +37,10 @@ public:
   void init(ResourceManager* rm);
   
   void drawSprite(GameObject *go, Sprite *sp);
+
+  void drawLine(int x1, int y1, int x2, int y2);
+  void drawLine(glm::vec2 p1, glm::vec2 p2);
+  void drawSquare(glm::vec4 sq);
 
   SDL_Window *getWindow() { return m_pWindow; }
 

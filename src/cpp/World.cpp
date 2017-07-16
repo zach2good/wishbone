@@ -25,6 +25,7 @@
 
 World::World()
 {
+	// ===
 }
 
 World:: ~World()
@@ -71,15 +72,19 @@ void World::init(ResourceManager *rm)
 			rm->GetSprite("eye1"));
 
 		auto e = std::make_shared<Enemy>();
+
 		auto phe = std::make_shared<Physics>();
 		phe->collisionLayer = Physics::CollisionLayer::One;
 		phe->useGravity = false;
+		phe->AddCollider(100, 100);
+
 		go->AddComponent(phe);
 		go->AddComponent(asp);
 		go->AddComponent(e);
+
 		m_gameObjects.push_back(go);
 	}
-	
+
 	// Player
 	{
 		auto go = std::make_shared<GameObject>("player", 50, 500);
@@ -104,11 +109,12 @@ void World::init(ResourceManager *rm)
 		playerAnimator->addState("jumping", jumping);
 		playerAnimator->addState("celebrating", celebrating);
 		playerAnimator->addState("dead", dead);
-
 		playerAnimator->currentState = "standing";
 
 		auto p = std::make_shared<Player>();
+
 		auto ph = std::make_shared<Physics>();
+		ph->AddCollider(100, 100);
 
 		go->AddComponent(p);
 		go->AddComponent(ph);
@@ -202,7 +208,7 @@ void World::handlePlayer(GameObject* go, Player* player, double delta)
 {
 	// Dirty find components
 	Physics* phys = go->GetComponentByType<Physics>();
-	Animator* anim = go->GetComponentByType<Animator>();;
+	Animator* anim = go->GetComponentByType<Animator>();
 
 	if (phys->isColliding) {
 		phys->dy += -player->jumpPower * 0.25;
@@ -346,6 +352,7 @@ void World::handlePhysics(std::vector<Physics*>& items, double delta)
 		phys->dy *= 0.95;
 
 		// Limits
+		// TEMP
 		// Ground
 		if (go->y > 500) {
 			go->y = 500;
@@ -379,9 +386,6 @@ void World::handlePhysics(std::vector<Physics*>& items, double delta)
 					continue;
 				}
 
-				auto parentA = itemA->getParent();
-				auto parentB = itemB->getParent();
-
 				if (itemA == itemB ||
 					itemA->collisionLayer != Physics::CollisionLayer::All &&
 					itemB->collisionLayer != Physics::CollisionLayer::All &&
@@ -393,6 +397,42 @@ void World::handlePhysics(std::vector<Physics*>& items, double delta)
 				int spriteW = 100;
 				int spriteH = 100;
 
+				auto parentA = itemA->getParent();
+				auto parentB = itemB->getParent();	
+
+				for (int a = 0; a < itemA->colliders.size(); a++)
+				{
+					for (int b = 0; b < itemB->colliders.size(); b++)
+					{
+						if (itemA->isColliding || itemB->isColliding)
+						{
+							return;
+						}
+
+						auto& colA = itemA->colliders.at(a);
+						auto& colB = itemB->colliders.at(a);
+
+						// ===
+						colA.offset.x = parentA->x;
+						colA.offset.y = parentA->y;
+
+						colB.offset.x = parentB->x;
+						colB.offset.y = parentB->y;
+
+						// ===
+						if (colA.offset.x < colB.offset.x + colB.size.x &&
+							colA.offset.x + colA.size.x > colB.offset.x &&
+							colA.offset.y < colB.offset.y + colB.size.y &&
+							colA.offset.y + colA.size.y > colB.offset.y)
+						{
+							itemA->isColliding = true;
+							itemB->isColliding = true;
+							continue;
+						}
+					}
+				}
+
+				/*
 				// Check collision
 				if (parentA->x < parentB->x + spriteW &&
 					parentA->x + spriteW > parentB->x &&
@@ -402,6 +442,7 @@ void World::handlePhysics(std::vector<Physics*>& items, double delta)
 					itemA->isColliding = true;
 					itemB->isColliding = true;
 				}
+				*/
 			}
 		}
 	}

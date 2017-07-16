@@ -4,9 +4,9 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
+#include <iostream>
 
 #include "Component.h"
-#include "Sprite.h"
 
 class GameObject {
 public:
@@ -31,6 +31,20 @@ public:
 		else {
 			m_ComponentsMap[std::type_index(comp->getType())] = comp;
 		}
+	}
+
+	template <typename T>
+	void RemoveComponent()
+	{
+		for (int i = 0; i < m_Components.size(); i++)
+		{
+			if (m_Components[i]->IsOfType<T>())
+			{
+				m_Components.erase(m_Components.begin() + i);
+			}
+		}
+
+		m_ComponentsMap.erase(std::type_index(typeid(T)));
 	}
 
 	template <typename T>
@@ -65,14 +79,19 @@ public:
 
 	template <typename T>
 	T* GetComponentByType() {
-		return GetComponentByTypeMap<T>();
+		return GetComponentByTypeDynCast<T>();
 	}
 
 //private:
 	std::string name;
+	// TODO: Make a decent system for generating non-clasing GUIDs
 	short id = rand() % 32000;
+
+	// TODO: Move x, y, z etc. into a transform component
 	float x;
 	float y;
+
+	// TODO: Decide on a single system and stick to it, instead of using 2
 	std::vector<std::shared_ptr<Component>> m_Components;
 	std::unordered_map<std::type_index, std::shared_ptr<Component>> m_ComponentsMap;
 };

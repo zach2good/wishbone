@@ -8,8 +8,8 @@
 
 Timer::Timer()
 {  
-	current_timestamps = std::shared_ptr<std::vector<std::pair<std::string, double>>>();
-	last_timestamps = std::shared_ptr<std::vector<std::pair<std::string, double>>>();
+	current_timestamps = std::make_shared<std::vector<std::pair<std::string, double>>>();
+	last_timestamps = std::make_shared<std::vector<std::pair<std::string, double>>>();
 }
 
 Timer::~Timer()
