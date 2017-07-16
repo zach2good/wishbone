@@ -7,6 +7,7 @@
 #endif
 
 #include <iostream>
+#include <memory>
 
 #include "Player.h"
 #include "Texture.h"
@@ -28,11 +29,7 @@ World::World()
 
 World:: ~World()
 {
-	for (auto go : m_gameObjects)
-	{
-		if (go)
-			delete go;
-	}
+	// ===
 }
 
 void World::init(ResourceManager *rm)
@@ -44,72 +41,81 @@ void World::init(ResourceManager *rm)
 	for (int i = 0; i < map.data.size(); i++)
 	{
 		if (map.data[i] == 0) continue;
-		GameObject* block = new GameObject("bg_mapblock", (i % map.width) * mapSize, (i / map.width) * mapSize);
+		auto block = std::make_shared<GameObject>("bg_mapblock", (i % map.width) * mapSize, (i / map.width) * mapSize);
 		std::string tileString = "tile" + std::to_string(map.data[i]);
-		AnimatedSprite* block_tile = new AnimatedSprite(200, 1, rm->GetSprite(tileString));
+		auto block_tile = std::make_shared<AnimatedSprite>(200, 1, rm->GetSprite(tileString));
 		block->AddComponent(block_tile);
 		m_gameObjects.push_back(block);
 	}
-
+	
 	map = rm->map->layerMap["main"];
 	for (int i = 0; i < map.data.size(); i++)
 	{
 		if (map.data[i] == 0) continue;
-		GameObject* block = new GameObject("main_mapblock", (i % map.width) * mapSize, (i / map.width) * mapSize);
+		auto block = std::make_shared<GameObject>("main_mapblock", (i % map.width) * mapSize, (i / map.width) * mapSize);
 		std::string tileString = "tile" + std::to_string(map.data[i]);
-		AnimatedSprite* block_tile = new AnimatedSprite(200, 1, rm->GetSprite(tileString));
+		auto block_tile = std::make_shared<AnimatedSprite>(200, 1, rm->GetSprite(tileString));
 		block->AddComponent(block_tile);
 		m_gameObjects.push_back(block);
 	}
-
+	
 	// Enemies
 	for (size_t i = 0; i < 100; i++)
 	{
-		GameObject* go2 = new GameObject("enemy", rand() % 800, rand() % 600);
-		AnimatedSprite* asp2 = new AnimatedSprite(200,
+		auto go = std::make_shared<GameObject>("enemy", rand() % 800, rand() % 600);
+		auto asp = std::make_shared<AnimatedSprite>(200,
 			4,
 			rm->GetSprite("eye2"),
 			rm->GetSprite("eye1"),
 			rm->GetSprite("eye3"),
 			rm->GetSprite("eye1"));
-		Enemy* e = new Enemy();
-		Physics* phe = new Physics();
+
+		auto e = std::make_shared<Enemy>();
+		auto phe = std::make_shared<Physics>();
 		phe->collisionLayer = Physics::CollisionLayer::One;
 		phe->useGravity = false;
-		go2->AddComponent(phe);
-		go2->AddComponent(asp2);
-		go2->AddComponent(e);
-		m_gameObjects.push_back(go2);
+		go->AddComponent(phe);
+		go->AddComponent(asp);
+		go->AddComponent(e);
+		m_gameObjects.push_back(go);
 	}
-
+	
 	// Player
-	GameObject* go = new GameObject("player", 50, 500);
-	AnimatedSprite* walking = new AnimatedSprite(200,
-		4,
-		rm->GetSprite("player2"),
-		rm->GetSprite("player1"),
-		rm->GetSprite("player2"),
-		rm->GetSprite("player3"));
+	{
+		auto go = std::make_shared<GameObject>("player", 50, 500);
 
-	AnimatedSprite* standing = new AnimatedSprite(200, 1, rm->GetSprite("player6"));
-	AnimatedSprite* crouching = new AnimatedSprite(200, 1, rm->GetSprite("player4"));
-	AnimatedSprite* jumping = new AnimatedSprite(200, 1, rm->GetSprite("player5"));
-	AnimatedSprite* celebrating = new AnimatedSprite(400, 2, rm->GetSprite("player7"), rm->GetSprite("player6"));
-	AnimatedSprite* dead = new AnimatedSprite(200, 1, rm->GetSprite("player8"));
-	Animator* playerAnimator = new Animator();
-	playerAnimator->addState("walking", walking);
-	playerAnimator->addState("standing", standing);
-	playerAnimator->addState("crouching", crouching);
-	playerAnimator->addState("jumping", jumping);
-	playerAnimator->addState("celebrating", celebrating);
-	playerAnimator->addState("dead", dead);
-	playerAnimator->currentState = "standing";
-	Player* p = new Player();
-	Physics* ph = new Physics();
-	go->AddComponent(p);
-	go->AddComponent(ph);
-	go->AddComponent(playerAnimator);
-	m_gameObjects.push_back(go);
+		auto walking = std::make_shared<AnimatedSprite>(200,
+			4,
+			rm->GetSprite("player2"),
+			rm->GetSprite("player1"),
+			rm->GetSprite("player2"),
+			rm->GetSprite("player3"));
+
+		auto standing = std::make_shared<AnimatedSprite>(200, 1, rm->GetSprite("player6"));
+		auto crouching = std::make_shared<AnimatedSprite>(200, 1, rm->GetSprite("player4"));
+		auto jumping = std::make_shared<AnimatedSprite>(200, 1, rm->GetSprite("player5"));
+		auto celebrating = std::make_shared<AnimatedSprite>(400, 2, rm->GetSprite("player7"), rm->GetSprite("player6"));
+		auto dead = std::make_shared<AnimatedSprite>(200, 1, rm->GetSprite("player8"));
+
+		auto playerAnimator = std::make_shared<Animator>();
+		playerAnimator->addState("walking", walking);
+		playerAnimator->addState("standing", standing);
+		playerAnimator->addState("crouching", crouching);
+		playerAnimator->addState("jumping", jumping);
+		playerAnimator->addState("celebrating", celebrating);
+		playerAnimator->addState("dead", dead);
+
+		playerAnimator->currentState = "standing";
+
+		auto p = std::make_shared<Player>();
+		auto ph = std::make_shared<Physics>();
+
+		go->AddComponent(p);
+		go->AddComponent(ph);
+		go->AddComponent(playerAnimator);
+
+		m_gameObjects.push_back(go);
+	}
 
 	// Set world information
 	isActive = true;
@@ -133,7 +139,7 @@ void World::step(double delta)
 	physicsItems.clear();
 	for (int i = 0; i < m_gameObjects.size(); ++i)
 	{
-		auto go = m_gameObjects.at(i);
+		auto go = m_gameObjects.at(i).get();
 		if (!go) return;
 		Physics* phys = go->GetComponentByType<Physics>();
 		if (phys)
@@ -147,11 +153,11 @@ void World::step(double delta)
 	// Actions
 	for (int i = 0; i < m_gameObjects.size(); ++i)
 	{
-		auto go = m_gameObjects.at(i);
+		auto go = m_gameObjects.at(i).get();
 		if (!go) return;
 		for (int j = 0; j < go->m_Components.size(); j++)
 		{
-			auto comp = go->m_Components[j];
+			auto comp = go->m_Components[j].get();
 			if (!comp) return;
 			if (comp->IsOfType<AnimatedSprite>())
 			{

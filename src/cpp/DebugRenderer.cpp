@@ -101,7 +101,7 @@ void DebugRenderer::draw()
 				ImGui::Text("X:%.0f Y:%.0f", go->x, go->y);
 
 				for (int j = 0; j < go->m_Components.size(); j++) {
-					auto comp = go->m_Components[j];
+					auto comp = go->m_Components[j].get();
 					if (!comp) return;
 
 					if (comp->IsOfType<Sprite*>()) {
@@ -155,32 +155,28 @@ void DebugRenderer::draw()
 	if (ImGui::CollapsingHeader("Player")) {
 		Player* player = nullptr;
 		for (int i = 0; i < m_World->m_gameObjects.size(); ++i) {
-			auto go = m_World->m_gameObjects.at(i);
-			if (!go) return;
-			for (int j = 0; j < go->m_Components.size(); j++) {
-				auto comp = go->m_Components[j];
-				if (!comp) return;
-				else if (comp->IsOfType<Player>()) {
-					player = static_cast<Player *>(comp);
-				}
-			}
+			auto go = m_World->m_gameObjects.at(i).get();
+			player = go->GetComponentByType<Player>();
 		}
-		ImGui::Text("State: %s", player->getStateString());
-		ImGui::Text("Health: %i", player->health);
-		ImGui::Checkbox("isOnGround", &player->isOnGround);
-		ImGui::Checkbox("isPushingCeiling", &player->isPushingCeiling);
-		ImGui::Checkbox("isPushingLeftWall", &player->isPushingLeftWall);
-		ImGui::Checkbox("isPushingRightWall", &player->isPushingRightWall);
-		ImGui::DragFloat("walkSpeed", &player->walkSpeed, 0.1, 0, 20);
-		ImGui::DragFloat("jumpPower", &player->jumpPower, 0.1, 0, 20);
+		if (player) {
+			ImGui::Text("State: %s", player->getStateString());
+			ImGui::Text("Health: %i", player->health);
+			ImGui::Checkbox("isOnGround", &player->isOnGround);
+			ImGui::Checkbox("isPushingCeiling", &player->isPushingCeiling);
+			ImGui::Checkbox("isPushingLeftWall", &player->isPushingLeftWall);
+			ImGui::Checkbox("isPushingRightWall", &player->isPushingRightWall);
+			ImGui::DragFloat("walkSpeed", &player->walkSpeed, 0.1, 0, 20);
+			ImGui::DragFloat("jumpPower", &player->jumpPower, 0.1, 0, 20);
+		}
 	}
 
 	if (ImGui::CollapsingHeader("Physics")) {
+		/*
 		for (int i = 0; i < m_World->physicsItems.size(); i++)
 		{
 			ImGui::Text("%s: %s", m_World->physicsItems[i]->getParent()->name.c_str(), m_World->physicsItems[i]->isColliding ? "Yes" : "No");
 		}
-		
+		*/		
 	}
 }
 

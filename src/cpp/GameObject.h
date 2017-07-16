@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <memory>
 
 #include "Component.h"
 #include "Sprite.h"
@@ -15,12 +16,10 @@ public:
 
 	~GameObject()
 	{
-		for (auto& comp : m_Components) {
-			delete comp;
-		}
+		// ===
 	}
 
-	void AddComponent(Component* comp)
+	void AddComponent(std::shared_ptr<Component> comp)
 	{
 		comp->setParent(this);
 
@@ -32,7 +31,6 @@ public:
 		else {
 			m_ComponentsMap[std::type_index(comp->getType())] = comp;
 		}
-
 	}
 
 	template <typename T>
@@ -41,7 +39,7 @@ public:
 		{
 			if (m_Components[i]->IsOfType<T>())
 			{
-				return dynamic_cast<T*>(m_Components.at(i));
+				return dynamic_cast<T*>(m_Components.at(i).get());
 			}
 		}
 		return nullptr;
@@ -50,7 +48,7 @@ public:
 	template <typename T>
 	T* GetComponentByTypeMap() {
 		return m_ComponentsMap[std::type_index(typeid(T))] ?
-			dynamic_cast<T*>(m_ComponentsMap[std::type_index(typeid(T))]) :
+			dynamic_cast<T*>(m_ComponentsMap[std::type_index(typeid(T))].get()) :
 			nullptr;
 	}
 
@@ -58,7 +56,7 @@ public:
 	T* GetComponentByTypeDynCast() {
 		for (int i = 0; i < m_Components.size(); i++)
 		{
-			if (auto result = dynamic_cast<T*>(m_Components.at(i))) {
+			if (auto result = dynamic_cast<T*>(m_Components.at(i).get())) {
 				return result;
 			}
 		}
@@ -67,7 +65,7 @@ public:
 
 	template <typename T>
 	T* GetComponentByType() {
-		return GetComponentByTypeDynCast<T>();
+		return GetComponentByTypeMap<T>();
 	}
 
 //private:
@@ -75,6 +73,6 @@ public:
 	short id = rand() % 32000;
 	float x;
 	float y;
-	std::vector<Component*> m_Components;
-	std::unordered_map<std::type_index, Component*> m_ComponentsMap;
+	std::vector<std::shared_ptr<Component>> m_Components;
+	std::unordered_map<std::type_index, std::shared_ptr<Component>> m_ComponentsMap;
 };

@@ -139,12 +139,10 @@ void OpenGLRenderer::draw() {
     if (!isActive) return;
 
     for (int i = 0; i < m_World->m_gameObjects.size(); ++i) {
-        auto go = m_World->m_gameObjects.at(i);
-        if (!go)
-            return;
+        auto go = m_World->m_gameObjects.at(i).get();
 
         for (int j = 0; j < go->m_Components.size(); j++) {
-            auto comp = go->m_Components[j];
+            auto comp = go->m_Components[j].get();
             if (!comp)
                 return;
             if (comp->IsOfType<Sprite>()) {

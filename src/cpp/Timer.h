@@ -15,6 +15,7 @@ public:
 		static Timer myInstance;
 		return myInstance;
 	}
+
 	// delete copy and move constructors and assign operators
 	Timer(Timer const&) = delete;             // Copy construct
 	Timer(Timer&&) = delete;                  // Move construct
@@ -37,6 +38,6 @@ public:
     double delta;
 	float multiplier = 1;
 
-    std::vector<std::pair<std::string, double>>* current_timestamps;
-	std::vector<std::pair<std::string, double>>* last_timestamps;
+    std::shared_ptr<std::vector<std::pair<std::string, double>>> current_timestamps;
+	std::shared_ptr<std::vector<std::pair<std::string, double>>> last_timestamps;
 };

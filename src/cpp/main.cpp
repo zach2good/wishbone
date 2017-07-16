@@ -1,7 +1,6 @@
 #include "common.h"
 
 #include "OpenGLRenderer.h"
-#define REN OpenGLRenderer
 
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
@@ -25,7 +24,7 @@ int main(int argc, char* argv[])
     std::unique_ptr<InputManager> ptr_im = std::make_unique<InputManager>();
     auto m_InputManager = ptr_im.get();
 
-    std::unique_ptr<REN> ptr_ren = std::make_unique<REN>("Wishbone", 800, 600);
+    std::unique_ptr<OpenGLRenderer> ptr_ren = std::make_unique<OpenGLRenderer>("Wishbone", 800, 600);
     auto m_Renderer = ptr_ren.get();
 
     std::unique_ptr<ResourceManager> ptr_rm = std::make_unique<ResourceManager>();
@@ -86,6 +85,5 @@ int main(int argc, char* argv[])
 	
 		//timer.endFrame();
     }
-
     return 0;
 }

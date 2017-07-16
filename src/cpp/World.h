@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "Component.h"
 #include "GameObject.h"
@@ -26,8 +27,8 @@ public:
     void step(double delta);
 
     //private:
-    std::vector<GameObject*> m_gameObjects;
-    std::vector<Component*> m_components;
+    std::vector<std::shared_ptr<GameObject>> m_gameObjects;
+    //std::vector<Component*> m_components;
 
     void updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double delta);
     void handlePlayer(GameObject* go, Player* player, double delta);

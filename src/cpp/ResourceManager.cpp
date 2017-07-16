@@ -110,7 +110,6 @@ SpriteSheet* ResourceManager::LoadSpriteSheet(std::string name, Texture* tex, in
 
 Shader* ResourceManager::GetShader(std::string name)
 {
-    // TODO: Can you assert with a warning message? When these trigger its not immediatley clear why
     assert(m_mapShaders[name]);
     return m_mapShaders[name];
 }

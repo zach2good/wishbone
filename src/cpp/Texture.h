@@ -13,7 +13,6 @@
 
 #include <glad/glad.h>
 
-//#include "common.h"
 
 class Texture
 {

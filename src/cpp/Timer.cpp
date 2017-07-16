@@ -7,18 +7,14 @@
 #endif
 
 Timer::Timer()
-{
-    // TODO: Use C++11 Pointers, I'm lazy and leaking a lot of memory, literally everywhere.
-    
-	current_timestamps = new std::vector<std::pair<std::string, double>>();
-	last_timestamps = new std::vector<std::pair<std::string, double>>();
+{  
+	current_timestamps = std::shared_ptr<std::vector<std::pair<std::string, double>>>();
+	last_timestamps = std::shared_ptr<std::vector<std::pair<std::string, double>>>();
 }
 
 Timer::~Timer()
 {
-	// TODO: This was causing a crash? Hmmmmm
-    //delete current_timestamps;
-    //delete last_timestamps;
+	// ===
 }
 
 void Timer::setup()
@@ -60,5 +56,5 @@ double Timer::getDelta()
 
 std::vector<std::pair<std::string, double>>* Timer::getStamps()
 {
-	return last_timestamps;
+	return last_timestamps.get();
 }

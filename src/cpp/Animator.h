@@ -18,24 +18,22 @@ public:
 
 	~Animator()
 	{
-		for (auto state : states) {
-			delete state.second;
-		}
+		// ===
 	}
 
-	void addState(std::string name, AnimatedSprite* state) {
+	void addState(std::string name, std::shared_ptr<AnimatedSprite> state) {
 		states[name] = state;
 	}
 
 	AnimatedSprite* getState(std::string name) {
-		return states[name];
+		return states[name].get();
 	}
 
 	AnimatedSprite* getCurrentState() {
-		return states[currentState];
+		return states[currentState].get();
 	}
 
 	std::string currentState;
-	std::map<std::string, AnimatedSprite*> states;
+	std::map<std::string, std::shared_ptr<AnimatedSprite>> states;
 };
 
