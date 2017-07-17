@@ -3,6 +3,7 @@
 ResourceManager::ResourceManager()
 {
     LoadShader("sprite", "res/shaders/sprite.vs", "res/shaders/sprite.fs");
+    LoadShader("line", "res/shaders/line.vs", "res/shaders/line.fs");
 
     auto player_texture = LoadTexture("player", "res/graphics/player.png");
 	auto enemies_texture = LoadTexture("enemies", "res/graphics/enemies.png");

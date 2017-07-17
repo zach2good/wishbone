@@ -49,7 +49,7 @@ OpenGLRenderer::OpenGLRenderer(const char *_title, const int _width,
 
     // TODO: This is meant to disable VSync but it isn't working, the renderer is still
     // capping out at 16ms even when there is no load...
-	SDL_GL_SetSwapInterval(0);
+	SDL_GL_SetSwapInterval(1);
 
     m_GLContext = SDL_GL_CreateContext(m_pWindow);
     if (!m_GLContext) {
@@ -98,6 +98,7 @@ void OpenGLRenderer::init(ResourceManager* rm)
     this->rm = rm;
 	m_clearColor = ImColor(180, 180, 180);
 	spriteShader = rm->GetShader("sprite");
+    lineShader = rm->GetShader("line");
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(m_Width),
 		static_cast<GLfloat>(m_Height), 0.0f, -1.0f, 1.0f);
@@ -105,6 +106,7 @@ void OpenGLRenderer::init(ResourceManager* rm)
 	spriteShader->Use().SetInteger("image", 0);
 
 	spriteShader->SetMatrix4("projection", projection);
+    lineShader->SetMatrix4("projection", projection);
 
 	// Configure VAO/VBO
 	GLuint VBO;
@@ -131,12 +133,11 @@ void OpenGLRenderer::init(ResourceManager* rm)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
+    // ===
 	isActive = true;
 }
 
 void OpenGLRenderer::draw() {
-
-	drawLine(0, 0, 500, 500);
 
     if (!isActive) return;
 
@@ -170,22 +171,13 @@ void OpenGLRenderer::draw() {
 										 col.offset.y + col.size.y));
 				}
 			}
-
-            // TODO: Shader effects, I imagine I won't be changing the vertex shader, only the fragment shader,
-            // So these won't be that big of a deal
-
-            // TODO: Particals, no idea how to do these, especially with the current crappy OpenGL implementation
         }
     }
 }
 
 void OpenGLRenderer::drawLine(int x1, int y1, int x2, int y2)
 {
-	GLuint vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	// TODO
+    // TODO: Maybe just with a fragment shader?
 }
 
 void OpenGLRenderer::drawLine(glm::vec2 p1, glm::vec2 p2)
@@ -201,8 +193,8 @@ void OpenGLRenderer::drawSquare(glm::vec4 sq)
 	drawLine(sq.x, sq.w, sq.x, sq.y);
 }
 
-void OpenGLRenderer::drawSprite(GameObject* go, Sprite* sp) {
-	
+void OpenGLRenderer::drawSprite(GameObject* go, Sprite* sp)
+{
 	glm::vec2 position = glm::vec2(go->x, go->y);
 	//glm::vec2 size = glm::vec2(sp->width, sp->height);
 	glm::vec2 size = glm::vec2(100, 100);
@@ -215,8 +207,7 @@ void OpenGLRenderer::drawSprite(GameObject* go, Sprite* sp) {
 		color = glm::vec3(1, 0, 0);
 	}
 
-    // TODO: Figure out how to do horizontal and vertical flipping only using srcRect
-	//if (sp->flip)
+	if (sp->flip)
 	{
 		//srcRect *= -1;
 	}

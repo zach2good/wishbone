@@ -59,4 +59,11 @@ public:
   GLuint quadVAO;
   
   ImColor m_clearColor;
+
+
+  // Line Renderer
+  Shader* lineShader;
+  GLuint vao;
+  GLuint vbo;
+  GLuint ebo;
 };
