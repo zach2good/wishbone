@@ -82,6 +82,24 @@ public:
 		return GetComponentByTypeDynCast<T>();
 	}
 
+    void AddChild(std::shared_ptr<GameObject> go)
+    {
+        // Does it already exist in this object?
+
+        // Insert
+        m_Children.push_back(go);
+    }
+
+    std::shared_ptr<GameObject> GetChild()
+    {
+        // TODO
+    }
+    
+    void RemoveChild()
+    {
+        // TODO
+    }
+    
 //private:
 	std::string name;
 	// TODO: Make a decent system for generating non-clasing GUIDs
@@ -94,4 +112,6 @@ public:
 	// TODO: Decide on a single system and stick to it, instead of using 2
 	std::vector<std::shared_ptr<Component>> m_Components;
 	std::unordered_map<std::type_index, std::shared_ptr<Component>> m_ComponentsMap;
+
+    std::vector<std::shared_ptr<GameObject>> m_Children;
 };
