@@ -10,9 +10,19 @@
 
 class GameObject {
 public:
-	GameObject(std::string _name) : name(_name), x(0), y(0) {};
-	GameObject(std::string _name, float _x, float _y)
-		: name(_name), x(_x), y(_y) {};
+    GameObject()
+    {
+        // TODO: Fix this
+        auto num = rand() % 32000;
+        name = std::to_string(num);
+        id = num;
+    }
+
+	GameObject(std::string _name)
+    {
+        name = _name;
+        id = rand() % 32000;
+    }
 
 	~GameObject()
 	{
@@ -86,6 +96,8 @@ public:
     {
         // Does it already exist in this object?
 
+        go->m_Parent = this;
+        
         // Insert
         m_Children.push_back(go);
     }
@@ -103,15 +115,12 @@ public:
 //private:
 	std::string name;
 	// TODO: Make a decent system for generating non-clasing GUIDs
-	short id = rand() % 32000;
-
-	// TODO: Move x, y, z etc. into a transform component
-	float x;
-	float y;
+    short id;
 
 	// TODO: Decide on a single system and stick to it, instead of using 2
 	std::vector<std::shared_ptr<Component>> m_Components;
 	std::unordered_map<std::type_index, std::shared_ptr<Component>> m_ComponentsMap;
 
+    GameObject* m_Parent;
     std::vector<std::shared_ptr<GameObject>> m_Children;
 };

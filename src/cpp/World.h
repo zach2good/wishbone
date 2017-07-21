@@ -12,12 +12,13 @@ class Player;
 class ResourceManager;
 class Physics;
 class Enemy;
+class Camera;
 
 class World {
 public:
 
     World();
-    ~World();
+    virtual ~World();
 
 	void init(ResourceManager* rm);
     
@@ -28,7 +29,6 @@ public:
 
     //private:
     std::vector<std::shared_ptr<GameObject>> m_gameObjects;
-    //std::vector<Component*> m_components;
 
     void updateAnimatedSprite(GameObject* go, AnimatedSprite* anim, double delta);
     void handlePlayer(GameObject* go, Player* player, double delta);
@@ -37,10 +37,7 @@ public:
    
 	ResourceManager* rm;
 
+    Camera* camera;
+
 	bool isActive;
-	float gravity = 0.011f;
-
-	std::vector<Physics*> physicsItems;
-
-	int mapSize = 100;
 };

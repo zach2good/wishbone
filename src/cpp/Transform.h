@@ -11,12 +11,18 @@ public:
 	{
 		position.x = _x;
 		position.y = _y;
+        rotation = glm::vec2(0.0f, 0.0f);
 		scale = glm::vec2(1.0f, 1.0f);
 	};
 
-	virtual ~Transform() {}
+	virtual ~Transform() 
+    {
+        // ===
+    }
+
 //private:
 
 	glm::vec2 position; 
+    glm::vec2 rotation;
 	glm::vec2 scale;
 };

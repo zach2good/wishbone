@@ -8,7 +8,9 @@
 #include <SDL2/SDL.h>
 #endif
 
-#include "SpriteSheet.h"
+#include "glm/common.hpp"
+
+#include "Texture.h"
 
 class Sprite : public Component
 {
@@ -17,34 +19,18 @@ public:
     Sprite(Texture* _tex) : Component(typeid(Sprite))
     {
         tex = _tex;
-        x = 0.0f;
-        y = 0.0f;
-        w = 1.0f;
-        h = 1.0f;
     }
 
-    // Use a subset of a texture, dictated by a spritesheet
-    Sprite(SpriteSheet* _ss, int _x, int _y) : Component(typeid(Sprite))
-    {
-		tex = _ss->GetTexture();
-		auto ss = _ss->getSrcRect(_x, _y);
-		x = ss.x;
-		y = ss.y;
-		w = ss.z;
-		h = ss.w;
-
-		width = _ss->width;
-		height = _ss->height;
-    }
+    virtual ~Sprite() {}
 
     Texture* tex;
-    float x;
-    float y;
-    float w;
-    float h;
 
-	float width;
-	float height;
+    glm::vec2 pivot = glm::vec2(0.5f, 0.5f);
+    glm::vec2 uvdim = glm::vec2(1.0f, 1.0f);
+    glm::vec2 uvoffset = glm::vec2(0.0f, 0.0f);
+    glm::vec2 size = glm::vec2(0, 0);
+
+    int frame = 0;
 
 	bool flip = false;
 };

@@ -97,8 +97,7 @@ void OpenGLRenderer::init(ResourceManager* rm)
 {
     this->rm = rm;
 	m_clearColor = ImColor(180, 180, 180);
-	spriteShader = rm->GetShader("sprite");
-    lineShader = rm->GetShader("line");
+	spriteShader = rm->LoadShader("sprite", "res/shaders/sprite.vs", "res/shaders/sprite.fs");
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(m_Width),
 		static_cast<GLfloat>(m_Height), 0.0f, -1.0f, 1.0f);
@@ -106,34 +105,7 @@ void OpenGLRenderer::init(ResourceManager* rm)
 	spriteShader->Use().SetInteger("image", 0);
 
 	spriteShader->SetMatrix4("projection", projection);
-    lineShader->SetMatrix4("projection", projection);
 
-	// Configure VAO/VBO
-	GLuint VBO;
-	GLfloat vertices[] = {
-		// Pos      // Tex
-		0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 0.0f, 0.0f,
-
-		0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		1.0f, 0.0f, 1.0f, 0.0f
-	};
-
-	glGenVertexArrays(1, &this->quadVAO);
-	glGenBuffers(1, &VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindVertexArray(this->quadVAO);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-    // ===
 	isActive = true;
 }
 
@@ -141,7 +113,7 @@ void OpenGLRenderer::draw() {
 
     if (!isActive) return;
 
-    for (int i = 0; i < m_World->m_gameObjects.size(); ++i) {
+    /*for (int i = 0; i < m_World->m_gameObjects.size(); ++i) {
         auto go = m_World->m_gameObjects.at(i).get();
 
         for (int j = 0; j < go->m_Components.size(); j++) {
@@ -172,7 +144,7 @@ void OpenGLRenderer::draw() {
 				}
 			}
         }
-    }
+    }*/
 }
 
 void OpenGLRenderer::drawLine(int x1, int y1, int x2, int y2)
@@ -195,47 +167,7 @@ void OpenGLRenderer::drawSquare(glm::vec4 sq)
 
 void OpenGLRenderer::drawSprite(GameObject* go, Sprite* sp)
 {
-	glm::vec2 position = glm::vec2(go->x, go->y);
-	//glm::vec2 size = glm::vec2(sp->width, sp->height);
-	glm::vec2 size = glm::vec2(100, 100);
-	GLfloat rotate = 0;
-	glm::vec3 color = glm::vec3(1, 1, 1);
-	glm::vec4 srcRect = glm::vec4(sp->x, sp->y, sp->w, sp->h);
-
-	Physics* phys = go->GetComponentByType<Physics>();
-	if (phys && phys->isColliding) {
-		color = glm::vec3(1, 0, 0);
-	}
-
-	if (sp->flip)
-	{
-		//srcRect *= -1;
-	}
-
-	spriteShader->Use();
-
-	glm::mat4 model;
-
-	model = glm::translate(model, glm::vec3(position, 0.0f)); 
-	model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
-
-	model = glm::rotate(model, rotate, glm::vec3(0.0f, 0.0f, 1.0f));
-	model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
-
-	model = glm::scale(model, glm::vec3(size, 1.0f));
-
-	spriteShader->SetMatrix4("model", model);
-	spriteShader->SetVector3f("spriteColor", color);
-	spriteShader->SetVector4f("srcRect", srcRect);
-
-	// TODO: This is expensive, do some sorting and do this as little as possible
-    // TODO: Also, implement a Z draw order so sprites can be sent ot the front or back
-	glActiveTexture(GL_TEXTURE0);
-	sp->tex->Bind();
-
-	glBindVertexArray(this->quadVAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+	// ===
 }
 
 void OpenGLRenderer::swap() {

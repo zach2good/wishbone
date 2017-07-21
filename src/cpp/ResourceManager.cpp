@@ -2,48 +2,7 @@
 
 ResourceManager::ResourceManager()
 {
-    LoadShader("sprite", "res/shaders/sprite.vs", "res/shaders/sprite.fs");
-    LoadShader("line", "res/shaders/line.vs", "res/shaders/line.fs");
-
-    auto player_texture = LoadTexture("player", "res/graphics/player.png");
-	auto enemies_texture = LoadTexture("enemies", "res/graphics/enemies.png");
-	auto tiles_texture = LoadTexture("tiles", "res/graphics/tiles.png");
-	auto portrait_texture = LoadTexture("portrait", "res/graphics/portrait.png");
-
-	auto player_spritesheet = LoadSpriteSheet("player_spritesheet", player_texture, 4, 2);
-	auto enemies_spritesheet = LoadSpriteSheet("enemies_spritesheet", enemies_texture, 4, 3);
-	auto tiles_spritesheet = LoadSpriteSheet("tiles_spritesheet", tiles_texture, 8, 5);
-
-	LoadSprite("player1", player_spritesheet, 0, 0);
-	LoadSprite("player2", player_spritesheet, 1, 0);
-	LoadSprite("player3", player_spritesheet, 2, 0);
-	LoadSprite("player4", player_spritesheet, 3, 0);
-	LoadSprite("player5", player_spritesheet, 0, 1);
-	LoadSprite("player6", player_spritesheet, 1, 1);
-	LoadSprite("player7", player_spritesheet, 2, 1);
-	LoadSprite("player8", player_spritesheet, 3, 1);
-
-	LoadSprite("eye1", enemies_spritesheet, 0, 2);
-	LoadSprite("eye2", enemies_spritesheet, 1, 2);
-	LoadSprite("eye3", enemies_spritesheet, 2, 2);
-
-	// Load Tilemap (1-based)
-	for (int i = 0; i < 8 * 5; i++)
-	{
-		int x = i % 8;
-		int y = i / 8;
-		std::string tileString = "tile" + std::to_string(i + 1);
-		LoadSprite(tileString, tiles_spritesheet, x, y);
-	}
-
-	map = std::make_unique<Map>("res/graphics/map1.tmx");
-
-    // TODO: What needs pooling?
-    // Create 100 of each kind of component? They're just data classes so they're essentially free
-    // (*as long as they're cleaned up correctly)
-    // -> Log warnings when components start getting reused, or expand the vector holding them and log warnings then
-
-    // Create loads of physics objects and make them inactive, when they're needed change their state and set them to active
+    // ===
 }
 
 ResourceManager::~ResourceManager()
@@ -58,24 +17,23 @@ ResourceManager::~ResourceManager()
 		delete tex.second;
     }
 
-	for (auto ss : m_mapSpriteSheets)
-	{
-		delete ss.second;
-	}
-
-	for (auto sp : m_mapSprites)
-	{
-		delete sp.second;
-	}
-
-    for(auto go : m_vGameObjects)
+    for (auto mesh : m_mapMeshes)
     {
-        delete go;
+        delete mesh.second;
+    }
+
+    for (auto map : m_mapMaps)
+    {
+        delete map.second;
     }
 }
 
 Shader* ResourceManager::LoadShader(std::string name, std::string vertexPath, std::string fragmentPath, std::string geometryPath)
 {
+    if (m_mapShaders[name]) {
+        return m_mapShaders[name];
+    }
+
     Shader* shader = new Shader(vertexPath, fragmentPath, geometryPath);
     m_mapShaders[name] = shader;
     return shader;
@@ -83,30 +41,36 @@ Shader* ResourceManager::LoadShader(std::string name, std::string vertexPath, st
 
 Texture* ResourceManager::LoadTexture(std::string name, std::string filename)
 {
+    if (m_mapTextures[name]) {
+        return m_mapTextures[name];
+    }
+
     Texture* tex = new Texture(filename);
     m_mapTextures[name] = tex;
     return tex;
 }
 
-Sprite* ResourceManager::LoadSprite(std::string name, Texture* tex)
+Mesh* ResourceManager::LoadMesh(std::string name, int width, int height, float pivotx, float pivoty, float uvwidth, float uvheight)
 {
-    Sprite* sp = new Sprite(tex);
-    m_mapSprites[name] = sp;
-    return sp;
+    if (m_mapMeshes[name]) {
+        return m_mapMeshes[name];
+    }
+
+    Mesh* mesh = new Mesh();
+    mesh->generateSpriteMesh(width, height, pivotx, pivoty, uvwidth, uvheight);
+    m_mapMeshes[name] = mesh;
+    return mesh;
 }
 
-Sprite* ResourceManager::LoadSprite(std::string name, SpriteSheet* ss, int x, int y)
+Map* ResourceManager::LoadMap(std::string name, std::string filename)
 {
-	Sprite* sp = new Sprite(ss, x, y);
-	m_mapSprites[name] = sp;
-	return sp;
-}
+    if (m_mapMaps[name]) {
+        return m_mapMaps[name];
+    }
 
-SpriteSheet* ResourceManager::LoadSpriteSheet(std::string name, Texture* tex, int x, int y)
-{
-    SpriteSheet* ss = new SpriteSheet(tex, x, y);
-    m_mapSpriteSheets[name] = ss;
-    return ss;
+    Map* map = new Map(filename);
+    m_mapMaps[name] = map;
+    return map;
 }
 
 Shader* ResourceManager::GetShader(std::string name)
@@ -121,25 +85,14 @@ Texture* ResourceManager::GetTexture(std::string name)
     return m_mapTextures[name];
 }
 
-Sprite* ResourceManager::GetSprite(std::string name)
+Mesh* ResourceManager::GetMesh(std::string name)
 {
-    assert(m_mapSprites[name]);
-    return m_mapSprites[name];
+    assert(m_mapMeshes[name]);
+    return m_mapMeshes[name];
 }
 
-SpriteSheet* ResourceManager::GetSpriteSheet(std::string name)
+Map* ResourceManager::GetMap(std::string name)
 {
-    assert(m_mapSpriteSheets[name]);
-    return m_mapSpriteSheets[name];
+    assert(m_mapMaps[name]);
+    return m_mapMaps[name];
 }
-
-GameObject* ResourceManager::GetGameObject(std::string name)
-{
-    // Index = GameObjectMap.size() (Remember size and capacity are different)
-    // if there isn't a GameObject at map[name], 
-    // claim a GO from the premade vector (perfect use of shared_ptr
-    // Remove from vector and insert into map?    
-    
-    return nullptr;
-}
-
